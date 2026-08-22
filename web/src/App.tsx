@@ -10,6 +10,7 @@ import { labelText, hoursLabel, camLabel, debugImage, type UiEvent } from './api
 type Screen =
   | 'dashboard'
   | 'library'
+  | 'analysis'
   | 'event-explorer'
   | 'investigation'
 
@@ -224,6 +225,7 @@ function statusBadge(s: string) {
 const NAV = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'library', label: 'Library' },
+  { id: 'analysis', label: 'Analysis' },
   { id: 'event-explorer', label: 'Events' },
   { id: 'investigation', label: 'Investigate' },
 ] as const
@@ -231,6 +233,7 @@ const NAV = [
 const SCREEN_TITLE: Record<Screen, string> = {
   'dashboard': 'Investigation Dashboard',
   'library': 'Recording Library',
+  'analysis': 'Recording Analysis',
   'event-explorer': 'Event Explorer',
   'investigation': 'Investigate',
 }
@@ -238,6 +241,7 @@ const SCREEN_TITLE: Record<Screen, string> = {
 const NAV_ICON: Record<Screen, string> = {
   'dashboard': I.layers,
   'library': I.video,
+  'analysis': I.roi,
   'event-explorer': I.event,
   'investigation': I.search,
 }
@@ -727,8 +731,17 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 
 // ── Video Analysis ─────────────────────────────────────────────────
 
+function priorityCounts(evs: UiEvent[]) {
+  return {
+    high: evs.filter(e => e.priority === 'high').length,
+    med: evs.filter(e => e.priority === 'medium').length,
+    low: evs.filter(e => e.priority === 'low').length,
+  }
+}
+
+/** Card grid of the processed recordings. Entry point of the review flow. */
 function Library({ onNavigate }: { onNavigate: (s: Screen) => void }) {
-  const { events, stats, summary, select, loading, error } = useData()
+  const { events, stats, summary, setVideo, loading, error } = useData()
   if (error) return <ApiError error={error} />
   if (loading) return <Loading />
 
@@ -736,20 +749,18 @@ function Library({ onNavigate }: { onNavigate: (s: Screen) => void }) {
     .filter(([, v]) => v && typeof v === 'object' && !('error' in v))
     .map(([video, v]: [string, any]) => {
       const evs = events.filter(e => e.raw.video === video)
-      const named = evs.filter(e => !['staff_or_transit', 'unclassified_anomaly']
-        .includes(e.raw.action_label)).length
+      const p = priorityCounts(evs)
       return {
-        video,
-        seats: v.n_seats ?? 0,
-        durationS: v.duration_s ?? 0,
+        video, stem: video.replace(/\.[^.]+$/, ''),
+        seats: v.n_seats ?? 0, durationS: v.duration_s ?? 0,
         candidates: v.stage1_candidates ?? null,
         promoted: v.promoted_to_stage2 ?? null,
         pct: v.promoted_fraction_of_seat_seconds ?? null,
         fixtures: (v.fixtures ?? {}).n ?? null,
         scanS: v.elapsed_s ?? null,
         events: evs.length,
-        named,
-        note: v.note as string | undefined,
+        findings: evs.filter(e => !['staff_or_transit','unclassified_anomaly'].includes(e.raw.action_label)).length,
+        ...p,
       }
     })
     .sort((a, b) => b.durationS - a.durationS)
@@ -758,61 +769,72 @@ function Library({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 
   return (
     <div className="overflow-y-auto h-full px-8 py-10 space-y-7">
-      <div>
-        <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">
-          Processed Library
+      <div className="flex items-end justify-between">
+        <div>
+          <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Processed Library</div>
+          <h1 className="text-3xl font-display text-cream">Recordings</h1>
+          <p className="text-cream-dim text-sm mt-1">
+            {rows.length} recordings · {hoursLabel(totalS)} analysed offline. Select one to review its events.
+          </p>
         </div>
-        <h1 className="text-3xl font-display text-cream">Recordings</h1>
-        <p className="text-cream-dim text-sm mt-1">
-          {rows.length} recordings · {hoursLabel(totalS)} of footage · analysed
-          offline, ahead of review. Select one to review its events.
-        </p>
+        <div className="text-xs font-mono text-muted">
+          {events.length} events · {rows.reduce((a,r)=>a+r.findings,0)} findings
+        </div>
       </div>
 
-      <Card className="overflow-hidden">
-        <table className="w-full text-xs">
-          <thead className="bg-elevated">
-            <tr className="text-muted font-mono text-[10px] uppercase tracking-widest">
-              {['Recording', 'Duration', 'Seats', 'Stage 1 scan', 'Candidates',
-                'Reviewed', 'Fixtures rejected', 'Events', ''].map(h => (
-                <th key={h} className="text-left px-5 py-3 font-medium border-b border-border whitespace-nowrap">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(r => (
-              <tr key={r.video} className="border-b border-border/50 hover:bg-elevated/40 transition-colors">
-                <td className="px-5 py-3 font-mono text-olive whitespace-nowrap">{camLabel(r.video)}</td>
-                <td className="px-5 py-3 font-mono text-cream-dim">{hoursLabel(r.durationS)}</td>
-                <td className="px-5 py-3 font-mono text-cream-dim">{r.seats}</td>
-                <td className="px-5 py-3 font-mono text-cream-dim">
-                  {r.scanS != null ? `${r.scanS.toFixed(0)}s` : '—'}
-                </td>
-                <td className="px-5 py-3 font-mono text-cream-dim">{r.candidates ?? '—'}</td>
-                <td className="px-5 py-3 font-mono">
-                  {r.pct != null ? (
-                    <span className="text-cream">{(r.pct * 100).toFixed(2)}%
-                      <span className="text-muted"> of seat-seconds</span></span>
-                  ) : <span className="text-muted">{r.note ? 'no seat grid' : '—'}</span>}
-                </td>
-                <td className="px-5 py-3 font-mono text-cream-dim">{r.fixtures ?? '—'}</td>
-                <td className="px-5 py-3 font-mono">
-                  <span className="text-cream">{r.events}</span>
-                  <span className="text-muted"> · {r.named} named</span>
-                </td>
-                <td className="px-5 py-3">
-                  <Btn variant="secondary" size="sm"
-                    onClick={() => {
-                      const first = events.find(e => e.raw.video === r.video)
-                      if (first) select(first)
-                      onNavigate('event-explorer')
-                    }}>Review</Btn>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+      <div className="grid grid-cols-3 gap-5">
+        {rows.map(r => (
+          <button key={r.video}
+            onClick={() => { setVideo(r.video); onNavigate('analysis') }}
+            className="text-left group">
+            <Card className="overflow-hidden border border-border hover:border-olive-mid/50 transition-colors">
+              {/* Real Stage 1 render: discovered seats drawn on an actual frame. */}
+              <div className="relative h-40 bg-[#0E1209] overflow-hidden">
+                <img src={debugImage(`seats_${r.stem}.png`)} alt=""
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+                  onError={e => { (e.currentTarget as HTMLImageElement).style.visibility = 'hidden' }} />
+                <div className="absolute top-2 left-2 flex gap-1.5">
+                  <span className="text-[9px] font-mono text-white/85 bg-black/60 px-1.5 py-0.5 rounded">
+                    {camLabel(r.video)}
+                  </span>
+                </div>
+                <div className="absolute bottom-2 right-2">
+                  <span className="text-[9px] font-mono text-white/85 bg-black/60 px-1.5 py-0.5 rounded">
+                    {hoursLabel(r.durationS)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-4 space-y-3">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <Badge color="olive" dot>Analysis complete</Badge>
+                  {r.findings > 0 && <Badge color="amber">{r.findings} findings</Badge>}
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-cream truncate">{camLabel(r.video)}</div>
+                  <div className="text-xs text-muted mt-0.5 font-mono">
+                    {r.seats} seats · {r.candidates ?? '—'} candidates · {r.pct != null ? `${(r.pct*100).toFixed(2)}% reviewed` : 'no seat grid'}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {r.high > 0 && <Badge color="danger">{r.high} high</Badge>}
+                  {r.med > 0 && <Badge color="amber">{r.med} med</Badge>}
+                  {r.low > 0 && <Badge color="muted">{r.low} low</Badge>}
+                </div>
+                <div className="flex items-center justify-between pt-1 border-t border-border/60">
+                  <span className="text-[10px] font-mono text-muted">
+                    Stage 1 scan {r.scanS != null ? `${r.scanS.toFixed(0)}s` : '—'}
+                    {r.fixtures ? ` · ${r.fixtures} fixtures rejected` : ''}
+                  </span>
+                  <span className="text-xs text-olive opacity-0 group-hover:opacity-100 transition-opacity font-medium">
+                    Review →
+                  </span>
+                </div>
+              </div>
+            </Card>
+          </button>
+        ))}
+      </div>
 
       <Card className="p-6">
         <h3 className="text-sm font-semibold text-cream mb-2">How these were processed</h3>
@@ -830,6 +852,150 @@ function Library({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 }
 
 
+/** One recording: its counts, its events, drill-down into a segment. */
+function Analysis({ onNavigate }: { onNavigate: (s: Screen) => void }) {
+  const { events, stats, video, setVideo, select, loading, error } = useData()
+  const [filter, setFilter] = useState('All')
+  if (error) return <ApiError error={error} />
+  if (loading) return <Loading />
+
+  if (!video) {
+    return (
+      <div className="h-full flex items-center justify-center px-10">
+        <div className="text-center space-y-3">
+          <div className="text-sm text-cream-dim">No recording selected.</div>
+          <Btn onClick={() => onNavigate('library')}>
+            <Ico d={I.video} size={14} />Choose a recording
+          </Btn>
+        </div>
+      </div>
+    )
+  }
+
+  const evs = events.filter(e => e.raw.video === video)
+  const st: any = (stats ?? {})[video] ?? {}
+  const p = priorityCounts(evs)
+  const DISMISS = ['staff_or_transit', 'unclassified_anomaly']
+  const findings = evs.filter(e => !DISMISS.includes(e.raw.action_label))
+  const counts = evs.reduce<Record<string, number>>((a, e) => {
+    a[e.raw.action_label] = (a[e.raw.action_label] ?? 0) + 1; return a
+  }, {})
+  const chips = ['All', 'Findings only',
+    ...Object.keys(counts).sort((a, b) => counts[b] - counts[a])]
+
+  const shown = evs.filter(e =>
+    filter === 'All'
+    || (filter === 'Findings only' && !DISMISS.includes(e.raw.action_label))
+    || filter === e.raw.action_label)
+
+  const kpi = [
+    { label: 'Events surfaced', val: evs.length, sub: 'across this recording', color: 'olive' as const },
+    { label: 'Findings', val: findings.length, sub: 'named seat behaviour', color: 'danger' as const },
+    { label: 'High confidence', val: p.high, sub: 'conf 0.60 and above', color: 'amber' as const },
+    { label: 'Set aside', val: evs.length - findings.length, sub: 'transit or unclassified', color: 'olive' as const },
+  ]
+
+  return (
+    <div className="overflow-y-auto h-full px-8 py-8 space-y-6">
+      <div className="flex items-start justify-between gap-6">
+        <div>
+          <button onClick={() => { setVideo(null); onNavigate('library') }}
+            className="text-xs font-mono text-muted hover:text-cream-dim flex items-center gap-1 mb-2">
+            <Ico d={I.chevronL} size={11} />Back to library
+          </button>
+          <h1 className="text-2xl font-display text-cream">{camLabel(video)}</h1>
+          <p className="text-cream-dim text-sm mt-1 font-mono">
+            {hoursLabel(st.duration_s ?? 0)} · {st.n_seats ?? 0} seats discovered ·
+            {' '}{st.stage1_candidates ?? '—'} Stage 1 candidates ·
+            {' '}{st.promoted_fraction_of_seat_seconds != null
+              ? `${(st.promoted_fraction_of_seat_seconds * 100).toFixed(2)}% of seat-seconds fully decoded`
+              : 'no seat grid'}
+          </p>
+        </div>
+        <Badge color="olive" dot>Analysis complete</Badge>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        {kpi.map(k => {
+          const cc = { olive: 'text-olive border-olive-mid/20', danger: 'text-danger border-danger/20',
+                       amber: 'text-amber border-amber/20' }[k.color]
+          return (
+            <Card key={k.label} className={cn('p-5 border', cc.split(' ')[1])}>
+              <div className="text-xs font-mono text-muted uppercase tracking-wider mb-2">{k.label}</div>
+              <div className={cn('text-3xl font-display', cc.split(' ')[0])}>{k.val}</div>
+              <div className="text-xs text-muted mt-1">{k.sub}</div>
+            </Card>
+          )
+        })}
+      </div>
+
+      <Card className="p-5">
+        <p className="text-sm text-cream-dim leading-relaxed">
+          REWIND surfaced <span className="text-cream font-semibold">{evs.length}</span> moments
+          in this recording, of which <span className="text-cream font-semibold">{findings.length}</span> are
+          named seat behaviour and the rest are movement through the room or windows no rule could name.
+        </p>
+        <p className="text-[11px] text-muted mt-2 leading-relaxed">
+          Every label describes observed behaviour, never intent, and every one carries a
+          confidence score. Detections are probabilistic and require human verification.
+        </p>
+      </Card>
+
+      <div className="flex gap-1.5 flex-wrap">
+        {chips.map(f => (
+          <button key={f} onClick={() => setFilter(f)} title={f}
+            className={cn('px-3 py-2 text-xs rounded-lg font-medium transition-colors',
+              filter === f ? 'bg-olive text-white font-semibold'
+                           : 'bg-card border border-border text-muted hover:text-cream-dim')}>
+            {f === 'All' || f === 'Findings only' ? f : labelText(f)}
+            {counts[f] != null && <span className="opacity-60"> {counts[f]}</span>}
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-2">
+        <div className="text-xs font-mono text-muted">{shown.length} events</div>
+        {shown.slice(0, 80).map(e => (
+          <button key={e.id} onClick={() => { select(e); onNavigate('investigation') }}
+            className="w-full text-left">
+            <Card className="p-4 flex items-center gap-4 hover:border-olive-mid/40 border border-transparent transition-colors">
+              <div className="w-24 h-14 rounded-lg bg-[#0E1209] border border-border shrink-0 overflow-hidden flex items-center justify-center">
+                <span className="text-[9px] font-mono text-white/40">{e.durationS}s</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-mono text-muted">t+{e.time} · {e.roi}</div>
+                <div className="text-sm font-semibold text-cream mt-0.5">{e.type}</div>
+                <div className="text-xs text-muted mt-0.5 truncate">{e.rule || '—'}</div>
+              </div>
+              <div className="text-right shrink-0 space-y-1">
+                <Badge color={e.priority === 'high' ? 'danger' : e.priority === 'medium' ? 'amber' : 'muted'}>
+                  {e.priority} priority
+                </Badge>
+                <div className="text-xs font-mono text-cream-dim">{e.conf}% conf.</div>
+              </div>
+            </Card>
+          </button>
+        ))}
+        {shown.length > 80 && (
+          <div className="text-xs font-mono text-muted pt-2">
+            showing first 80 of {shown.length} — use Events for the full searchable list
+          </div>
+        )}
+      </div>
+
+      <Card className="p-5">
+        <h3 className="text-sm font-semibold text-cream mb-1">Activity heatmap</h3>
+        <p className="text-xs text-muted mb-3">
+          Accumulated motion-vector energy for this recording, with the discovered seats drawn on top.
+        </p>
+        <img src={debugImage(`heatmap_${video.replace(/\.[^.]+$/, '')}.png`)}
+          alt="activity heatmap"
+          className="w-full rounded-lg border border-border bg-[#0E1209]"
+          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }} />
+      </Card>
+    </div>
+  )
+}
 
 function InvestigationWorkspace() {
   const { events, selected, select, setStatus, loading, error } = useData()
@@ -1185,6 +1351,7 @@ export default function App() {
   const screens: Record<Screen, React.ReactNode> = {
     'dashboard': <Dashboard onNavigate={setScreen} />,
     'library': <Library onNavigate={setScreen} />,
+    'analysis': <Analysis onNavigate={setScreen} />,
     'event-explorer': <EventExplorer onNavigate={setScreen} search={search} />,
     'investigation': <InvestigationWorkspace />,
   }

@@ -9,6 +9,9 @@ type Ctx = {
   error: string | null
   selected: UiEvent | null
   select: (e: UiEvent | null) => void
+  /** which recording the Analysis screen is drilled into */
+  video: string | null
+  setVideo: (v: string | null) => void
   setStatus: (id: string, s: UiEvent['status']) => void
   reload: () => void
 }
@@ -22,6 +25,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selected, select] = useState<UiEvent | null>(null)
+  const [video, setVideo] = useState<string | null>(null)
   const [tick, setTick] = useState(0)
 
   useEffect(() => {
@@ -52,7 +56,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   return (
     <DataCtx.Provider
-      value={{ events, summary, stats, loading, error, selected, select, setStatus,
+      value={{ events, summary, stats, loading, error, selected, select,
+               video, setVideo, setStatus,
                reload: () => setTick((t) => t + 1) }}
     >
       {children}
