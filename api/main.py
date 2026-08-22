@@ -129,11 +129,17 @@ def health() -> dict:
 
 # Video files. StaticFiles handles Range requests, which browsers require to
 # seek within a video rather than download the whole file first.
-if CLIPS.exists():
-    app.mount("/clips", StaticFiles(directory=str(CLIPS)), name="clips")
-if CLIPS_ANNOTATED.exists():
-    app.mount("/clips_annotated", StaticFiles(directory=str(CLIPS_ANNOTATED)),
-              name="clips_annotated")
+#
+# The directories are created rather than tested for. Mounting conditionally
+# meant a directory produced *after* the server started was never served:
+# burn_overlays.py created out/clips_annotated/ while uvicorn was already
+# running, so every annotated clip 404'd even though the files were on disk
+# and /health happily reported 921 of them.
+CLIPS.mkdir(parents=True, exist_ok=True)
+CLIPS_ANNOTATED.mkdir(parents=True, exist_ok=True)
+app.mount("/clips", StaticFiles(directory=str(CLIPS)), name="clips")
+app.mount("/clips_annotated", StaticFiles(directory=str(CLIPS_ANNOTATED)),
+          name="clips_annotated")
 
 
 @app.get("/debug/{name}")

@@ -38,6 +38,7 @@ from .config import (
     SEAT_EXCHANGE_MIN_HOLD_S,
     TALKING_MIN_CORR,
     TALKING_MIN_S,
+    TRANSIT_MAX_CONF,
     TRANSIT_MIN_DISPLACEMENT,
     TRANSIT_MIN_FRAMES,
 )
@@ -274,8 +275,13 @@ def rule_staff_transit(ev: WindowEvidence) -> Action | None:
             continue
         obs = seats.get(tid, [])
         unseated = (float(np.mean([s is None for _, s in obs])) if obs else 1.0)
-        conf = _confidence(min(1.0, len(dets) / max(ev.n_frames, 1)),
-                           min(1.0, disp / (2 * TRANSIT_MIN_DISPLACEMENT))) * 0.85
+        # Ceilinged: this label exists to take a window OUT of the queue, so it
+        # must never outrank a window that reports an actual behaviour.
+        conf = min(
+            TRANSIT_MAX_CONF,
+            _confidence(min(1.0, len(dets) / max(ev.n_frames, 1)),
+                        min(1.0, disp / (2 * TRANSIT_MIN_DISPLACEMENT))) * 0.85,
+        )
         act = Action("staff_or_transit", conf, {
             "rule": "a tracked person crossed the scene by more than "
                     f"{TRANSIT_MIN_DISPLACEMENT} of their own box diagonal",

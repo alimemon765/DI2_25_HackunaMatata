@@ -87,7 +87,24 @@ TRANSIT_MIN_FRAMES = 3
 
 CROWD_MIN_PERSONS = 4
 CROWD_MIN_S = 5.0
-UNCLASSIFIED_MAX_CONF = 0.35  # a fallback must never outrank a rule that matched
+# --- ranking: findings outrank dismissals, always -------------------------
+# Two of the six labels are not findings about a seat. They are the opposite:
+# a reason to spend LESS attention on a window. `staff_or_transit` says
+# somebody walked through; `unclassified_anomaly` says nothing matched at all.
+# Both must therefore sort below every label that reports an actual observed
+# behaviour, or the review queue is led by its own dismissals.
+#
+# That is exactly what went wrong. measured before this cap: staff_or_transit
+# had the HIGHEST median confidence of any label (0.758, max 0.825), against a
+# median of 0.457 for mobile_phone_usage -- so it became the top label on four
+# of eight files and file-level top-label accuracy fell from 38% to 25%.
+#
+# The ceilings sit below the lowest confidence any named seat behaviour
+# produced on this data (0.232, a weak phone detection), and transit ranks
+# above unclassified because "this is someone crossing the room" is a more
+# specific statement than "no rule matched".
+TRANSIT_MAX_CONF = 0.22
+UNCLASSIFIED_MAX_CONF = 0.20
 
 # COCO class ids used by the Stage 3 rules.
 COCO_PERSON = 0
