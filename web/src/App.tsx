@@ -86,8 +86,8 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
   return <div className={cn('bg-card border border-border rounded-xl', className)}>{children}</div>
 }
 
-function Btn({ children, variant = 'primary', size = 'md', onClick, className }: {
-  children: React.ReactNode; variant?: 'primary' | 'secondary' | 'ghost' | 'danger'; size?: 'sm' | 'md' | 'lg'; onClick?: () => void; className?: string
+function Btn({ children, variant = 'primary', size = 'md', onClick, className, disabled, title }: {
+  children: React.ReactNode; variant?: 'primary' | 'secondary' | 'ghost' | 'danger'; size?: 'sm' | 'md' | 'lg'; onClick?: () => void; className?: string; disabled?: boolean; title?: string
 }) {
   const v = {
     primary: 'bg-olive text-white hover:bg-olive-mid',
@@ -97,8 +97,12 @@ function Btn({ children, variant = 'primary', size = 'md', onClick, className }:
   }
   const s = { sm: 'px-3 py-1.5 text-xs', md: 'px-4 py-2 text-sm', lg: 'px-6 py-3 text-sm' }
   return (
-    <button onClick={onClick}
-      className={cn('inline-flex items-center gap-2 font-medium rounded-lg transition-colors', v[variant], s[size], className)}>
+    <button onClick={disabled ? undefined : onClick} disabled={disabled} title={title}
+      className={cn('inline-flex items-center gap-2 font-medium rounded-lg transition-colors',
+        disabled
+          ? 'bg-elevated border border-border text-muted/60 cursor-not-allowed opacity-60'
+          : v[variant],
+        s[size], className)}>
       {children}
     </button>
   )
@@ -741,9 +745,11 @@ function InvestigationWorkspace() {
               <h1 className="text-xl font-display text-cream">REWIND — Investigation Workspace</h1>
             </div>
             <div className="flex items-center gap-2">
-              <Btn variant="secondary" size="sm"><Ico d={I.bookmark} size={12} />Bookmark</Btn>
-              <Btn variant="secondary" size="sm"><Ico d={I.export} size={12} />Export Clip</Btn>
-              <Btn variant="danger" size="sm"><Ico d={I.flag} size={12} />Mark Relevant</Btn>
+              {/* Disabled rather than removed: they show what a review workflow
+                  would offer, without pretending any of it works yet. */}
+              <Btn variant="secondary" size="sm" disabled title="not implemented - this build is read-only review"><Ico d={I.bookmark} size={12} />Bookmark</Btn>
+              <Btn variant="secondary" size="sm" disabled title="not implemented - this build is read-only review"><Ico d={I.export} size={12} />Export Clip</Btn>
+              <Btn variant="danger" size="sm" disabled title="not implemented - this build is read-only review"><Ico d={I.flag} size={12} />Mark Relevant</Btn>
             </div>
           </div>
         </div>
@@ -894,8 +900,10 @@ function InvestigationWorkspace() {
           ))}
         </div>
         <div className="p-4 border-t border-border">
-          <textarea placeholder="Add investigation notes..." className="w-full bg-card border border-border rounded-lg p-3 text-xs text-cream-dim placeholder:text-muted resize-none focus:outline-none focus:border-olive-mid h-20" />
-          <Btn className="w-full justify-center mt-2">Save Note</Btn>
+          <textarea disabled placeholder="Investigation notes - not implemented in this build"
+            title="not implemented - this build is read-only review"
+            className="w-full bg-elevated border border-border rounded-lg p-3 text-xs text-muted/60 placeholder:text-muted/60 resize-none focus:outline-none h-20 cursor-not-allowed" />
+          <Btn className="w-full justify-center mt-2" disabled title="not implemented - this build is read-only review">Save Note</Btn>
         </div>
       </div>
     </div>
@@ -908,13 +916,24 @@ function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
   const { events: ALL_EVENTS, select, loading, error } = useData()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('All')
-  const filters = ['All', 'High Priority', 'Unreviewed', 'Possible Object', 'Elevated Motion']
+  // Chips are the labels classify.py can actually emit, plus a findings-only
+  // shortcut. The originals ('Possible Object', 'Elevated Motion') matched no
+  // label this system produces, so they filtered to nothing.
+  const DISMISSALS = ['staff_or_transit', 'unclassified_anomaly']
+  const counts = ALL_EVENTS.reduce<Record<string, number>>((a, e) => {
+    a[e.raw.action_label] = (a[e.raw.action_label] ?? 0) + 1
+    return a
+  }, {})
+  const filters = ['All', 'Findings only',
+    ...Object.keys(counts).sort((a, b) => counts[b] - counts[a])]
   if (error) return <ApiError error={error} />
   if (loading) return <Loading />
   const shown = ALL_EVENTS.filter(e => {
     const q = search.toLowerCase()
     const m = !q || e.time.includes(q) || e.cam.toLowerCase().includes(q) || e.type.toLowerCase().includes(q) || e.roi.toLowerCase().includes(q)
-    const f = filter === 'All' || (filter === 'High Priority' && e.priority === 'high') || (filter === 'Unreviewed' && e.status === 'Unreviewed') || (filter === 'Possible Object' && e.type.includes('Object')) || (filter === 'Elevated Motion' && e.type.includes('Motion'))
+    const f = filter === 'All'
+      || (filter === 'Findings only' && !DISMISSALS.includes(e.raw.action_label))
+      || filter === e.raw.action_label
     return m && f
   })
   return (
@@ -934,10 +953,11 @@ function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
         </div>
         <div className="flex gap-1.5">
           {filters.map(f => (
-            <button key={f} onClick={() => setFilter(f)}
+            <button key={f} onClick={() => setFilter(f)} title={f}
               className={cn('px-3 py-2 text-xs rounded-lg font-medium transition-colors',
                 filter === f ? 'bg-olive text-white font-semibold' : 'bg-card border border-border text-muted hover:text-cream-dim')}>
-              {f}
+              {f === 'All' || f === 'Findings only' ? f : labelText(f)}
+              {counts[f] != null && <span className="opacity-60"> {counts[f]}</span>}
             </button>
           ))}
         </div>
