@@ -2,6 +2,9 @@
 data/raw/
 data/processed/
 out/clips/
+out/short/
+out/crowdtest/
+out/smoke/
 out/debug/
 *.mkv
 *.mp4
