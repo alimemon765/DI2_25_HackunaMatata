@@ -16,10 +16,12 @@ export function ClipPlayer({
   event,
   compact = false,
   preferAnnotated = true,
+  rate = 1,
 }: {
   event: UiEvent | null
   compact?: boolean
   preferAnnotated?: boolean
+  rate?: number
 }) {
   const ref = useRef<HTMLVideoElement>(null)
   const [useAnnotated, setUseAnnotated] = useState(preferAnnotated)
@@ -38,6 +40,12 @@ export function ClipPlayer({
     ref.current.muted = true
     ref.current.load()
   }, [src])
+
+  // Playback speed is driven from the workspace controls; applied on every
+  // change and re-applied after a load, which resets it.
+  useEffect(() => {
+    if (ref.current) ref.current.playbackRate = rate
+  }, [rate, src])
 
   const h = compact ? 'h-52' : 'h-80'
 

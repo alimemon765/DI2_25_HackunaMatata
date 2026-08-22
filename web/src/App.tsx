@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useData } from './data'
 import { ClipPlayer } from './ClipPlayer'
-import { labelText, hoursLabel, camLabel } from './api'
+import { labelText, hoursLabel, camLabel, debugImage, type UiEvent } from './api'
 
 // Live data replaces the design's hardcoded arrays. The module-level mock
 // consts are kept below only as a shape reference; every screen shadows them
@@ -228,45 +228,163 @@ const NAV = [
   { id: 'investigation', label: 'Investigate' },
 ] as const
 
-function TopNav({ active, onNavigate }: { active: Screen; onNavigate: (s: Screen) => void }) {
+const SCREEN_TITLE: Record<Screen, string> = {
+  'dashboard': 'Investigation Dashboard',
+  'library': 'Recording Library',
+  'event-explorer': 'Event Explorer',
+  'investigation': 'Investigate',
+}
+
+const NAV_ICON: Record<Screen, string> = {
+  'dashboard': I.layers,
+  'library': I.video,
+  'event-explorer': I.event,
+  'investigation': I.search,
+}
+
+function Sidebar({ active, onNavigate }: { active: Screen; onNavigate: (s: Screen) => void }) {
   return (
-    <nav className="sticky top-0 z-50 bg-surface/95 backdrop-blur-sm border-b border-border h-14 flex items-center">
-      <div className="w-full px-8 flex items-center gap-8">
-        {/* Logo */}
-        <div className="flex items-center gap-2.5 shrink-0">
-          <div className="w-7 h-7 bg-olive-subtle border border-olive-mid/30 rounded-lg flex items-center justify-center">
-            <Ico d={I.layers} size={13} />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-lg text-cream leading-none tracking-tight font-bold">REWIND</span>
-            <span className="text-[9px] font-mono text-olive bg-olive-subtle px-1.5 py-0.5 rounded tracking-widest">FORENSICS</span>
-          </div>
+    <aside className="w-56 shrink-0 h-full bg-surface border-r border-border flex flex-col">
+      <div className="h-14 px-5 flex items-center gap-2.5 border-b border-border shrink-0">
+        <div className="w-7 h-7 bg-olive-subtle border border-olive-mid/30 rounded-lg flex items-center justify-center">
+          <Ico d={I.layers} size={13} />
         </div>
-
-        {/* Nav links */}
-        <div className="flex items-center gap-0.5 flex-1">
-          {NAV.map(item => (
-            <button key={item.id} onClick={() => onNavigate(item.id as Screen)}
-              className={cn('px-3 py-1.5 text-sm rounded-md font-medium transition-colors',
-                active === item.id
-                  ? 'bg-olive-subtle text-olive'
-                  : 'text-cream-dim hover:text-cream hover:bg-elevated')}>
-              {item.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Right */}
-        <div className="flex items-center gap-4 shrink-0">
-          <div className="flex items-center gap-1.5 text-xs font-mono text-muted">
-            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-            Offline analysis
-          </div>
-          {/* GPU% and storage used to sit here as fixed strings. Nothing
-              measured them, so they are gone rather than left as decoration. */}
+        <div className="flex items-baseline gap-2 min-w-0">
+          <span className="font-display text-lg text-cream leading-none tracking-tight font-bold">REWIND</span>
+          <span className="text-[9px] font-mono text-olive bg-olive-subtle px-1.5 py-0.5 rounded tracking-widest">FORENSICS</span>
         </div>
       </div>
-    </nav>
+
+      <nav className="flex-1 p-3 space-y-1">
+        {NAV.map(item => {
+          const on = active === item.id
+          return (
+            <button key={item.id} onClick={() => onNavigate(item.id as Screen)}
+              aria-current={on ? 'page' : undefined}
+              className={cn('w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg font-medium transition-all duration-150 text-left',
+                on ? 'bg-olive-subtle text-olive' : 'text-cream-dim hover:text-cream hover:bg-elevated')}>
+              <Ico d={NAV_ICON[item.id as Screen]} size={15} />
+              {item.label}
+            </button>
+          )
+        })}
+      </nav>
+
+      <div className="p-4 border-t border-border">
+        <p className="text-[10px] font-mono text-muted leading-relaxed">
+          Decision support for review prioritisation. Names observed behaviour;
+          does not determine intent.
+        </p>
+      </div>
+    </aside>
+  )
+}
+
+function TopBar({ screen, search, onSearch }: {
+  screen: Screen; search: string; onSearch: (v: string) => void
+}) {
+  return (
+    <header className="h-14 shrink-0 bg-surface/95 backdrop-blur-sm border-b border-border flex items-center gap-6 px-6">
+      <h1 className="text-sm font-semibold text-cream shrink-0">{SCREEN_TITLE[screen]}</h1>
+
+      <div className="flex-1 max-w-md relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none">
+          <Ico d={I.search} size={13} />
+        </span>
+        <input
+          value={search}
+          onChange={e => onSearch(e.target.value)}
+          placeholder="Search seat, recording, label or offset…"
+          className="w-full bg-card border border-border rounded-lg pl-9 pr-3 py-1.5 text-xs text-cream-dim placeholder:text-muted focus:outline-none focus:border-olive-mid transition-colors"
+        />
+      </div>
+
+      <div className="flex items-center gap-1.5 text-xs font-mono text-muted shrink-0">
+        <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+        Offline analysis
+      </div>
+    </header>
+  )
+}
+
+/** Renders an event's `evidence` object as-is.
+ *
+ * The shape genuinely varies by rule -- a phone event carries
+ * frames_with_detection and mean_detection_conf, a talking event carries a
+ * correlation and a lag, a transit event carries a displacement. Hard-coding
+ * fields would mean silently dropping whichever rule fired, so this walks
+ * whatever is there. `rule` is promoted to a sentence; `note` and `caveat` are
+ * shown as prose because they exist to qualify the finding.
+ */
+function EvidencePanel({ event }: { event: UiEvent | null }) {
+  if (!event) {
+    return <p className="text-xs text-muted">Select an event to see its evidence.</p>
+  }
+  const ev = event.raw.evidence ?? {}
+  const rule = String(ev['rule'] ?? '')
+  const prose = ['note', 'caveat'] as const
+  const skip = new Set<string>(['rule', ...prose])
+  const rows = Object.entries(ev).filter(([k, v]) =>
+    !skip.has(k) && v !== null && typeof v !== 'object')
+  const also = ev['also_matched'] as { label: string; confidence: number }[] | undefined
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">
+          Signal that fired
+        </div>
+        <p className="text-xs text-cream-dim leading-relaxed">{rule || '—'}</p>
+      </div>
+
+      {rows.length > 0 && (
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
+          {rows.map(([k, v]) => (
+            <div key={k} className="min-w-0">
+              <dt className="text-[10px] font-mono text-muted truncate">{k.replace(/_/g, ' ')}</dt>
+              <dd className="text-xs font-mono text-cream truncate">{String(v)}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
+      {event.raw.stage1 && (
+        <div>
+          <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">
+            Stage 1 signal
+          </div>
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
+            {Object.entries(event.raw.stage1).map(([k, v]) => (
+              <div key={k}>
+                <dt className="text-[10px] font-mono text-muted">{k.replace(/_/g, ' ')}</dt>
+                <dd className="text-xs font-mono text-cream">{String(v)}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {also?.length ? (
+        <div>
+          <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">
+            Other rules that also matched
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {also.map(a => (
+              <Badge key={a.label} color="muted">
+                {labelText(a.label)} {a.confidence}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {prose.map(k => ev[k] ? (
+        <p key={k} className="text-[11px] text-muted leading-relaxed border-l-2 border-border pl-3">
+          {String(ev[k])}
+        </p>
+      ) : null)}
+    </div>
   )
 }
 
@@ -282,7 +400,11 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
   const kpi = (() => {
     const videos = summary ? Object.keys(summary.videos).length : 0
     const events = ALL_EVENTS.length
-    const named = ALL_EVENTS.filter(e => e.raw.action_label !== 'unclassified_anomaly').length
+    // A finding is a reported behaviour at a seat. staff_or_transit and
+    // unclassified_anomaly are the opposite -- reasons to look elsewhere --
+    // so counting them as "named behaviours" would overstate the result.
+    const DISMISS = ['staff_or_transit', 'unclassified_anomaly']
+    const named = ALL_EVENTS.filter(e => !DISMISS.includes(e.raw.action_label)).length
     const reviewSec = ALL_EVENTS.reduce((a, e) => a + e.durationS, 0)
     return {
       videos,
@@ -308,13 +430,18 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
           <div>
             <div className="flex items-center gap-2 mb-5">
               <span className="w-1.5 h-1.5 rounded-full bg-success" />
-              <span className="text-xs font-mono text-muted uppercase tracking-widest">Offline Analysis Ready · Semester Exam 2026</span>
+              <span className="text-xs font-mono text-muted uppercase tracking-widest">
+                {kpi.videos} recordings analysed · offline
+              </span>
             </div>
             <h1 className="text-5xl font-display text-cream leading-tight mb-4">
-              Rewind.<br />Investigate.<br />Verify.
+              Review what<br />is worth reviewing.
             </h1>
             <p className="text-cream-dim text-base leading-relaxed mb-8 max-w-md">
-              Turn hours of recorded footage into prioritized events, motion insights, and investigation-ready evidence — without watching a single frame manually.
+              {kpi.hours} of recorded footage reduced to {kpi.events} ranked
+              moments — each with its seat, offset, the signal that fired, and a
+              clip. REWIND names observed behaviour; a reviewer decides what it
+              means.
             </p>
             <div className="flex items-center gap-3">
               <Btn size="lg" onClick={() => onNavigate('library')}>
@@ -356,15 +483,13 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
             <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Session Analytics</div>
             <h2 className="text-2xl font-display text-cream">Key Metrics</h2>
           </div>
-          <Btn variant="ghost" size="sm">
-            <Ico d={I.calendar} size={13} />22 Aug 2026 · IT Department
-          </Btn>
+
         </div>
         <div className="grid grid-cols-4 gap-4">
           {[
             { label: 'Recordings Analysed', val: String(kpi.videos), sub: `${kpi.hours} of footage`, spark: s1, color: 'olive' as const },
             { label: 'Events Surfaced', val: String(kpi.events), sub: `${kpi.reviewMin} min to review`, spark: s2, color: 'olive' as const },
-            { label: 'Named Behaviours', val: String(kpi.named), sub: `${kpi.unnamed} unclassified`, spark: s3, color: 'danger' as const },
+            { label: 'Findings', val: String(kpi.named), sub: `${kpi.unnamed} set aside as transit or unclassified`, spark: s3, color: 'danger' as const },
             { label: 'Object Evidence', val: String(kpi.withObject), sub: 'detection-backed', spark: [4,6,8,7,10,12,14,16,18,20,21,23], color: 'amber' as const },
           ].map(k => {
             const cc = { olive: { border: 'border-olive-mid/20', val: 'text-olive', sc: '#5E7832' }, danger: { border: 'border-danger/20', val: 'text-danger', sc: '#B02030' }, amber: { border: 'border-amber/20', val: 'text-amber', sc: '#A06010' } }[k.color]
@@ -393,11 +518,13 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
             <p className="text-cream-dim text-sm mt-1">Jump directly to high-activity moments — skip manual review of quiet footage.</p>
           </div>
           <div className="flex gap-1.5">
-            {['all','CAM-01','CAM-02','CAM-03','CAM-04'].map(c => (
-              <button key={c} onClick={() => setCam(c)}
+            {/* Recordings, not cameras. This system has no camera concept --
+                regions are seats within a recording. */}
+            {['all', ...Object.keys(summary?.videos ?? {})].map(c => (
+              <button key={c} onClick={() => setCam(c)} title={c}
                 className={cn('px-3 py-1.5 text-xs rounded-lg font-mono transition-colors',
                   cam === c ? 'bg-olive text-white font-semibold' : 'bg-card border border-border text-muted hover:text-cream-dim')}>
-                {c === 'all' ? 'All' : c}
+                {c === 'all' ? 'All' : camLabel(c)}
               </button>
             ))}
           </div>
@@ -412,7 +539,8 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
               </span>
             ))}
           </div>
-          <ActivityChart height={100} data={activitySeries(ALL_EVENTS)} />
+          <ActivityChart height={100} data={activitySeries(
+            cam === 'all' ? ALL_EVENTS : ALL_EVENTS.filter(e => e.raw.video === cam))} />
         </Card>
       </div>
 
@@ -470,28 +598,9 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
             </Card>
           ))}
         </div>
-        {/* Processing queue strip */}
-        <div className="mt-6 p-5 bg-surface rounded-xl border border-border flex items-center gap-8">
-          <div>
-            <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Processing Queue</div>
-            <div className="text-sm text-cream-dim font-medium">2 videos currently processing</div>
-          </div>
-          <div className="flex-1 grid grid-cols-2 gap-4">
-            {[{ name: 'CAM-08_14h30.mp4', prog: 67 }, { name: 'CAM-11_14h45.mp4', prog: 23 }].map(f => (
-              <div key={f.name} className="space-y-1.5">
-                <div className="flex justify-between text-xs font-mono text-muted">
-                  <span className="truncate">{f.name}</span><span>{f.prog}%</span>
-                </div>
-                <div className="h-1.5 bg-elevated rounded-full overflow-hidden">
-                  <div className="h-full bg-olive rounded-full" style={{ width: `${f.prog}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-          <Btn variant="secondary" size="sm" onClick={() => onNavigate('library')}>
-            Manage Queue
-          </Btn>
-        </div>
+        {/* A 'Processing Queue' strip sat here showing two files at 67% and
+            23%. Nothing was processing -- the filenames and percentages were
+            literals. This build reviews already-processed footage only. */}
       </div>
 
       {/* Priority Video Columns */}
@@ -723,7 +832,7 @@ function Library({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 
 
 function InvestigationWorkspace() {
-  const { events, selected, select, loading, error } = useData()
+  const { events, selected, select, setStatus, loading, error } = useData()
   const DET_EVENTS = events.slice(0, 8).map(e => ({
     time: e.time, type: e.type, roi: e.roi,
     score: e.activity, conf: e.conf, dur: `${e.durationS} sec`,
@@ -732,6 +841,7 @@ function InvestigationWorkspace() {
   }))
   const [playing, setPlaying] = useState(false)
   const [speed, setSpeed] = useState('1×')
+  const rate = parseFloat(speed.replace('×', '')) || 1
   const [sel, setSel] = useState(0)
   const [tlX, setTlX] = useState(28)
   return (
@@ -755,7 +865,7 @@ function InvestigationWorkspace() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          <ClipPlayer event={selected} />
+          <ClipPlayer event={selected} rate={rate} />
 
           {/* Controls */}
           <Card className="px-5 py-4">
@@ -830,33 +940,49 @@ function InvestigationWorkspace() {
             </div>
           </Card>
 
-          {/* Heatmap */}
+          {/* Evidence, straight from the event record */}
+          <Card className="p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-semibold text-cream">Evidence</h3>
+                <p className="text-xs text-muted mt-0.5">
+                  What the pipeline actually recorded for this window. Shape
+                  varies by rule, so nothing here is fixed.
+                </p>
+              </div>
+              {selected && (
+                <Badge color={selected.priority === 'high' ? 'danger'
+                  : selected.priority === 'medium' ? 'amber' : 'muted'} dot>
+                  confidence {(selected.raw.confidence).toFixed(2)}
+                </Badge>
+              )}
+            </div>
+            <EvidencePanel event={selected} />
+          </Card>
+
+          {/* Motion heatmap - the real one the pipeline rendered */}
           <Card className="p-5">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-semibold text-cream">Motion Activity Heatmap</h3>
-                <p className="text-xs text-muted mt-0.5">Visualize where activity occurred throughout the examination recording.</p>
-              </div>
-              <div className="flex items-center gap-3 text-xs font-mono text-muted">
-                <span className="flex items-center gap-1"><span className="w-3 h-1.5 rounded-sm bg-info/60" />Low</span>
-                <span className="flex items-center gap-1"><span className="w-3 h-1.5 rounded-sm bg-amber/70" />Medium</span>
-                <span className="flex items-center gap-1"><span className="w-3 h-1.5 rounded-sm bg-danger/80" />High</span>
+                <p className="text-xs text-muted mt-0.5">
+                  Accumulated motion-vector energy for this recording, with the
+                  discovered seats drawn on top. Rendered by Stage 1.
+                </p>
               </div>
             </div>
-            <div className="relative h-28 bg-[#0E1209] rounded-lg border border-border overflow-hidden">
-              {[{x:15,y:20,r:28,c:'rgba(176,32,48,0.7)'},{x:55,y:45,r:40,c:'rgba(176,32,48,0.85)'},{x:75,y:25,r:22,c:'rgba(160,96,16,0.7)'},{x:30,y:60,r:18,c:'rgba(36,104,120,0.5)'},{x:85,y:65,r:15,c:'rgba(36,104,120,0.4)'}].map((h,i) => (
-                <div key={i} className="absolute rounded-full" style={{ left:`${h.x}%`,top:`${h.y}%`,width:`${h.r*2}px`,height:`${h.r*2}px`,transform:'translate(-50%,-50%)',background:`radial-gradient(circle,${h.c} 0%,transparent 70%)` }} />
-              ))}
-              <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage:'linear-gradient(#5E7832 1px,transparent 1px),linear-gradient(90deg,#5E7832 1px,transparent 1px)',backgroundSize:'30px 20px' }} />
-            </div>
-            <div className="flex items-center gap-4 mt-3">
-              <span className="text-xs font-mono text-muted">Opacity</span>
-              <input type="range" min="0" max="100" defaultValue="70" className="flex-1 accent-olive h-1" />
-              <span className="text-xs font-mono text-muted">Time Window</span>
-              <select className="bg-card border border-border rounded-lg px-2 py-1 text-xs font-mono text-cream-dim focus:outline-none">
-                <option>5 min</option><option>15 min</option><option>30 min</option>
-              </select>
-            </div>
+            {selected ? (
+              <img
+                src={debugImage(`heatmap_${selected.raw.video.replace(/\.[^.]+$/, '')}.png`)}
+                alt="motion activity heatmap"
+                className="w-full rounded-lg border border-border bg-[#0E1209]"
+                onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+              />
+            ) : (
+              <div className="h-28 rounded-lg border border-border bg-elevated flex items-center justify-center">
+                <span className="text-xs font-mono text-muted">select an event</span>
+              </div>
+            )}
           </Card>
         </div>
       </div>
@@ -892,9 +1018,24 @@ function InvestigationWorkspace() {
                 </div>
               )}
               <div className="flex gap-1.5">
-                <button className="flex-1 py-1.5 text-[10px] bg-olive-subtle border border-olive-mid/30 text-olive rounded-lg hover:bg-olive-dim font-medium transition-colors">Review</button>
-                <button className="flex-1 py-1.5 text-[10px] bg-burgundy-dim border border-burgundy-mid/30 text-burgundy rounded-lg hover:bg-burgundy-mid font-medium transition-colors">Relevant</button>
-                <button className="flex-1 py-1.5 text-[10px] bg-card border border-border text-muted rounded-lg hover:text-cream-dim font-medium transition-colors">Ignore</button>
+                {/* Review state is UI-local by design: the pipeline produces
+                    evidence, and whether a human has looked at something is not
+                    something it can know. It shows up in the Status column. */}
+                <button onClick={() => { select(e.ev); setStatus(e.ev.id, 'Reviewed') }}
+                  className={cn('flex-1 py-1.5 text-[10px] rounded-lg font-medium transition-colors border',
+                    e.ev.status === 'Reviewed'
+                      ? 'bg-olive text-white border-olive'
+                      : 'bg-olive-subtle border-olive-mid/30 text-olive hover:bg-olive-dim')}>Review</button>
+                <button onClick={() => { select(e.ev); setStatus(e.ev.id, 'Relevant') }}
+                  className={cn('flex-1 py-1.5 text-[10px] rounded-lg font-medium transition-colors border',
+                    e.ev.status === 'Relevant'
+                      ? 'bg-burgundy text-white border-burgundy'
+                      : 'bg-burgundy-dim border-burgundy-mid/30 text-burgundy hover:bg-burgundy-mid')}>Relevant</button>
+                <button onClick={() => setStatus(e.ev.id, 'Ignored')}
+                  className={cn('flex-1 py-1.5 text-[10px] rounded-lg font-medium transition-colors border',
+                    e.ev.status === 'Ignored'
+                      ? 'bg-elevated text-cream-dim border-border-light'
+                      : 'bg-card border-border text-muted hover:text-cream-dim')}>Ignore</button>
               </div>
             </div>
           ))}
@@ -912,9 +1053,10 @@ function InvestigationWorkspace() {
 
 // ── Event Explorer ─────────────────────────────────────────────────
 
-function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
+function EventExplorer({ onNavigate, search }: {
+  onNavigate: (s: Screen) => void; search: string
+}) {
   const { events: ALL_EVENTS, select, loading, error } = useData()
-  const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('All')
   // Chips are the labels classify.py can actually emit, plus a findings-only
   // shortcut. The originals ('Possible Object', 'Elevated Motion') matched no
@@ -941,17 +1083,20 @@ function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
       <div>
         <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Investigation Database</div>
         <h1 className="text-3xl font-display text-cream">Event Explorer</h1>
-        <p className="text-cream-dim text-sm mt-1">Search, filter, and review all detected events across recorded footage.</p>
+        <p className="text-cream-dim text-sm mt-1">
+          Every event the pipeline surfaced, newest analysis first. Search from
+          the bar above; filter by the labels actually present in the data.
+        </p>
       </div>
 
+      {/* The search box lives in the top bar; this screen consumes it. */}
       <div className="flex items-center gap-3">
-        <div className="flex-1 relative">
-          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"><Ico d={I.search} size={14} /></div>
-          <input value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Search timestamp, camera, event, ROI or object..."
-            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-cream placeholder:text-muted focus:outline-none focus:border-olive-mid font-mono" />
-        </div>
-        <div className="flex gap-1.5">
+        {search && (
+          <span className="text-xs font-mono text-muted shrink-0">
+            filtering on “{search}”
+          </span>
+        )}
+        <div className="flex gap-1.5 flex-wrap">
           {filters.map(f => (
             <button key={f} onClick={() => setFilter(f)} title={f}
               className={cn('px-3 py-2 text-xs rounded-lg font-medium transition-colors',
@@ -968,7 +1113,7 @@ function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
           <table className="w-full text-xs">
             <thead className="bg-elevated">
               <tr className="text-muted font-mono text-[10px] uppercase tracking-widest">
-                {['ID','Timestamp','Camera','Event Type','ROI','Activity','Confidence','Object','Status',''].map(h => (
+                {['ID','Offset','Recording','Observed behaviour','Seat','Activity','Confidence','Object','Status',''].map(h => (
                   <th key={h} className="text-left px-5 py-3 font-medium border-b border-border whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -1030,18 +1175,28 @@ function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('dashboard')
+  // One search box in the chrome, and it drives the only searchable surface.
+  // Typing anywhere takes you to the results rather than silently doing nothing.
+  const [search, setSearch] = useState('')
+  const onSearch = (v: string) => {
+    setSearch(v)
+    if (v && screen !== 'event-explorer') setScreen('event-explorer')
+  }
   const screens: Record<Screen, React.ReactNode> = {
     'dashboard': <Dashboard onNavigate={setScreen} />,
     'library': <Library onNavigate={setScreen} />,
-    'event-explorer': <EventExplorer onNavigate={setScreen} />,
+    'event-explorer': <EventExplorer onNavigate={setScreen} search={search} />,
     'investigation': <InvestigationWorkspace />,
   }
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-bg text-cream font-sans">
-      <TopNav active={screen} onNavigate={setScreen} />
-      <main className="flex-1 overflow-hidden screen-enter" key={screen}>
-        {screens[screen]}
-      </main>
+    <div className="flex h-screen w-screen overflow-hidden bg-bg text-cream font-sans">
+      <Sidebar active={screen} onNavigate={setScreen} />
+      <div className="flex-1 flex flex-col min-w-0">
+        <TopBar screen={screen} search={search} onSearch={onSearch} />
+        <main className="flex-1 overflow-hidden screen-enter" key={screen}>
+          {screens[screen]}
+        </main>
+      </div>
     </div>
   )
 }
