@@ -312,3 +312,42 @@ event counts as false if it does not overlap **the single** scrubbed window,
 and these clips plainly contain other genuine activity — staff walking through
 01 and 05 is real. Treat it as an upper bound until more of each file is
 scrubbed, not as a measured false-positive rate.
+
+## 10. CLIP linear probe: not enough independent positives to train responsibly
+
+A linear probe on our own labelled crops is a genuinely different technique
+from the zero-shot text-prompt test in §3, so it was worth attempting. It was
+stopped at the data-sufficiency gate, before any classifier was fitted.
+
+**There is one verified real-phone event in the entire dataset.** Scrubbing the
+raw footage (§9) established 02 at 104-162 s. Harvesting that window yields 48
+`cell phone` crops — but all 48 detections fall inside a **single 40 px cell**
+at (652, 371), because the phone is held still against the candidate's face.
+They are 48 views of one object, not 48 examples.
+
+Measured in CLIP embedding space:
+
+| | median pairwise cosine |
+|---|---|
+| the 48 crops of that one phone | **0.924** (80% of pairs above 0.90) |
+| the 12 *distinct* objects — mice, calculators, bottle, hands | **0.823** |
+
+**Crops of the same object are more similar to each other than genuinely
+different objects are.** A random train/test split over those 48 would put
+near-duplicates on both sides of the line, and the held-out score would measure
+memorisation of one phone at one pixel location. It would read as ~100% and
+mean nothing — the same self-grading error as scoring a rule on the data used
+to design it.
+
+Counting *independent instances* rather than crops: **1 verified positive**,
+plus at most two more candidates from the cluster audit that were never
+confirmed. Against roughly nine distinct negatives. That is not a training set;
+it is one example.
+
+**Not built.** The duration-based fixture filter remains the primary defence —
+it is measured (§3: `cell phone` detections 1393 -> 156, −89%) and it does not
+require any phone examples at all, which is precisely why it works here.
+
+What would change this: several verified phone events across different people,
+seats and recordings. One per recording would be a reasonable bar. That is the
+same labelling effort §9 identified, and it unlocks the same things.
