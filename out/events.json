@@ -70,7 +70,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 4.4,
+      "elapsed_s": 5.3,
       "duration_s": 131.28
     },
     "02_mobile_phone_hall.mkv": {
@@ -114,7 +114,7 @@
           "lag_s": 0.0
         }
       ],
-      "elapsed_s": 18.6,
+      "elapsed_s": 19.2,
       "duration_s": 212.16
     },
     "03_cctv_mobile_usage.mkv": {
@@ -139,7 +139,7 @@
         "kept_after_dedupe": 0
       },
       "pair_correlations": [],
-      "elapsed_s": 17.5,
+      "elapsed_s": 17.7,
       "duration_s": 281.834
     },
     "04_cctv_candidate_talking.mkv": {
@@ -251,7 +251,7 @@
           "lag_s": 0.0
         }
       ],
-      "elapsed_s": 4.1,
+      "elapsed_s": 4.5,
       "duration_s": 143.16
     },
     "05_crowd_reception_desk.mp4": {
@@ -376,7 +376,7 @@
           "lag_s": -2.0
         }
       ],
-      "elapsed_s": 18.6,
+      "elapsed_s": 20.3,
       "duration_s": 240.8
     },
     "08_seat12_paper_pass.mp4": {
@@ -474,7 +474,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 3.3,
+      "elapsed_s": 3.9,
       "duration_s": 88.4
     },
     "06_mobile_phone_hall.mp4": {
@@ -729,7 +729,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 71.9,
+      "elapsed_s": 172.0,
       "duration_s": 7697.2
     },
     "07_seat_exchange.mp4": {
@@ -984,7 +984,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 60.7,
+      "elapsed_s": 135.6,
       "duration_s": 8061.927995
     }
   },
@@ -1352,7 +1352,7 @@
         "duration_s": 4.0,
         "salience": 28.24
       },
-      "clip_path": null
+      "clip_path": "out/clips/01_mobile_phone_hall_000_staff_or_transit.mp4"
     },
     {
       "video": "02_mobile_phone_hall.mkv",
@@ -1402,7 +1402,7 @@
         "duration_s": 8.0,
         "salience": 27.88
       },
-      "clip_path": null
+      "clip_path": "out/clips/02_mobile_phone_hall_000_staff_or_transit.mp4"
     },
     {
       "video": "02_mobile_phone_hall.mkv",
@@ -1427,7 +1427,7 @@
         "duration_s": 2.0,
         "salience": 24.06
       },
-      "clip_path": null
+      "clip_path": "out/clips/02_mobile_phone_hall_002_staff_or_transit.mp4"
     },
     {
       "video": "03_cctv_mobile_usage.mkv",
@@ -1599,7 +1599,7 @@
         "duration_s": 8.0,
         "salience": 20.5
       },
-      "clip_path": null
+      "clip_path": "out/clips/05_crowd_reception_desk_000_staff_or_transit.mp4"
     },
     {
       "video": "05_crowd_reception_desk.mp4",
@@ -1674,7 +1674,7 @@
         "duration_s": 5.0,
         "salience": 14.68
       },
-      "clip_path": null
+      "clip_path": "out/clips/05_crowd_reception_desk_002_staff_or_transit.mp4"
     },
     {
       "video": "05_crowd_reception_desk.mp4",
@@ -1699,7 +1699,7 @@
         "duration_s": 5.0,
         "salience": 10.76
       },
-      "clip_path": null
+      "clip_path": "out/clips/05_crowd_reception_desk_005_staff_or_transit.mp4"
     },
     {
       "video": "05_crowd_reception_desk.mp4",
@@ -1724,7 +1724,7 @@
         "duration_s": 4.0,
         "salience": 15.13
       },
-      "clip_path": null
+      "clip_path": "out/clips/05_crowd_reception_desk_001_staff_or_transit.mp4"
     },
     {
       "video": "05_crowd_reception_desk.mp4",
@@ -1749,7 +1749,7 @@
         "duration_s": 4.0,
         "salience": 14.24
       },
-      "clip_path": null
+      "clip_path": "out/clips/05_crowd_reception_desk_003_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -1865,7 +1865,7 @@
         "duration_s": 4.0,
         "salience": 22.06
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_129_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -2080,7 +2080,7 @@
         "duration_s": 2.0,
         "salience": 12.44
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_459_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -2130,7 +2130,7 @@
         "duration_s": 8.0,
         "salience": 16.49
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_270_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -2586,7 +2586,7 @@
         "duration_s": 4.0,
         "salience": 16.3
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_273_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -2636,7 +2636,7 @@
         "duration_s": 3.0,
         "salience": 27.92
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_051_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -2807,7 +2807,7 @@
         "duration_s": 7.0,
         "salience": 19.32
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_181_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -3127,7 +3127,7 @@
         "duration_s": 4.0,
         "salience": 22.16
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_123_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -3906,7 +3906,7 @@
         "duration_s": 5.0,
         "salience": 12.76
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_434_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -3955,7 +3955,7 @@
         "duration_s": 5.0,
         "salience": 13.16
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_407_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4697,7 +4697,7 @@
         "duration_s": 4.0,
         "salience": 14.7
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_326_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4772,7 +4772,7 @@
         "duration_s": 4.0,
         "salience": 25.7
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_076_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4797,7 +4797,7 @@
         "duration_s": 4.0,
         "salience": 24.71
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_088_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4822,7 +4822,7 @@
         "duration_s": 7.0,
         "salience": 13.53
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_388_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4847,7 +4847,7 @@
         "duration_s": 2.0,
         "salience": 15.9
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_286_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4872,7 +4872,7 @@
         "duration_s": 5.0,
         "salience": 14.15
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_353_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4897,7 +4897,7 @@
         "duration_s": 2.0,
         "salience": 12.62
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_446_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -5753,7 +5753,7 @@
         "duration_s": 5.0,
         "salience": 13.15
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_410_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -6492,7 +6492,7 @@
         "duration_s": 7.0,
         "salience": 22.28
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_120_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -6667,7 +6667,7 @@
         "duration_s": 4.0,
         "salience": 14.46
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_334_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -6742,7 +6742,7 @@
         "duration_s": 5.0,
         "salience": 22.41
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_116_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7012,7 +7012,7 @@
         "duration_s": 4.0,
         "salience": 14.32
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_344_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7434,7 +7434,7 @@
         "duration_s": 4.0,
         "salience": 20.38
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_162_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7508,7 +7508,7 @@
         "duration_s": 6.0,
         "salience": 20.91
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_149_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7608,7 +7608,7 @@
         "duration_s": 4.0,
         "salience": 17.03
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_252_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7633,7 +7633,7 @@
         "duration_s": 4.0,
         "salience": 12.48
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_453_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7962,7 +7962,7 @@
         "duration_s": 4.0,
         "salience": 20.03
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_167_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -8261,7 +8261,7 @@
         "duration_s": 10.0,
         "salience": 15.37
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_298_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -8973,7 +8973,7 @@
         "duration_s": 7.0,
         "salience": 16.7
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_259_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -8998,7 +8998,7 @@
         "duration_s": 8.0,
         "salience": 13.94
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_366_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9023,7 +9023,7 @@
         "duration_s": 13.0,
         "salience": 13.47
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_393_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9072,7 +9072,7 @@
         "duration_s": 6.0,
         "salience": 14.98
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_312_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9247,7 +9247,7 @@
         "duration_s": 4.0,
         "salience": 12.58
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_447_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9620,7 +9620,7 @@
         "duration_s": 4.0,
         "salience": 13.72
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_374_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9645,7 +9645,7 @@
         "duration_s": 5.0,
         "salience": 12.92
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_422_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9695,7 +9695,7 @@
         "duration_s": 5.0,
         "salience": 16.22
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_278_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9745,7 +9745,7 @@
         "duration_s": 6.0,
         "salience": 21.42
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_139_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9819,7 +9819,7 @@
         "duration_s": 4.0,
         "salience": 18.58
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_197_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -10140,7 +10140,7 @@
         "duration_s": 6.0,
         "salience": 18.77
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_191_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -10165,7 +10165,7 @@
         "duration_s": 12.0,
         "salience": 16.24
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_277_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -10765,7 +10765,7 @@
         "duration_s": 4.0,
         "salience": 17.26
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_239_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -11261,7 +11261,7 @@
         "duration_s": 5.0,
         "salience": 26.71
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_068_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -11929,7 +11929,7 @@
         "duration_s": 6.0,
         "salience": 16.59
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_263_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12228,7 +12228,7 @@
         "duration_s": 4.0,
         "salience": 12.5
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_452_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12353,7 +12353,7 @@
         "duration_s": 8.0,
         "salience": 34.06
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_019_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12378,7 +12378,7 @@
         "duration_s": 7.0,
         "salience": 12.35
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_468_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12403,7 +12403,7 @@
         "duration_s": 9.0,
         "salience": 44.82
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_004_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12553,7 +12553,7 @@
         "duration_s": 5.0,
         "salience": 18.48
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_201_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12578,7 +12578,7 @@
         "duration_s": 4.0,
         "salience": 17.17
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_245_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12603,7 +12603,7 @@
         "duration_s": 4.0,
         "salience": 14.55
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_329_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12905,7 +12905,7 @@
         "duration_s": 4.0,
         "salience": 17.79
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_218_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13327,7 +13327,7 @@
         "duration_s": 6.0,
         "salience": 23.01
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_109_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13376,7 +13376,7 @@
         "duration_s": 7.0,
         "salience": 15.65
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_290_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13401,7 +13401,7 @@
         "duration_s": 5.0,
         "salience": 17.72
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_222_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13451,7 +13451,7 @@
         "duration_s": 9.0,
         "salience": 14.11
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_357_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13476,7 +13476,7 @@
         "duration_s": 10.0,
         "salience": 14.56
       },
-      "clip_path": null
+      "clip_path": "out/clips/06_mobile_phone_hall_328_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13574,7 +13574,7 @@
         "duration_s": 5.0,
         "salience": 29.74
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_094_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -13599,7 +13599,7 @@
         "duration_s": 8.0,
         "salience": 18.22
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_244_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -13624,7 +13624,7 @@
         "duration_s": 3.0,
         "salience": 25.64
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_121_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -13698,7 +13698,7 @@
         "duration_s": 2.0,
         "salience": 39.31
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_048_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -13773,7 +13773,7 @@
         "duration_s": 5.0,
         "salience": 15.22
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_349_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -14205,7 +14205,7 @@
         "duration_s": 3.0,
         "salience": 58.76
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_012_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -14230,7 +14230,7 @@
         "duration_s": 2.0,
         "salience": 21.82
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_177_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -14680,7 +14680,7 @@
         "duration_s": 2.0,
         "salience": 17.15
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_277_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -14805,7 +14805,7 @@
         "duration_s": 6.0,
         "salience": 13.9
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_412_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -14880,7 +14880,7 @@
         "duration_s": 4.0,
         "salience": 19.88
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_207_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -14905,7 +14905,7 @@
         "duration_s": 5.0,
         "salience": 18.63
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_229_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -14930,7 +14930,7 @@
         "duration_s": 4.0,
         "salience": 46.02
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_031_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15274,7 +15274,7 @@
         "duration_s": 4.0,
         "salience": 59.62
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_009_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15299,7 +15299,7 @@
         "duration_s": 4.0,
         "salience": 32.39
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_080_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15374,7 +15374,7 @@
         "duration_s": 5.0,
         "salience": 22.02
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_170_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15449,7 +15449,7 @@
         "duration_s": 4.0,
         "salience": 14.07
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_401_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15474,7 +15474,7 @@
         "duration_s": 4.0,
         "salience": 22.19
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_169_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15548,7 +15548,7 @@
         "duration_s": 4.0,
         "salience": 28.57
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_102_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15922,7 +15922,7 @@
         "duration_s": 2.0,
         "salience": 22.02
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_171_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15947,7 +15947,7 @@
         "duration_s": 7.0,
         "salience": 30.9
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_089_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15972,7 +15972,7 @@
         "duration_s": 3.0,
         "salience": 25.85
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_120_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -15997,7 +15997,7 @@
         "duration_s": 6.0,
         "salience": 17.9
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_256_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16022,7 +16022,7 @@
         "duration_s": 2.0,
         "salience": 17.9
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_255_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16047,7 +16047,7 @@
         "duration_s": 3.0,
         "salience": 17.45
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_270_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16072,7 +16072,7 @@
         "duration_s": 2.0,
         "salience": 14.97
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_362_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16196,7 +16196,7 @@
         "duration_s": 7.0,
         "salience": 16.28
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_306_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16246,7 +16246,7 @@
         "duration_s": 4.0,
         "salience": 16.71
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_289_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16271,7 +16271,7 @@
         "duration_s": 4.0,
         "salience": 24.95
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_127_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16346,7 +16346,7 @@
         "duration_s": 4.0,
         "salience": 18.86
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_225_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16819,7 +16819,7 @@
         "duration_s": 3.0,
         "salience": 27.3
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_106_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16944,7 +16944,7 @@
         "duration_s": 8.0,
         "salience": 22.47
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_162_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16969,7 +16969,7 @@
         "duration_s": 5.0,
         "salience": 16.89
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_285_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17169,7 +17169,7 @@
         "duration_s": 5.0,
         "salience": 21.13
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_185_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17244,7 +17244,7 @@
         "duration_s": 2.0,
         "salience": 23.09
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_149_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17269,7 +17269,7 @@
         "duration_s": 3.0,
         "salience": 14.72
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_373_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17294,7 +17294,7 @@
         "duration_s": 2.0,
         "salience": 17.18
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_276_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17344,7 +17344,7 @@
         "duration_s": 4.0,
         "salience": 18.04
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_250_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17622,7 +17622,7 @@
         "duration_s": 4.0,
         "salience": 16.31
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_305_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17647,7 +17647,7 @@
         "duration_s": 4.0,
         "salience": 16.18
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_314_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17722,7 +17722,7 @@
         "duration_s": 2.0,
         "salience": 19.55
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_216_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17822,7 +17822,7 @@
         "duration_s": 5.0,
         "salience": 20.24
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_198_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17847,7 +17847,7 @@
         "duration_s": 4.0,
         "salience": 18.53
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_233_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17872,7 +17872,7 @@
         "duration_s": 2.0,
         "salience": 18.6
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_230_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -17947,7 +17947,7 @@
         "duration_s": 5.0,
         "salience": 16.6
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_292_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18269,7 +18269,7 @@
         "duration_s": 4.0,
         "salience": 23.46
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_142_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18492,7 +18492,7 @@
         "duration_s": 12.0,
         "salience": 16.18
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_313_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18541,7 +18541,7 @@
         "duration_s": 4.0,
         "salience": 25.11
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_126_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18566,7 +18566,7 @@
         "duration_s": 2.0,
         "salience": 13.93
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_408_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18616,7 +18616,7 @@
         "duration_s": 4.0,
         "salience": 18.97
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_222_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18641,7 +18641,7 @@
         "duration_s": 4.0,
         "salience": 17.51
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_265_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19017,7 +19017,7 @@
         "duration_s": 4.0,
         "salience": 37.34
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_058_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19042,7 +19042,7 @@
         "duration_s": 11.0,
         "salience": 13.95
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_407_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19117,7 +19117,7 @@
         "duration_s": 3.0,
         "salience": 32.99
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_077_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19192,7 +19192,7 @@
         "duration_s": 2.0,
         "salience": 13.97
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_404_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19217,7 +19217,7 @@
         "duration_s": 2.0,
         "salience": 14.7
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_374_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19242,7 +19242,7 @@
         "duration_s": 2.0,
         "salience": 24.4
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_134_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19415,7 +19415,7 @@
         "duration_s": 2.0,
         "salience": 16.08
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_318_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19440,7 +19440,7 @@
         "duration_s": 3.0,
         "salience": 15.87
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_326_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19565,7 +19565,7 @@
         "duration_s": 2.0,
         "salience": 18.54
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_232_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19615,7 +19615,7 @@
         "duration_s": 2.0,
         "salience": 22.68
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_157_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19640,7 +19640,7 @@
         "duration_s": 2.0,
         "salience": 13.71
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_423_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19714,7 +19714,7 @@
         "duration_s": 4.0,
         "salience": 50.31
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_024_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -20314,7 +20314,7 @@
         "duration_s": 5.0,
         "salience": 38.02
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_053_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -20339,7 +20339,7 @@
         "duration_s": 4.0,
         "salience": 21.41
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_181_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -20364,7 +20364,7 @@
         "duration_s": 4.0,
         "salience": 27.49
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_104_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -20389,7 +20389,7 @@
         "duration_s": 4.0,
         "salience": 17.08
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_281_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -20586,7 +20586,7 @@
         "duration_s": 3.0,
         "salience": 44.57
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_035_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -20785,7 +20785,7 @@
         "duration_s": 4.0,
         "salience": 59.43
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_011_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21038,7 +21038,7 @@
         "duration_s": 2.0,
         "salience": 15.45
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_342_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21088,7 +21088,7 @@
         "duration_s": 4.0,
         "salience": 50.52
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_023_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21136,7 +21136,7 @@
         "duration_s": 2.0,
         "salience": 52.26
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_021_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21260,7 +21260,7 @@
         "duration_s": 4.0,
         "salience": 20.78
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_191_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21385,7 +21385,7 @@
         "duration_s": 2.0,
         "salience": 30.81
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_090_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21585,7 +21585,7 @@
         "duration_s": 4.0,
         "salience": 56.74
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_016_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21708,7 +21708,7 @@
         "duration_s": 3.0,
         "salience": 31.5
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_084_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21808,7 +21808,7 @@
         "duration_s": 2.0,
         "salience": 24.16
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_136_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21858,7 +21858,7 @@
         "duration_s": 4.0,
         "salience": 42.52
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_043_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21883,7 +21883,7 @@
         "duration_s": 4.0,
         "salience": 42.15
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_044_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21908,7 +21908,7 @@
         "duration_s": 4.0,
         "salience": 31.16
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_088_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21933,7 +21933,7 @@
         "duration_s": 2.0,
         "salience": 24.56
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_131_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21958,7 +21958,7 @@
         "duration_s": 3.0,
         "salience": 16.23
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_310_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22065,7 +22065,7 @@
         "duration_s": 3.0,
         "salience": 14.62
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_377_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22090,7 +22090,7 @@
         "duration_s": 2.0,
         "salience": 15.31
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_347_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22115,7 +22115,7 @@
         "duration_s": 4.0,
         "salience": 28.77
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_099_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22140,7 +22140,7 @@
         "duration_s": 3.0,
         "salience": 31.43
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_085_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22165,7 +22165,7 @@
         "duration_s": 2.0,
         "salience": 14.73
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_372_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22190,7 +22190,7 @@
         "duration_s": 11.0,
         "salience": 14.96
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_363_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22240,7 +22240,7 @@
         "duration_s": 5.0,
         "salience": 15.54
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_339_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22265,7 +22265,7 @@
         "duration_s": 2.0,
         "salience": 22.42
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_165_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22290,7 +22290,7 @@
         "duration_s": 2.0,
         "salience": 16.44
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_299_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22413,7 +22413,7 @@
         "duration_s": 3.0,
         "salience": 21.67
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_179_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22438,7 +22438,7 @@
         "duration_s": 3.0,
         "salience": 38.57
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_051_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22665,7 +22665,7 @@
         "duration_s": 5.0,
         "salience": 20.78
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_190_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22690,7 +22690,7 @@
         "duration_s": 5.0,
         "salience": 13.96
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_405_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22740,7 +22740,7 @@
         "duration_s": 3.0,
         "salience": 24.59
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_130_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22840,7 +22840,7 @@
         "duration_s": 2.0,
         "salience": 15.14
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_353_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22990,7 +22990,7 @@
         "duration_s": 4.0,
         "salience": 16.18
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_312_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23401,7 +23401,7 @@
         "duration_s": 4.0,
         "salience": 15.55
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_338_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23475,7 +23475,7 @@
         "duration_s": 3.0,
         "salience": 17.1
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_280_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23548,7 +23548,7 @@
         "duration_s": 2.0,
         "salience": 19.56
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_215_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23573,7 +23573,7 @@
         "duration_s": 2.0,
         "salience": 16.45
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_298_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23598,7 +23598,7 @@
         "duration_s": 6.0,
         "salience": 22.5
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_161_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23623,7 +23623,7 @@
         "duration_s": 2.0,
         "salience": 15.52
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_340_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23648,7 +23648,7 @@
         "duration_s": 2.0,
         "salience": 22.78
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_154_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23673,7 +23673,7 @@
         "duration_s": 2.0,
         "salience": 14.34
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_388_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23755,7 +23755,7 @@
         "duration_s": 4.0,
         "salience": 22.44
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_164_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23855,7 +23855,7 @@
         "duration_s": 4.0,
         "salience": 13.91
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_409_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23880,7 +23880,7 @@
         "duration_s": 2.0,
         "salience": 15.34
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_345_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -23930,7 +23930,7 @@
         "duration_s": 4.0,
         "salience": 18.28
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_239_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -24054,7 +24054,7 @@
         "duration_s": 5.0,
         "salience": 19.5
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_218_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -24079,7 +24079,7 @@
         "duration_s": 2.0,
         "salience": 18.55
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_231_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -24104,7 +24104,7 @@
         "duration_s": 3.0,
         "salience": 14.62
       },
-      "clip_path": null
+      "clip_path": "out/clips/07_seat_exchange_376_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
