@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: #F0EBE0;
+  --color-surface: #F8F4EC;
+  --color-card: #FDFAF5;
+  --color-elevated: #EDE8DE;
+  --color-cream: #0F0D0B;
+  --color-cream-dim: #2C2A28;
+  --color-muted: #6B6560;
+  --color-olive: #5E7832;
+  --color-olive-mid: #4A6028;
+  --color-olive-dim: #D6E0C4;
+  --color-olive-subtle: #EAF0DC;
+  --color-burgundy: #7B2040;
+  --color-burgundy-mid: #601830;
+  --color-burgundy-dim: #F0DAE0;
+  --color-amber: #A06010;
+  --color-amber-dim: #F0E0C4;
+  --color-danger: #B02030;
+  --color-danger-dim: #F4D8DC;
+  --color-success: #2E7040;
+  --color-success-dim: #D0E8D8;
+  --color-info: #246878;
+  --color-info-dim: #C8E0E8;
+  --color-border: #D8D0C0;
+  --color-border-light: #C8BEA8;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Barlow', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #F0EBE0;
+  color: #0F0D0B;
+  font-family: 'Barlow', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C8BEA8; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #A89E88; }
+
+@keyframes scanline {
+  0% { top: -2px; }
+  100% { top: 100%; }
+}
+@keyframes blink-rec {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes pulse-dot {
+  0% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(2); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.screen-enter { animation: fadeIn 0.2s ease; }
+
+.scanline-overlay::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(transparent, rgba(94,120,50,0.15), transparent);
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+}
+
+.rec-blink { animation: blink-rec 1.2s step-end infinite; }

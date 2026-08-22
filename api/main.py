@@ -98,8 +98,12 @@ def get_summary() -> dict:
     for e in data["events"]:
         labels[e["action_label"]] = labels.get(e["action_label"], 0) + 1
         videos[e["video"]] = videos.get(e["video"], 0) + 1
+    stats = data.get("stats", {})
+    footage_s = sum(float(v.get("duration_s") or 0) for v in stats.values()
+                    if isinstance(v, dict))
     return {
         "total_events": len(data["events"]),
+        "total_footage_s": footage_s,
         "labels": dict(sorted(labels.items(), key=lambda kv: -kv[1])),
         "videos": dict(sorted(videos.items())),
         "parameters": data.get("parameters", {}),
