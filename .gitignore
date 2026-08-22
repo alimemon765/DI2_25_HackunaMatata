@@ -40,3 +40,4 @@ out/clips_stale/
 out/clips_archive/
 web/node_modules/
 web/dist/
+out/clips_annotated/

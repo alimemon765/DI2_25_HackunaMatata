@@ -239,6 +239,11 @@ def burn(event: dict, window: dict | None, out_path: Path,
             if not ok:
                 break
             t_src = t_clip0 + i / fps
+            placed: list[tuple[int, int]] = []
+
+            def _free(x: int, y: int) -> bool:
+                # two labels within this radius overlap into mush
+                return all(abs(x - px) > 90 or abs(y - py) > 12 for px, py in placed)
 
             # people first, so the trigger box always sits on top
             for tid, samples in people.items():
@@ -253,8 +258,9 @@ def burn(event: dict, window: dict | None, out_path: Path,
                 x0, y0 = int(box[0] - ox), int(box[1] - oy)
                 x1, y1 = int(box[2] - ox), int(box[3] - oy)
                 cv2.rectangle(frame, (x0, y0), (x1, y1), col, 1, cv2.LINE_AA)
-                if role == "staff":
+                if role == "staff" and _free(x0, y0):
                     _put_label(frame, x0, y0 - 3, "staff / transit", col, scale=0.4)
+                    placed.append((x0, y0))
 
             drew = False
             for key, samples in tracks.items():
@@ -272,16 +278,27 @@ def burn(event: dict, window: dict | None, out_path: Path,
                                      seat_box[2] - ox, seat_box[3] - oy],
                              f"seat {event.get('seat_id')} region")
             cv2.rectangle(frame, (0, 0), (w, 26), C_BANNER, -1)
-            cv2.putText(frame, banner, (8, 18), cv2.FONT_HERSHEY_SIMPLEX, 0.55,
+            avail = w - (150 if w >= 520 else 60) - 16
+            btxt = banner
+            while btxt and cv2.getTextSize(btxt, cv2.FONT_HERSHEY_SIMPLEX,
+                                           0.55, 1)[0][0] > avail:
+                btxt = btxt[:-2]
+            cv2.putText(frame, btxt, (8, 18), cv2.FONT_HERSHEY_SIMPLEX, 0.55,
                         C_TEXT, 1, cv2.LINE_AA)
+            # A narrow ROI cannot fit the banner and the full legend on one
+            # line; drop to colour swatches, then drop the legend entirely.
+            legend = (("trigger", C_TRIGGER), ("staff", C_STAFF), ("seated", C_STUDENT))
+            if w < 340:
+                legend = ()
+            show_text = w >= 520
             lx = w - 8
-            for text, col in (("trigger", C_TRIGGER), ("staff", C_STAFF),
-                              ("seated", C_STUDENT)):
+            for text, col in legend:
                 (tw, _), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.38, 1)
-                lx -= tw + 16
+                lx -= (tw + 16) if show_text else 16
                 cv2.rectangle(frame, (lx, 8), (lx + 9, 17), col, -1)
-                cv2.putText(frame, text, (lx + 13, 17), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.38, C_TEXT, 1, cv2.LINE_AA)
+                if show_text:
+                    cv2.putText(frame, text, (lx + 13, 17), cv2.FONT_HERSHEY_SIMPLEX,
+                                0.38, C_TEXT, 1, cv2.LINE_AA)
             cv2.putText(frame, DISCLAIMER, (8, h - 8), cv2.FONT_HERSHEY_SIMPLEX,
                         0.38, C_DIM, 1, cv2.LINE_AA)
             proc.stdin.write(frame.tobytes())
