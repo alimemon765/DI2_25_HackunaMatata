@@ -1,0 +1,28 @@
+# Footage and derived media — never commit, multi-GB
+data/raw/
+data/processed/
+out/clips/
+out/debug/
+*.mkv
+*.mp4
+*.avi
+
+# Model weights
+*.pt
+*.onnx
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Cached intermediates
+cache/
+*.npz
+*.npy
+
+# OS
+.DS_Store
