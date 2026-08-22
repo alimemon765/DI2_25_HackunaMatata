@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 
 from pipeline import config as C
-from pipeline.cascade import run_cascade, scan_zone_crowd, sweep_persistent_objects
+from pipeline.cascade import cached_sweep, run_cascade, scan_zone_crowd
 from pipeline.classify import (
     classify_crowd,
     classify_persistent_objects,
@@ -137,8 +137,8 @@ def process_video(
         sweep: list = []
         fixtures: list = []
         if C.SWEEP_ENABLED:
-            sweep = sweep_persistent_objects(str(video), grid, observed_s,
-                                             start_s=start_s, verbose=verbose)
+            sweep = cached_sweep(str(video), grid, observed_s,
+                                 start_s=start_s, verbose=verbose)
             fixtures = build_fixture_map(
                 sweep, only_classes=(C.COCO_CELL_PHONE, C.COCO_BOOK))
             n_dropped = drop_fixtures(sweep, fixtures)

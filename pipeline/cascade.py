@@ -263,3 +263,50 @@ def sweep_persistent_objects(
         print(f"  [sweep] {len(fds)} frames every {interval:.0f}s, "
               f"{n_hit} with a small-object detection", flush=True)
     return fds
+
+
+def _sweep_cache_path(video: str, duration_s: float, start_s: float,
+                      cache_dir: str = "cache") -> "Path":
+    from pathlib import Path
+    stem = Path(video).stem
+    return Path(cache_dir) / f"sweep_{stem}_s{start_s:.0f}_d{duration_s:.0f}.json"
+
+
+def cached_sweep(
+    video: str,
+    grid: SeatGrid | None,
+    duration_s: float,
+    start_s: float = 0.0,
+    cache_dir: str = "cache",
+    verbose: bool = True,
+) -> list[FrameDets]:
+    """`sweep_persistent_objects` with an on-disk cache of its detections.
+
+    The sweep is the only whole-file detection pass, and the fixture test is
+    built on top of it. Caching the detections means that test can be changed
+    and re-measured without decoding two hours of video again -- which is the
+    difference between iterating on it and guessing at it.
+    """
+    import json
+    from pathlib import Path
+
+    p = _sweep_cache_path(video, duration_s, start_s, cache_dir)
+    if p.exists():
+        raw = json.loads(p.read_text())
+        if verbose:
+            print(f"  [sweep] cache hit {p} ({len(raw)} frames)", flush=True)
+        return [FrameDets(t_sec=f["t"],
+                          dets=[Detection(cls_id=d[0], name=d[1], conf=d[2],
+                                          xyxy=tuple(d[3]))
+                                for d in f["d"]])
+                for f in raw]
+
+    frames = sweep_persistent_objects(video, grid, duration_s, start_s=start_s,
+                                      verbose=verbose)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(
+        [{"t": f.t_sec,
+          "d": [[d.cls_id, d.name, round(d.conf, 4),
+                 [round(v, 1) for v in d.xyxy]] for d in f.dets]}
+         for f in frames]))
+    return frames

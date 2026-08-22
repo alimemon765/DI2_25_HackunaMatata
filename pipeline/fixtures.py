@@ -28,15 +28,24 @@ import numpy as np
 
 from .detector import Detection, FrameDets, iou
 
-# A cluster counts as a fixture if it appears in at least this share of the
-# samples it could have appeared in...
-FIXTURE_MIN_PRESENCE = 0.5
-# ...and its centroid never wanders further than this multiple of its own box
-# diagonal. A held phone drifts far more than its own size as an arm moves; a
-# mouse drifts by detector jitter only.
+# A fixture is **stationary and long-lived**. Its centroid never wanders
+# further than this multiple of its own box diagonal: a held phone drifts far
+# more than its own size as an arm moves, a mouse drifts by detector jitter.
 FIXTURE_MAX_DRIFT = 0.75
-# Minimum samples before the test means anything.
-FIXTURE_MIN_SAMPLES = 4
+# It must be seen enough times for "never moves" to mean anything...
+FIXTURE_MIN_SAMPLES = 8
+# ...and those sightings must span a long stretch of the recording.
+FIXTURE_MIN_SPAN_FRAC = 0.25
+FIXTURE_MIN_SPAN_S = 300.0
+#
+# There is deliberately NO requirement on what *fraction* of samples a cluster
+# appears in. That was the first formulation and it failed exactly where it
+# mattered most: measured on the full two-hour file 06, a >=50% presence bar
+# identified **zero** fixtures, while the same footage cut to five minutes
+# yielded two. Over two hours a desk mouse is occluded by people, chairs and
+# passers-by for long stretches, so its presence fraction collapses even though
+# it never moves an inch. Occlusion is not evidence of mobility.
+FIXTURE_MIN_PRESENCE = 0.0
 # How much a detection must overlap a fixture to be considered the same object.
 FIXTURE_IOU = 0.30
 
@@ -48,13 +57,15 @@ class Fixture:
     presence: float
     drift: float
     n_samples: int
+    span_s: float = 0.0
 
     def describe(self) -> dict:
         return {"class_id": self.cls_id,
                 "box": [round(v) for v in self.box],
                 "presence": round(self.presence, 3),
                 "drift_in_box_diagonals": round(self.drift, 3),
-                "samples": self.n_samples}
+                "samples": self.n_samples,
+                "span_s": round(self.span_s, 1)}
 
 
 def build_fixture_map(
@@ -80,22 +91,33 @@ def build_fixture_map(
             # measure here, and is emphatically not furniture.
             if only_classes is not None and d.cls_id not in only_classes:
                 continue
-            hit = None
+            # Best match, not first match: a greedy first-match splits one
+            # jittering object into several weak clusters, and each fragment
+            # then looks too short-lived to be furniture.
+            hit, best_v = None, join_iou
             for c in clusters:
-                if c["cls"] == d.cls_id and iou(d.xyxy, c["box"]) >= join_iou:
-                    hit = c
-                    break
+                if c["cls"] != d.cls_id:
+                    continue
+                v = iou(d.xyxy, c["box"])
+                if v >= best_v:
+                    hit, best_v = c, v
             if hit is None:
                 clusters.append({"cls": d.cls_id, "box": tuple(d.xyxy), "n": 1,
-                                 "cents": [d.centroid], "frames": {round(f.t_sec, 3)}})
+                                 "cents": [d.centroid], "frames": {round(f.t_sec, 3)},
+                                 "t0": f.t_sec, "t1": f.t_sec})
             else:
                 k = hit["n"]
                 hit["box"] = tuple((np.array(hit["box"]) * k + np.array(d.xyxy)) / (k + 1))
                 hit["n"] = k + 1
                 hit["cents"].append(d.centroid)
                 hit["frames"].add(round(f.t_sec, 3))
+                hit["t0"] = min(hit["t0"], f.t_sec)
+                hit["t1"] = max(hit["t1"], f.t_sec)
 
     n_frames = len(frames)
+    obs_span = max(f.t_sec for f in frames) - min(f.t_sec for f in frames)
+    span_bar = min(FIXTURE_MIN_SPAN_S, obs_span * FIXTURE_MIN_SPAN_FRAC) \
+        if obs_span > 0 else 0.0
     out: list[Fixture] = []
     for c in clusters:
         n = len(c["frames"])
@@ -104,12 +126,15 @@ def build_fixture_map(
         presence = n / n_frames
         if presence < min_presence:
             continue
+        if (c["t1"] - c["t0"]) < span_bar:
+            continue
         cents = np.array(c["cents"], float)
         x0, y0, x1, y1 = c["box"]
         diag = max(float(np.hypot(x1 - x0, y1 - y0)), 1.0)
         drift = float(np.max(np.linalg.norm(cents - cents.mean(axis=0), axis=1))) / diag
         if drift <= max_drift:
-            out.append(Fixture(c["cls"], c["box"], presence, drift, n))
+            out.append(Fixture(c["cls"], c["box"], presence, drift, n,
+                               span_s=float(c["t1"] - c["t0"])))
     return out
 
 
