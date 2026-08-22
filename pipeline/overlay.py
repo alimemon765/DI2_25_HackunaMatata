@@ -26,14 +26,29 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from .config import COCO_BOOK, COCO_CELL_PHONE
+from .config import (
+    COCO_BOOK,
+    COCO_CELL_PHONE,
+    COCO_PERSON,
+    TRANSIT_MIN_DISPLACEMENT,
+)
 
-# BGR
-C_TRIGGER = (90, 230, 60)      # green: this is what fired the rule
-C_REGION = (40, 190, 245)      # amber: a seat region, not a detection
+# --- colour scheme (BGR) ---------------------------------------------------
+# Three roles, three colours, chosen against what this footage actually
+# contains: beige desks, grey floor, white shirts, black chairs, wood
+# partitions. Magenta is effectively absent from that palette, so the thing
+# that fired the rule is the one colour nothing else competes with.
+#
+# Amber and cyan sit far apart in hue AND in luminance, so seated vs moving
+# stays readable in greyscale and on the blue-yellow axis that the common
+# colour-vision deficiencies preserve.
+C_TRIGGER = (149, 45, 255)     # magenta - the object or region that fired the rule
+C_STAFF = (31, 165, 255)       # amber   - a person crossing the scene
+C_STUDENT = (232, 196, 49)     # cyan    - a person staying put at a seat
 C_BANNER = (24, 24, 28)
 C_TEXT = (245, 245, 245)
 C_DIM = (140, 140, 140)
+C_REGION = C_TRIGGER           # a flagged region is still "the trigger"
 
 MAX_EXTRAPOLATE_S = 0.30       # never draw a box further than this from a sample
 DISCLAIMER = "REWIND - observed behaviour, not a determination"
@@ -70,6 +85,14 @@ def _trigger_spec(event: dict) -> tuple[str, object]:
 def _collect_tracks(window: dict, spec: tuple[str, object]) -> dict:
     """identity -> sorted [(t_sec, box, conf, name)] for whatever we highlight."""
     kind, arg = spec
+    # A region-type label has no detection behind it -- talking_to_neighbour is
+    # triggered by cross-seat correlation and unclassified_anomaly by nothing
+    # matching at all. Returning early makes the caller fall through to the
+    # seat-region brackets. Without this, every detection in the window was
+    # collected as "the trigger", which drew magenta boxes over people and
+    # asserted evidence that does not exist.
+    if kind not in ("class", "track"):
+        return {}
     out: dict = {}
     for f in window["frames"]:
         for cls_id, name, conf, xyxy, tid in f["d"]:
@@ -79,6 +102,47 @@ def _collect_tracks(window: dict, spec: tuple[str, object]) -> dict:
                 continue
             key = tid if tid is not None else f"{name}"
             out.setdefault(key, []).append((f["t"], xyxy, conf, name))
+    for k in out:
+        out[k].sort(key=lambda r: r[0])
+    return out
+
+
+def classify_person_tracks(window: dict) -> dict:
+    """track_id -> 'staff' | 'student', by the displacement rule already in use.
+
+    Deliberately the *same* discriminator as `rule_staff_transit`: travel
+    measured in the track's own box diagonals, so it is scale-free and a
+    person at the back of the room is judged the same way as one at the front.
+    Nothing new is invented here -- if the rule changes, this follows it.
+    """
+    tracks: dict[int, list] = {}
+    for f in window["frames"]:
+        for cls_id, _name, _conf, xyxy, tid in f["d"]:
+            if cls_id == COCO_PERSON and tid is not None:
+                tracks.setdefault(tid, []).append(xyxy)
+    out: dict[int, str] = {}
+    for tid, boxes in tracks.items():
+        if len(boxes) < 3:
+            out[tid] = "student"
+            continue
+        a = np.array(boxes, float)
+        cents = np.stack([(a[:, 0] + a[:, 2]) / 2, (a[:, 1] + a[:, 3]) / 2], axis=1)
+        diag = float(np.median(np.hypot(a[:, 2] - a[:, 0], a[:, 3] - a[:, 1])))
+        if diag <= 1.0:
+            out[tid] = "student"
+            continue
+        disp = float(np.max(np.linalg.norm(cents - cents.mean(axis=0), axis=1))) * 2 / diag
+        out[tid] = "staff" if disp >= TRANSIT_MIN_DISPLACEMENT else "student"
+    return out
+
+
+def _person_samples(window: dict) -> dict:
+    """track_id -> sorted [(t, box, conf, name)] for every person track."""
+    out: dict[int, list] = {}
+    for f in window["frames"]:
+        for cls_id, name, conf, xyxy, tid in f["d"]:
+            if cls_id == COCO_PERSON and tid is not None:
+                out.setdefault(tid, []).append((f["t"], xyxy, conf, name))
     for k in out:
         out[k].sort(key=lambda r: r[0])
     return out
@@ -148,6 +212,11 @@ def burn(event: dict, window: dict | None, out_path: Path,
 
     spec = _trigger_spec(event)
     tracks = _collect_tracks(window, spec) if window else {}
+    roles = classify_person_tracks(window) if window else {}
+    people = _person_samples(window) if window else {}
+    # A person track that *is* the trigger (staff_or_transit, seat_exchange) is
+    # drawn once, as the trigger. Drawing it twice would imply two findings.
+    trigger_ids = set(tracks.keys()) if spec[0] == "track" else set()
     seat_box = None
     if window:
         sb = window.get("seat_boxes", {}).get(str(event.get("seat_id")))
@@ -170,6 +239,23 @@ def burn(event: dict, window: dict | None, out_path: Path,
             if not ok:
                 break
             t_src = t_clip0 + i / fps
+
+            # people first, so the trigger box always sits on top
+            for tid, samples in people.items():
+                if tid in trigger_ids:
+                    continue
+                got = _interp_box(samples, t_src)
+                if got is None:
+                    continue
+                box, _c, _n = got
+                role = roles.get(tid, "student")
+                col = C_STAFF if role == "staff" else C_STUDENT
+                x0, y0 = int(box[0] - ox), int(box[1] - oy)
+                x1, y1 = int(box[2] - ox), int(box[3] - oy)
+                cv2.rectangle(frame, (x0, y0), (x1, y1), col, 1, cv2.LINE_AA)
+                if role == "staff":
+                    _put_label(frame, x0, y0 - 3, "staff / transit", col, scale=0.4)
+
             drew = False
             for key, samples in tracks.items():
                 got = _interp_box(samples, t_src)
@@ -188,6 +274,14 @@ def burn(event: dict, window: dict | None, out_path: Path,
             cv2.rectangle(frame, (0, 0), (w, 26), C_BANNER, -1)
             cv2.putText(frame, banner, (8, 18), cv2.FONT_HERSHEY_SIMPLEX, 0.55,
                         C_TEXT, 1, cv2.LINE_AA)
+            lx = w - 8
+            for text, col in (("trigger", C_TRIGGER), ("staff", C_STAFF),
+                              ("seated", C_STUDENT)):
+                (tw, _), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.38, 1)
+                lx -= tw + 16
+                cv2.rectangle(frame, (lx, 8), (lx + 9, 17), col, -1)
+                cv2.putText(frame, text, (lx + 13, 17), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.38, C_TEXT, 1, cv2.LINE_AA)
             cv2.putText(frame, DISCLAIMER, (8, h - 8), cv2.FONT_HERSHEY_SIMPLEX,
                         0.38, C_DIM, 1, cv2.LINE_AA)
             proc.stdin.write(frame.tobytes())
