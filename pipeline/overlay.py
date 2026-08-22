@@ -27,6 +27,7 @@ import cv2
 import numpy as np
 
 from .config import (
+    CLIP_PAD_S,
     COCO_BOOK,
     COCO_CELL_PHONE,
     COCO_PERSON,
@@ -194,7 +195,7 @@ def _draw_region(img, box, text):
 
 
 def burn(event: dict, window: dict | None, out_path: Path,
-         pad_s: float = 2.0, crf: int = 23) -> Path | None:
+         pad_s: float = CLIP_PAD_S, crf: int = 23) -> Path | None:
     """Redraw one clip with its evidence burned in."""
     src = Path(event["clip_path"])
     if not src.exists():

@@ -11,6 +11,7 @@ from pathlib import Path
 
 import numpy as np
 
+from .config import CLIP_PAD_S
 from .mv import ActivityCube
 from .seats import SeatGrid
 
@@ -110,7 +111,7 @@ def export_clip(
     start_sec: float,
     end_sec: float,
     out_path: str | Path,
-    pad_s: float = 2.0,
+    pad_s: float = CLIP_PAD_S,
     crop_px: tuple[int, int, int, int] | None = None,
 ) -> Path | None:
     """Cut the evidence clip for one event. Returns None if ffmpeg fails."""

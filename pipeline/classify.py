@@ -35,9 +35,12 @@ from .config import (
     CROWD_MIN_S,
     PHONE_CONF,
     PHONE_MIN_FRAMES,
+    SEAT_EXCHANGE_ENABLED,
     SEAT_EXCHANGE_MIN_HOLD_S,
     TALKING_MIN_CORR,
     TALKING_MIN_S,
+    TALKING_REJECT_CORR,
+    TALKING_REJECT_SEAT_IOU,
     TRANSIT_MAX_CONF,
     TRANSIT_MIN_DISPLACEMENT,
     TRANSIT_MIN_FRAMES,
@@ -154,6 +157,8 @@ def rule_paper_pass(ev: WindowEvidence, grid: SeatGrid) -> Action | None:
 
 def rule_seat_exchange(ev: WindowEvidence, grid: SeatGrid) -> Action | None:
     """Two tracked people whose seat assignments swap and stay swapped."""
+    if not SEAT_EXCHANGE_ENABLED:
+        return None
     series = ev.seat_track_series()
     adj = grid.adjacency()
     if len(series) < 2:
@@ -229,6 +234,16 @@ def rule_talking(ev: WindowEvidence, scores: SeatScores, grid: SeatGrid) -> Acti
             best_pair, best_corr, best_lag = nb, pc.corr, pc.lag_s
     if best_pair is None or best_corr < TALKING_MIN_CORR:
         return None
+
+    # Near-perfect correlation at zero lag between two overlapping seat boxes
+    # is one motion counted twice, not a conversation. See config.py.
+    from .detector import iou as box_iou
+    a = ev.seat_boxes.get(c.seat_id)
+    b = ev.seat_boxes.get(best_pair)
+    seat_iou = box_iou(a, b) if (a and b) else 0.0
+    if (best_corr >= TALKING_REJECT_CORR and abs(best_lag) == 0.0
+            and seat_iou > TALKING_REJECT_SEAT_IOU):
+        return None
     persistence = min(1.0, c.duration_s / (2 * TALKING_MIN_S))
     return Action(
         "talking_to_neighbour",
@@ -237,6 +252,7 @@ def rule_talking(ev: WindowEvidence, scores: SeatScores, grid: SeatGrid) -> Acti
                  "object-class evidence",
          "seat_id": c.seat_id, "neighbour_seat_id": best_pair,
          "correlation": round(best_corr, 3), "lag_s": round(best_lag, 2),
+         "seat_box_iou": round(seat_iou, 3),
          "duration_s": round(c.duration_s, 2),
          "min_correlation": TALKING_MIN_CORR, "min_duration_s": TALKING_MIN_S,
          "caveat": "inferred from motion correlation, not from speech or pose"},

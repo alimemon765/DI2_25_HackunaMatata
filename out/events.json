@@ -70,7 +70,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 4.4,
+      "elapsed_s": 5.0,
       "duration_s": 131.28
     },
     "02_mobile_phone_hall.mkv": {
@@ -114,7 +114,7 @@
           "lag_s": 0.0
         }
       ],
-      "elapsed_s": 18.5,
+      "elapsed_s": 19.3,
       "duration_s": 212.16
     },
     "03_cctv_mobile_usage.mkv": {
@@ -139,7 +139,7 @@
         "kept_after_dedupe": 0
       },
       "pair_correlations": [],
-      "elapsed_s": 17.4,
+      "elapsed_s": 18.3,
       "duration_s": 281.834
     },
     "04_cctv_candidate_talking.mkv": {
@@ -251,7 +251,7 @@
           "lag_s": 0.0
         }
       ],
-      "elapsed_s": 4.0,
+      "elapsed_s": 4.6,
       "duration_s": 143.16
     },
     "05_crowd_reception_desk.mp4": {
@@ -376,7 +376,7 @@
           "lag_s": -2.0
         }
       ],
-      "elapsed_s": 18.6,
+      "elapsed_s": 21.2,
       "duration_s": 240.8
     },
     "08_seat12_paper_pass.mp4": {
@@ -474,7 +474,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 3.3,
+      "elapsed_s": 4.1,
       "duration_s": 88.4
     },
     "06_mobile_phone_hall.mp4": {
@@ -729,7 +729,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 72.0,
+      "elapsed_s": 181.1,
       "duration_s": 7697.2
     },
     "07_seat_exchange.mp4": {
@@ -984,7 +984,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 60.7,
+      "elapsed_s": 138.2,
       "duration_s": 8061.927995
     }
   },
@@ -995,17 +995,16 @@
       "metric": "action-label accuracy (file level, filename-derived truth)",
       "status": "measured",
       "n_files_scored": 8,
-      "top_label_correct": 0.25,
-      "label_present": 0.5,
+      "top_label_correct": 0.125,
+      "label_present": 0.375,
       "per_file": [
         {
           "video": "06_mobile_phone_hall.mp4",
           "expected": "mobile_phone_usage",
-          "top_label": "seat_exchange",
+          "top_label": "talking_to_neighbour",
           "n_events": 476,
           "labels_seen": [
             "mobile_phone_usage",
-            "seat_exchange",
             "staff_or_transit",
             "talking_to_neighbour",
             "unclassified_anomaly"
@@ -1017,17 +1016,16 @@
         {
           "video": "07_seat_exchange.mp4",
           "expected": "seat_exchange",
-          "top_label": "seat_exchange",
+          "top_label": "talking_to_neighbour",
           "n_events": 424,
           "labels_seen": [
             "mobile_phone_usage",
-            "seat_exchange",
             "staff_or_transit",
             "talking_to_neighbour",
             "unclassified_anomaly"
           ],
-          "top_label_correct": true,
-          "label_present": true,
+          "top_label_correct": false,
+          "label_present": false,
           "status": "scored"
         },
         {
@@ -1296,6 +1294,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.905,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -1353,6 +1352,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.928,
         "lag_s": 0.0,
+        "seat_box_iou": 0.531,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -1450,6 +1450,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.897,
         "lag_s": 0.0,
+        "seat_box_iou": 0.108,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -1548,6 +1549,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.514,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -1624,6 +1626,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.919,
         "lag_s": 1.0,
+        "seat_box_iou": 0.208,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -1650,6 +1653,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.915,
         "lag_s": -1.0,
+        "seat_box_iou": 0.208,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -1676,6 +1680,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.922,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -1708,6 +1713,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.858,
         "lag_s": 1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -1831,6 +1837,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.985,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -2095,6 +2102,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.834,
         "lag_s": 0.0,
+        "seat_box_iou": 0.118,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -2121,6 +2129,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.883,
         "lag_s": 0.0,
+        "seat_box_iou": 0.221,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -2139,18 +2148,16 @@
       "seat_id": 4,
       "start_sec": 253.0,
       "end_sec": 258.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.647,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.143,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.991,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.05,
+        "mean_z": 5.72,
+        "persons_tracked": 6,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.05,
@@ -2158,25 +2165,23 @@
         "duration_s": 5.0,
         "salience": 12.79
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_431_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_431_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 4,
       "start_sec": 317.0,
       "end_sec": 326.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.119,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.961,
-        "lag_s": 0.0,
-        "duration_s": 9.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 6.55,
+        "mean_z": 4.77,
+        "persons_tracked": 7,
+        "frames_in_window": 56,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 6.55,
@@ -2184,25 +2189,23 @@
         "duration_s": 9.0,
         "salience": 14.3
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_346_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_346_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 2,
       "start_sec": 325.0,
       "end_sec": 330.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.632,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.139,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 2,
-        "neighbour_seat_id": 1,
-        "correlation": 0.954,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.46,
+        "mean_z": 5.57,
+        "persons_tracked": 8,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.46,
@@ -2210,7 +2213,7 @@
         "duration_s": 5.0,
         "salience": 12.46
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_456_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_456_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -2225,6 +2228,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.825,
         "lag_s": 0.0,
+        "seat_box_iou": 0.221,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -2251,6 +2255,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.833,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 9.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -2477,6 +2482,7 @@
         "neighbour_seat_id": 9,
         "correlation": 0.843,
         "lag_s": -2.0,
+        "seat_box_iou": 0.05,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -2503,6 +2509,7 @@
         "neighbour_seat_id": 9,
         "correlation": 0.964,
         "lag_s": 1.0,
+        "seat_box_iou": 0.05,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -2553,6 +2560,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.917,
         "lag_s": 0.0,
+        "seat_box_iou": 0.221,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -2669,18 +2677,16 @@
       "seat_id": 5,
       "start_sec": 636.0,
       "end_sec": 641.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.647,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.168,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.991,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.39,
+        "mean_z": 6.71,
+        "persons_tracked": 5,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.39,
@@ -2688,7 +2694,7 @@
         "duration_s": 5.0,
         "salience": 14.99
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_311_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_311_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -2775,6 +2781,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.848,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 7.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -3096,6 +3103,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.771,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -3247,6 +3255,7 @@
         "neighbour_seat_id": 9,
         "correlation": 0.841,
         "lag_s": 0.0,
+        "seat_box_iou": 0.05,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -3368,6 +3377,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.734,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -3650,18 +3660,16 @@
       "seat_id": 4,
       "start_sec": 1144.0,
       "end_sec": 1152.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.14,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.985,
-        "lag_s": 0.0,
-        "duration_s": 8.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 8.25,
+        "mean_z": 5.6,
+        "persons_tracked": 7,
+        "frames_in_window": 51,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 8.25,
@@ -3669,25 +3677,23 @@
         "duration_s": 8.0,
         "salience": 15.84
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_287_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_287_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 6,
       "start_sec": 1145.0,
       "end_sec": 1151.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.694,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.134,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 6,
-        "neighbour_seat_id": 5,
-        "correlation": 0.984,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.34,
+        "mean_z": 5.35,
+        "persons_tracked": 9,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.34,
@@ -3695,7 +3701,7 @@
         "duration_s": 6.0,
         "salience": 13.1
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_412_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_412_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -3878,6 +3884,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.761,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -3928,6 +3935,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.856,
         "lag_s": -2.0,
+        "seat_box_iou": 0.001,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -3954,6 +3962,7 @@
         "neighbour_seat_id": 9,
         "correlation": 0.692,
         "lag_s": 0.0,
+        "seat_box_iou": 0.05,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -4148,6 +4157,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.873,
         "lag_s": -1.0,
+        "seat_box_iou": 0.001,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -4287,18 +4297,17 @@
       "seat_id": 4,
       "start_sec": 1662.0,
       "end_sec": 1667.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.642,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.98,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 19,
+        "displacement_box_diagonals": 0.84,
+        "unseated_fraction": 0.0,
+        "frames_tracked": 17,
+        "frames_in_window": 36,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 8.55,
@@ -4306,25 +4315,24 @@
         "duration_s": 5.0,
         "salience": 13.24
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_400_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_400_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 5,
       "start_sec": 1663.0,
       "end_sec": 1669.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.696,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.989,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 22,
+        "displacement_box_diagonals": 0.75,
+        "unseated_fraction": 0.17,
+        "frames_tracked": 18,
+        "frames_in_window": 41,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 7.41,
@@ -4332,7 +4340,7 @@
         "duration_s": 6.0,
         "salience": 14.08
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_358_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_358_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4521,6 +4529,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.527,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -4670,6 +4679,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.923,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -4854,24 +4864,15 @@
       "seat_id": 4,
       "start_sec": 1756.0,
       "end_sec": 1761.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.64,
+      "action_label": "mobile_phone_usage",
+      "confidence": 0.467,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "cell_phone detected inside the seat region",
         "seat_id": 4,
-        "neighbour_seat_id": 6,
-        "correlation": 0.975,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose",
-        "also_matched": [
-          {
-            "label": "mobile_phone_usage",
-            "confidence": 0.467
-          }
-        ]
+        "frames_with_detection": 11,
+        "frames_in_window": 36,
+        "mean_detection_conf": 0.323,
+        "detector_class": "cell phone (COCO 67)"
       },
       "stage1": {
         "peak_z": 8.44,
@@ -4879,7 +4880,7 @@
         "duration_s": 5.0,
         "salience": 14.15
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_353_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_353_mobile_phone_usage.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -4917,6 +4918,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.623,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 10.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -5061,18 +5063,17 @@
       "seat_id": 4,
       "start_sec": 1913.0,
       "end_sec": 1921.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.981,
-        "lag_s": 0.0,
-        "duration_s": 8.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 7,
+        "displacement_box_diagonals": 0.68,
+        "unseated_fraction": 1.0,
+        "frames_tracked": 36,
+        "frames_in_window": 51,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 6.57,
@@ -5080,7 +5081,7 @@
         "duration_s": 8.0,
         "salience": 14.14
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_355_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_355_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -5230,18 +5231,16 @@
       "seat_id": 1,
       "start_sec": 2198.0,
       "end_sec": 2203.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.642,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.2,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 1,
-        "neighbour_seat_id": 2,
-        "correlation": 0.981,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 14.18,
+        "mean_z": 10.35,
+        "persons_tracked": 9,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 14.18,
@@ -5249,25 +5248,23 @@
         "duration_s": 5.0,
         "salience": 23.15
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_107_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_107_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 2,
       "start_sec": 2198.0,
       "end_sec": 2203.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.642,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.16,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 2,
-        "neighbour_seat_id": 1,
-        "correlation": 0.981,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 8.19,
+        "mean_z": 6.39,
+        "persons_tracked": 6,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 8.19,
@@ -5275,7 +5272,7 @@
         "duration_s": 5.0,
         "salience": 14.3
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_347_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_347_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -5498,18 +5495,16 @@
       "seat_id": 5,
       "start_sec": 2406.0,
       "end_sec": 2412.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.697,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.133,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.993,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.87,
+        "mean_z": 5.34,
+        "persons_tracked": 9,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.87,
@@ -5517,7 +5512,7 @@
         "duration_s": 6.0,
         "salience": 13.08
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_414_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_414_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -5606,6 +5601,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.479,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -5720,18 +5716,17 @@
       "seat_id": 6,
       "start_sec": 2515.0,
       "end_sec": 2521.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.688,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 6,
-        "neighbour_seat_id": 5,
-        "correlation": 0.971,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 0.83,
+        "unseated_fraction": 0.1,
+        "frames_tracked": 41,
+        "frames_in_window": 41,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 6.66,
@@ -5739,7 +5734,7 @@
         "duration_s": 6.0,
         "salience": 13.22
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_403_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_403_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -5754,6 +5749,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.766,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -5804,6 +5800,7 @@
         "neighbour_seat_id": 9,
         "correlation": 0.721,
         "lag_s": 1.0,
+        "seat_box_iou": 0.05,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -5926,6 +5923,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.919,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 12.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -6000,6 +5998,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.586,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -6266,6 +6265,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.496,
         "lag_s": 1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -6364,6 +6364,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.716,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -6390,6 +6391,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.565,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -6432,18 +6434,16 @@
       "seat_id": 4,
       "start_sec": 3143.0,
       "end_sec": 3148.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.644,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.138,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 6,
-        "correlation": 0.984,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 8.41,
+        "mean_z": 5.52,
+        "persons_tracked": 11,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 8.41,
@@ -6451,7 +6451,7 @@
         "duration_s": 5.0,
         "salience": 12.35
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_469_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_469_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -6490,6 +6490,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.691,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 7.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -6583,23 +6584,17 @@
       "seat_id": 6,
       "start_sec": 3311.0,
       "end_sec": 3321.0,
-      "action_label": "seat_exchange",
-      "confidence": 0.849,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "two tracked people ended the window in each other's seat region, and held it",
-        "seat_a": 7,
-        "seat_b": 6,
-        "track_a": 1,
-        "track_b": 5,
-        "hold_fraction": 0.697,
-        "min_hold_s": 3.0,
-        "note": "seat assignment is recomputed every frame from the tracked box, never fixed at first detection",
-        "also_matched": [
-          {
-            "label": "talking_to_neighbour",
-            "confidence": 0.776
-          }
-        ]
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 4,
+        "displacement_box_diagonals": 0.65,
+        "unseated_fraction": 0.15,
+        "frames_tracked": 34,
+        "frames_in_window": 61,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 5.22,
@@ -6607,7 +6602,7 @@
         "duration_s": 10.0,
         "salience": 13.33
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_398_seat_exchange.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_398_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -6672,6 +6667,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.95,
         "lag_s": -1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -6690,23 +6686,17 @@
       "seat_id": 6,
       "start_sec": 3387.0,
       "end_sec": 3391.0,
-      "action_label": "seat_exchange",
-      "confidence": 0.756,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "two tracked people ended the window in each other's seat region, and held it",
-        "seat_a": 5,
-        "seat_b": 4,
-        "track_a": 5,
-        "track_b": 8,
-        "hold_fraction": 0.9,
-        "min_hold_s": 3.0,
-        "note": "seat assignment is recomputed every frame from the tracked box, never fixed at first detection",
-        "also_matched": [
-          {
-            "label": "talking_to_neighbour",
-            "confidence": 0.592
-          }
-        ]
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 4,
+        "displacement_box_diagonals": 0.87,
+        "unseated_fraction": 0.13,
+        "frames_tracked": 31,
+        "frames_in_window": 31,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 10.89,
@@ -6714,30 +6704,24 @@
         "duration_s": 4.0,
         "salience": 17.27
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_238_seat_exchange.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_238_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 5,
       "start_sec": 3387.0,
       "end_sec": 3391.0,
-      "action_label": "seat_exchange",
-      "confidence": 0.756,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "two tracked people ended the window in each other's seat region, and held it",
-        "seat_a": 5,
-        "seat_b": 4,
-        "track_a": 5,
-        "track_b": 8,
-        "hold_fraction": 0.9,
-        "min_hold_s": 3.0,
-        "note": "seat assignment is recomputed every frame from the tracked box, never fixed at first detection",
-        "also_matched": [
-          {
-            "label": "talking_to_neighbour",
-            "confidence": 0.592
-          }
-        ]
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 4,
+        "displacement_box_diagonals": 0.87,
+        "unseated_fraction": 0.13,
+        "frames_tracked": 31,
+        "frames_in_window": 31,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 8.55,
@@ -6745,7 +6729,7 @@
         "duration_s": 4.0,
         "salience": 14.97
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_314_seat_exchange.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_314_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -6760,6 +6744,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.629,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -7031,6 +7016,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.702,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -7421,17 +7407,17 @@
       "seat_id": 5,
       "start_sec": 3833.0,
       "end_sec": 3835.0,
-      "action_label": "seat_exchange",
-      "confidence": 0.917,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "two tracked people ended the window in each other's seat region, and held it",
-        "seat_a": 4,
-        "seat_b": 6,
-        "track_a": 3,
-        "track_b": 7,
-        "hold_fraction": 0.833,
-        "min_hold_s": 3.0,
-        "note": "seat assignment is recomputed every frame from the tracked box, never fixed at first detection"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 3,
+        "displacement_box_diagonals": 0.58,
+        "unseated_fraction": 0.19,
+        "frames_tracked": 21,
+        "frames_in_window": 21,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 11.32,
@@ -7439,7 +7425,7 @@
         "duration_s": 2.0,
         "salience": 14.05
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_359_seat_exchange.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_359_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7454,6 +7440,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.915,
         "lag_s": 0.0,
+        "seat_box_iou": 0.529,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -7529,6 +7516,7 @@
         "neighbour_seat_id": 9,
         "correlation": 0.92,
         "lag_s": 0.0,
+        "seat_box_iou": 0.221,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -7597,18 +7585,17 @@
       "seat_id": 4,
       "start_sec": 3947.0,
       "end_sec": 3952.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.635,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 4,
-        "neighbour_seat_id": 6,
-        "correlation": 0.962,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 0.82,
+        "unseated_fraction": 0.0,
+        "frames_tracked": 36,
+        "frames_in_window": 36,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 10.22,
@@ -7616,7 +7603,7 @@
         "duration_s": 5.0,
         "salience": 17.66
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_224_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_224_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7631,6 +7618,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.741,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -7657,6 +7645,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.683,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -7707,6 +7696,7 @@
         "neighbour_seat_id": 9,
         "correlation": 0.769,
         "lag_s": 0.0,
+        "seat_box_iou": 0.05,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -7739,6 +7729,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.89,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -7905,18 +7896,16 @@
       "seat_id": 5,
       "start_sec": 4070.0,
       "end_sec": 4078.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.16,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.992,
-        "lag_s": 0.0,
-        "duration_s": 8.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 10.0,
+        "mean_z": 6.41,
+        "persons_tracked": 10,
+        "frames_in_window": 51,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 10.0,
@@ -7924,25 +7913,23 @@
         "duration_s": 8.0,
         "salience": 18.13
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_209_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_209_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 4,
       "start_sec": 4070.0,
       "end_sec": 4078.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.143,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 6,
-        "correlation": 0.981,
-        "lag_s": 0.0,
-        "duration_s": 8.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.46,
+        "mean_z": 5.72,
+        "persons_tracked": 9,
+        "frames_in_window": 51,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.46,
@@ -7950,7 +7937,7 @@
         "duration_s": 8.0,
         "salience": 16.17
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_279_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_279_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -7989,6 +7976,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.947,
         "lag_s": 1.0,
+        "seat_box_iou": 0.373,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -8289,6 +8277,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.516,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 10.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -8363,6 +8352,7 @@
         "neighbour_seat_id": 10,
         "correlation": 0.8,
         "lag_s": 0.0,
+        "seat_box_iou": 0.05,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -8507,18 +8497,16 @@
       "seat_id": 5,
       "start_sec": 4583.0,
       "end_sec": 4588.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.647,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.139,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.993,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 8.93,
+        "mean_z": 5.55,
+        "persons_tracked": 8,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 8.93,
@@ -8526,25 +8514,23 @@
         "duration_s": 5.0,
         "salience": 12.4
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_462_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_462_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 4,
       "start_sec": 4584.0,
       "end_sec": 4588.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.598,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.18,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 6,
-        "correlation": 0.994,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 9.15,
+        "mean_z": 7.18,
+        "persons_tracked": 11,
+        "frames_in_window": 31,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 9.15,
@@ -8552,7 +8538,7 @@
         "duration_s": 4.0,
         "salience": 14.36
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_340_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_340_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -8754,18 +8740,16 @@
       "seat_id": 4,
       "start_sec": 4933.0,
       "end_sec": 4938.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.639,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.169,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 6,
-        "correlation": 0.973,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 9.36,
+        "mean_z": 6.77,
+        "persons_tracked": 8,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 9.36,
@@ -8773,25 +8757,23 @@
         "duration_s": 5.0,
         "salience": 15.14
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_306_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_306_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 4,
       "start_sec": 5024.0,
       "end_sec": 5028.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.582,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.2,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 6,
-        "correlation": 0.954,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 11.03,
+        "mean_z": 9.16,
+        "persons_tracked": 7,
+        "frames_in_window": 31,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 11.03,
@@ -8799,7 +8781,7 @@
         "duration_s": 4.0,
         "salience": 18.32
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_203_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_203_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -8830,18 +8812,16 @@
       "seat_id": 4,
       "start_sec": 5126.0,
       "end_sec": 5130.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.597,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.2,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.994,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 14.86,
+        "mean_z": 12.62,
+        "persons_tracked": 8,
+        "frames_in_window": 31,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 14.86,
@@ -8849,7 +8829,7 @@
         "duration_s": 4.0,
         "salience": 25.25
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_082_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_082_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -8864,6 +8844,7 @@
         "neighbour_seat_id": 10,
         "correlation": 0.915,
         "lag_s": 0.0,
+        "seat_box_iou": 0.05,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -8882,18 +8863,16 @@
       "seat_id": 4,
       "start_sec": 5165.0,
       "end_sec": 5171.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.694,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.2,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 6,
-        "correlation": 0.986,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 11.53,
+        "mean_z": 9.11,
+        "persons_tracked": 11,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 11.53,
@@ -8901,7 +8880,7 @@
         "duration_s": 6.0,
         "salience": 22.31
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_119_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_119_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9012,6 +8991,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.931,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 7.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9038,6 +9018,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.874,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9064,6 +9045,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.781,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 13.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9114,6 +9096,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.927,
         "lag_s": 0.0,
+        "seat_box_iou": 0.529,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9290,6 +9273,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.921,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9664,6 +9648,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.883,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9690,6 +9675,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.841,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9708,18 +9694,17 @@
       "seat_id": 6,
       "start_sec": 5580.0,
       "end_sec": 5590.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 6,
-        "neighbour_seat_id": 5,
-        "correlation": 0.971,
-        "lag_s": 0.0,
-        "duration_s": 10.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 1.08,
+        "unseated_fraction": 0.0,
+        "frames_tracked": 61,
+        "frames_in_window": 61,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 7.34,
@@ -9727,7 +9712,7 @@
         "duration_s": 10.0,
         "salience": 19.03
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_188_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_188_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9742,6 +9727,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.754,
         "lag_s": 0.0,
+        "seat_box_iou": 0.273,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9760,18 +9746,17 @@
       "seat_id": 5,
       "start_sec": 5580.0,
       "end_sec": 5588.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.967,
-        "lag_s": 0.0,
-        "duration_s": 8.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 0.63,
+        "unseated_fraction": 0.0,
+        "frames_tracked": 51,
+        "frames_in_window": 51,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 6.61,
@@ -9779,7 +9764,7 @@
         "duration_s": 8.0,
         "salience": 15.58
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_292_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_292_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -9794,6 +9779,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.765,
         "lag_s": -2.0,
+        "seat_box_iou": 0.063,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -9869,6 +9855,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.441,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -10191,6 +10178,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.813,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -10217,6 +10205,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.844,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 12.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -10415,6 +10404,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.639,
         "lag_s": 0.0,
+        "seat_box_iou": 0.001,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -10441,6 +10431,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.95,
         "lag_s": 0.0,
+        "seat_box_iou": 0.118,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -10816,6 +10807,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.88,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -11155,18 +11147,17 @@
       "seat_id": 4,
       "start_sec": 6348.0,
       "end_sec": 6353.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.641,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.977,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 0.52,
+        "unseated_fraction": 0.36,
+        "frames_tracked": 36,
+        "frames_in_window": 36,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 8.24,
@@ -11174,7 +11165,7 @@
         "duration_s": 5.0,
         "salience": 12.65
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_444_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_444_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -11314,6 +11305,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.672,
         "lag_s": 0.0,
+        "seat_box_iou": 0.221,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -11506,18 +11498,17 @@
       "seat_id": 1,
       "start_sec": 6365.0,
       "end_sec": 6374.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 1,
-        "neighbour_seat_id": 2,
-        "correlation": 0.992,
-        "lag_s": 0.0,
-        "duration_s": 9.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 2,
+        "displacement_box_diagonals": 1.55,
+        "unseated_fraction": 0.04,
+        "frames_tracked": 53,
+        "frames_in_window": 56,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 7.58,
@@ -11525,7 +11516,7 @@
         "duration_s": 9.0,
         "salience": 16.1
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_281_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_281_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -11557,18 +11548,16 @@
       "seat_id": 2,
       "start_sec": 6369.0,
       "end_sec": 6375.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.696,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.177,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 2,
-        "neighbour_seat_id": 1,
-        "correlation": 0.99,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 9.34,
+        "mean_z": 7.08,
+        "persons_tracked": 6,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 9.34,
@@ -11576,7 +11565,7 @@
         "duration_s": 6.0,
         "salience": 17.35
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_234_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_234_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -11607,18 +11596,16 @@
       "seat_id": 5,
       "start_sec": 6520.0,
       "end_sec": 6525.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.648,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.194,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.995,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 8.99,
+        "mean_z": 7.78,
+        "persons_tracked": 8,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 8.99,
@@ -11626,25 +11613,23 @@
         "duration_s": 5.0,
         "salience": 17.39
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_232_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_232_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 4,
       "start_sec": 6520.0,
       "end_sec": 6525.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.642,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.16,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.98,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.78,
+        "mean_z": 6.4,
+        "persons_tracked": 7,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.78,
@@ -11652,25 +11637,23 @@
         "duration_s": 5.0,
         "salience": 14.31
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_345_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_345_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 6,
       "start_sec": 6520.0,
       "end_sec": 6528.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.776,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.123,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 6,
-        "neighbour_seat_id": 5,
-        "correlation": 0.996,
-        "lag_s": 0.0,
-        "duration_s": 8.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 6.81,
+        "mean_z": 4.91,
+        "persons_tracked": 8,
+        "frames_in_window": 51,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 6.81,
@@ -11678,25 +11661,23 @@
         "duration_s": 8.0,
         "salience": 13.89
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_369_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_369_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 7,
       "start_sec": 6524.0,
       "end_sec": 6530.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.693,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.14,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 7,
-        "neighbour_seat_id": 8,
-        "correlation": 0.981,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.71,
+        "mean_z": 5.59,
+        "persons_tracked": 7,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.71,
@@ -11704,7 +11685,7 @@
         "duration_s": 6.0,
         "salience": 13.7
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_376_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_376_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -11743,6 +11724,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.885,
         "lag_s": 0.0,
+        "seat_box_iou": 0.001,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -11769,6 +11751,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.885,
         "lag_s": 0.0,
+        "seat_box_iou": 0.001,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -11812,18 +11795,17 @@
       "seat_id": 2,
       "start_sec": 6896.0,
       "end_sec": 6901.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.639,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 2,
-        "neighbour_seat_id": 1,
-        "correlation": 0.973,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 4,
+        "displacement_box_diagonals": 1.01,
+        "unseated_fraction": 0.22,
+        "frames_tracked": 18,
+        "frames_in_window": 36,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 10.39,
@@ -11831,7 +11813,7 @@
         "duration_s": 5.0,
         "salience": 13.92
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_368_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_368_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -11966,6 +11948,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.889,
         "lag_s": 0.0,
+        "seat_box_iou": 0.001,
         "duration_s": 7.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -11992,6 +11975,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.407,
         "lag_s": 2.0,
+        "seat_box_iou": 0.212,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12292,6 +12276,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.933,
         "lag_s": 0.0,
+        "seat_box_iou": 0.529,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12418,6 +12403,7 @@
         "neighbour_seat_id": 9,
         "correlation": 0.426,
         "lag_s": -1.0,
+        "seat_box_iou": 0.05,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12444,6 +12430,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.709,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 7.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12470,6 +12457,7 @@
         "neighbour_seat_id": 10,
         "correlation": 0.697,
         "lag_s": -2.0,
+        "seat_box_iou": 0.05,
         "duration_s": 9.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12538,18 +12526,17 @@
       "seat_id": 5,
       "start_sec": 7267.0,
       "end_sec": 7271.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.591,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.977,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 0.96,
+        "unseated_fraction": 0.16,
+        "frames_tracked": 31,
+        "frames_in_window": 31,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 15.4,
@@ -12557,7 +12544,7 @@
         "duration_s": 4.0,
         "salience": 22.1
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_127_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_127_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12622,6 +12609,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.955,
         "lag_s": 2.0,
+        "seat_box_iou": 0.063,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12648,6 +12636,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.891,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12674,6 +12663,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.972,
         "lag_s": 2.0,
+        "seat_box_iou": 0.019,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12800,6 +12790,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.968,
         "lag_s": 1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12826,6 +12817,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.865,
         "lag_s": 0.0,
+        "seat_box_iou": 0.001,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12917,18 +12909,17 @@
       "seat_id": 6,
       "start_sec": 7393.0,
       "end_sec": 7398.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.637,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 6,
-        "neighbour_seat_id": 5,
-        "correlation": 0.967,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 2,
+        "displacement_box_diagonals": 1.08,
+        "unseated_fraction": 0.0,
+        "frames_tracked": 36,
+        "frames_in_window": 36,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 15.12,
@@ -12936,25 +12927,24 @@
         "duration_s": 5.0,
         "salience": 24.12
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_098_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_098_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
       "seat_id": 5,
       "start_sec": 7394.0,
       "end_sec": 7398.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.581,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 5,
-        "neighbour_seat_id": 6,
-        "correlation": 0.953,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 0.71,
+        "unseated_fraction": 0.0,
+        "frames_tracked": 31,
+        "frames_in_window": 31,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 13.62,
@@ -12962,7 +12952,7 @@
         "duration_s": 4.0,
         "salience": 22.23
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_121_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_121_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -12977,6 +12967,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.816,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -12995,18 +12986,16 @@
       "seat_id": 4,
       "start_sec": 7398.0,
       "end_sec": 7403.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.639,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.142,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.974,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 6.82,
+        "mean_z": 5.69,
+        "persons_tracked": 10,
+        "frames_in_window": 36,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 6.82,
@@ -13014,7 +13003,7 @@
         "duration_s": 5.0,
         "salience": 12.71
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_440_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_440_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13046,18 +13035,17 @@
       "seat_id": 6,
       "start_sec": 7408.0,
       "end_sec": 7412.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.584,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 6,
-        "neighbour_seat_id": 5,
-        "correlation": 0.96,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 2,
+        "displacement_box_diagonals": 1.07,
+        "unseated_fraction": 0.06,
+        "frames_tracked": 31,
+        "frames_in_window": 31,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 12.58,
@@ -13065,7 +13053,7 @@
         "duration_s": 4.0,
         "salience": 22.17
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_122_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_122_staff_or_transit.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13403,6 +13391,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.807,
         "lag_s": 0.0,
+        "seat_box_iou": 0.273,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -13453,6 +13442,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.721,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 7.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -13479,6 +13469,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.903,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -13530,6 +13521,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.869,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 9.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -13556,6 +13548,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.888,
         "lag_s": 0.0,
+        "seat_box_iou": 0.212,
         "duration_s": 10.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -13574,18 +13567,16 @@
       "seat_id": 8,
       "start_sec": 7641.0,
       "end_sec": 7647.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.69,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.135,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 8,
-        "neighbour_seat_id": 7,
-        "correlation": 0.974,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 8.36,
+        "mean_z": 5.38,
+        "persons_tracked": 5,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 8.36,
@@ -13593,7 +13584,7 @@
         "duration_s": 6.0,
         "salience": 13.19
       },
-      "clip_path": "out/clips/06_mobile_phone_hall_406_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/06_mobile_phone_hall_406_unclassified_anomaly.mp4"
     },
     {
       "video": "06_mobile_phone_hall.mp4",
@@ -13657,6 +13648,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.82,
         "lag_s": 0.0,
+        "seat_box_iou": 0.003,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -13689,6 +13681,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.729,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -13866,6 +13859,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.874,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -13898,6 +13892,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.975,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14020,6 +14015,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.601,
         "lag_s": 1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14075,6 +14071,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.35,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14101,6 +14098,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.913,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14127,6 +14125,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.996,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14211,6 +14210,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.782,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14243,6 +14243,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.707,
         "lag_s": -1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14369,6 +14370,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.677,
         "lag_s": 1.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14443,6 +14445,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.808,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14517,6 +14520,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.746,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -14889,6 +14893,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.892,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15000,6 +15005,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.996,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15026,6 +15032,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.64,
         "lag_s": 1.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15124,6 +15131,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.822,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 7.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15370,6 +15378,7 @@
         "neighbour_seat_id": 7,
         "correlation": 0.549,
         "lag_s": 0.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15396,6 +15405,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.549,
         "lag_s": 0.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15472,6 +15482,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.438,
         "lag_s": 0.0,
+        "seat_box_iou": 0.174,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15548,6 +15559,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.748,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15574,6 +15586,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.782,
         "lag_s": 1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15655,6 +15668,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.543,
         "lag_s": -1.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -15780,6 +15794,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.809,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -16044,25 +16059,23 @@
       "seat_id": 3,
       "start_sec": 1361.0,
       "end_sec": 1368.0,
-      "action_label": "seat_exchange",
-      "confidence": 0.891,
+      "action_label": "talking_to_neighbour",
+      "confidence": 0.642,
       "evidence": {
-        "rule": "two tracked people ended the window in each other's seat region, and held it",
-        "seat_a": 1,
-        "seat_b": 2,
-        "track_a": 1,
-        "track_b": 7,
-        "hold_fraction": 0.781,
-        "min_hold_s": 3.0,
-        "note": "seat assignment is recomputed every frame from the tracked box, never fixed at first detection",
+        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "seat_id": 3,
+        "neighbour_seat_id": 1,
+        "correlation": 0.731,
+        "lag_s": 2.0,
+        "seat_box_iou": 0.0,
+        "duration_s": 7.0,
+        "min_correlation": 0.35,
+        "min_duration_s": 4.0,
+        "caveat": "inferred from motion correlation, not from speech or pose",
         "also_matched": [
           {
             "label": "mobile_phone_usage",
             "confidence": 0.308
-          },
-          {
-            "label": "talking_to_neighbour",
-            "confidence": 0.642
           }
         ]
       },
@@ -16072,7 +16085,7 @@
         "duration_s": 7.0,
         "salience": 30.9
       },
-      "clip_path": "out/clips/07_seat_exchange_089_seat_exchange.mp4"
+      "clip_path": "out/clips/07_seat_exchange_089_talking_to_neighbour.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16110,6 +16123,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.977,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -16310,6 +16324,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.752,
         "lag_s": -1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 7.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -16367,6 +16382,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.884,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -16399,6 +16415,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.873,
         "lag_s": 1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -16417,18 +16434,17 @@
       "seat_id": 4,
       "start_sec": 1543.0,
       "end_sec": 1548.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.636,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.966,
-        "lag_s": 0.0,
-        "duration_s": 5.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 1.79,
+        "unseated_fraction": 0.17,
+        "frames_tracked": 36,
+        "frames_in_window": 36,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 10.2,
@@ -16436,7 +16452,7 @@
         "duration_s": 5.0,
         "salience": 16.26
       },
-      "clip_path": "out/clips/07_seat_exchange_308_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_308_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -16476,6 +16492,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.896,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17073,6 +17090,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.947,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17105,6 +17123,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.849,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17312,6 +17331,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.894,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17482,6 +17502,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.874,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17557,6 +17578,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.66,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17583,6 +17605,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.526,
         "lag_s": 1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17681,6 +17704,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.898,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17731,6 +17755,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.908,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17757,6 +17782,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.642,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17783,6 +17809,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.675,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17957,6 +17984,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.794,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -17983,6 +18011,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.869,
         "lag_s": -1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18088,6 +18117,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.461,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18139,6 +18169,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.976,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 13.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18165,6 +18196,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.783,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 13.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18191,6 +18223,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.978,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18223,6 +18256,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.693,
         "lag_s": 2.0,
+        "seat_box_iou": 0.003,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18278,6 +18312,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.768,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18302,18 +18337,16 @@
       "seat_id": 4,
       "start_sec": 2759.0,
       "end_sec": 2765.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.688,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.167,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.969,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 8.18,
+        "mean_z": 6.67,
+        "persons_tracked": 10,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 8.18,
@@ -18321,7 +18354,7 @@
         "duration_s": 6.0,
         "salience": 16.35
       },
-      "clip_path": "out/clips/07_seat_exchange_301_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_301_unclassified_anomaly.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18408,6 +18441,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.71,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18632,6 +18666,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.934,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 12.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18650,18 +18685,16 @@
       "seat_id": 4,
       "start_sec": 3241.0,
       "end_sec": 3247.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.692,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.199,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.98,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 9.07,
+        "mean_z": 7.95,
+        "persons_tracked": 14,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 9.07,
@@ -18669,7 +18702,7 @@
         "duration_s": 6.0,
         "salience": 19.47
       },
-      "clip_path": "out/clips/07_seat_exchange_219_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_219_unclassified_anomaly.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18684,6 +18717,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.928,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18764,6 +18798,7 @@
         "neighbour_seat_id": 8,
         "correlation": 0.476,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18796,6 +18831,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.413,
         "lag_s": 1.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18838,18 +18874,16 @@
       "seat_id": 4,
       "start_sec": 3504.0,
       "end_sec": 3511.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.735,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.141,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.964,
-        "lag_s": 0.0,
-        "duration_s": 7.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 7.67,
+        "mean_z": 5.62,
+        "persons_tracked": 9,
+        "frames_in_window": 46,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 7.67,
@@ -18857,7 +18891,7 @@
         "duration_s": 7.0,
         "salience": 14.88
       },
-      "clip_path": "out/clips/07_seat_exchange_366_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_366_unclassified_anomaly.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -18896,6 +18930,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.978,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18922,6 +18957,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.999,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -18948,6 +18984,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.906,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -19022,6 +19059,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.792,
         "lag_s": 0.0,
+        "seat_box_iou": 0.003,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -19096,6 +19134,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.935,
         "lag_s": 0.0,
+        "seat_box_iou": 0.003,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -19138,18 +19177,16 @@
       "seat_id": 4,
       "start_sec": 4295.0,
       "end_sec": 4301.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.687,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.181,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.966,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 9.53,
+        "mean_z": 7.22,
+        "persons_tracked": 9,
+        "frames_in_window": 41,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 9.53,
@@ -19157,7 +19194,7 @@
         "duration_s": 6.0,
         "salience": 17.69
       },
-      "clip_path": "out/clips/07_seat_exchange_260_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_260_unclassified_anomaly.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -19172,6 +19209,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.801,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -19198,6 +19236,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.67,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 11.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -19853,6 +19892,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.926,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -19928,6 +19968,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.921,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -19954,6 +19995,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.921,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -20052,6 +20094,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.738,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -20118,24 +20161,15 @@
       "seat_id": 4,
       "start_sec": 4735.0,
       "end_sec": 4739.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.591,
+      "action_label": "mobile_phone_usage",
+      "confidence": 0.519,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "cell_phone detected inside the seat region",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.978,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose",
-        "also_matched": [
-          {
-            "label": "mobile_phone_usage",
-            "confidence": 0.519
-          }
-        ]
+        "frames_with_detection": 12,
+        "frames_in_window": 31,
+        "mean_detection_conf": 0.265,
+        "detector_class": "cell phone (COCO 67)"
       },
       "stage1": {
         "peak_z": 10.37,
@@ -20143,7 +20177,7 @@
         "duration_s": 4.0,
         "salience": 16.66
       },
-      "clip_path": "out/clips/07_seat_exchange_291_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_291_mobile_phone_usage.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -20158,6 +20192,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.983,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -20459,6 +20494,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.887,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -20485,6 +20521,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.747,
         "lag_s": 1.0,
+        "seat_box_iou": 0.003,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -20511,6 +20548,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.858,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -20537,6 +20575,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.851,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -20586,6 +20625,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.916,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -20931,6 +20971,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.675,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21030,6 +21071,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.988,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21056,6 +21098,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.948,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21082,6 +21125,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.94,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21230,6 +21274,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.483,
         "lag_s": 0.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21407,6 +21452,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.454,
         "lag_s": -2.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21628,6 +21674,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.689,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 10.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21654,6 +21701,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.571,
         "lag_s": -1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 11.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21729,6 +21777,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.881,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -21772,18 +21821,17 @@
       "seat_id": 4,
       "start_sec": 6035.0,
       "end_sec": 6041.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.682,
+      "action_label": "staff_or_transit",
+      "confidence": 0.22,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
-        "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.956,
-        "lag_s": 0.0,
-        "duration_s": 6.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "rule": "a tracked person crossed the scene by more than 0.5 of their own box diagonal",
+        "track_id": 1,
+        "displacement_box_diagonals": 1.58,
+        "unseated_fraction": 0.17,
+        "frames_tracked": 41,
+        "frames_in_window": 41,
+        "note": "movement across the scene, not behaviour at a seat -- typically an invigilator or a candidate arriving or leaving. Reported so it can be filtered out of a review queue, not because it is of interest in itself.",
+        "caveat": "threshold set from 5 hand-checked windows; provisional"
       },
       "stage1": {
         "peak_z": 18.1,
@@ -21791,7 +21839,7 @@
         "duration_s": 6.0,
         "salience": 35.14
       },
-      "clip_path": "out/clips/07_seat_exchange_068_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_068_staff_or_transit.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -21822,18 +21870,16 @@
       "seat_id": 4,
       "start_sec": 6063.0,
       "end_sec": 6067.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.581,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.2,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.953,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 18.14,
+        "mean_z": 13.54,
+        "persons_tracked": 5,
+        "frames_in_window": 31,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 18.14,
@@ -21841,7 +21887,7 @@
         "duration_s": 4.0,
         "salience": 27.09
       },
-      "clip_path": "out/clips/07_seat_exchange_108_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_108_unclassified_anomaly.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22060,6 +22106,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.905,
         "lag_s": 2.0,
+        "seat_box_iou": 0.003,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -22138,6 +22185,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.73,
         "lag_s": -1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -22455,18 +22503,16 @@
       "seat_id": 4,
       "start_sec": 6505.0,
       "end_sec": 6509.0,
-      "action_label": "talking_to_neighbour",
-      "confidence": 0.592,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.172,
       "evidence": {
-        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
         "seat_id": 4,
-        "neighbour_seat_id": 5,
-        "correlation": 0.981,
-        "lag_s": 0.0,
-        "duration_s": 4.0,
-        "min_correlation": 0.35,
-        "min_duration_s": 4.0,
-        "caveat": "inferred from motion correlation, not from speech or pose"
+        "peak_z": 8.55,
+        "mean_z": 6.89,
+        "persons_tracked": 5,
+        "frames_in_window": 31,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
       },
       "stage1": {
         "peak_z": 8.55,
@@ -22474,7 +22520,7 @@
         "duration_s": 4.0,
         "salience": 13.77
       },
-      "clip_path": "out/clips/07_seat_exchange_418_talking_to_neighbour.mp4"
+      "clip_path": "out/clips/07_seat_exchange_418_unclassified_anomaly.mp4"
     },
     {
       "video": "07_seat_exchange.mp4",
@@ -22684,6 +22730,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.985,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -22810,6 +22857,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.844,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -22836,6 +22884,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.844,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23133,6 +23182,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.424,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23215,6 +23265,7 @@
         "neighbour_seat_id": 6,
         "correlation": 0.593,
         "lag_s": -1.0,
+        "seat_box_iou": 0.174,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23241,6 +23292,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.573,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 8.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23291,6 +23343,7 @@
         "neighbour_seat_id": 3,
         "correlation": 0.959,
         "lag_s": 0.0,
+        "seat_box_iou": 0.063,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23371,6 +23424,7 @@
         "neighbour_seat_id": 3,
         "correlation": 1.0,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23471,6 +23525,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.41,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23546,6 +23601,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.621,
         "lag_s": 2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23738,6 +23794,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.839,
         "lag_s": 1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 6.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23857,6 +23914,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.789,
         "lag_s": -1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23889,6 +23947,7 @@
         "neighbour_seat_id": 1,
         "correlation": 0.797,
         "lag_s": -1.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -23990,6 +24049,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.909,
         "lag_s": 0.0,
+        "seat_box_iou": 0.23,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -24070,6 +24130,7 @@
         "neighbour_seat_id": 4,
         "correlation": 0.536,
         "lag_s": -2.0,
+        "seat_box_iou": 0.0,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -24195,6 +24256,7 @@
         "neighbour_seat_id": 5,
         "correlation": 0.876,
         "lag_s": 0.0,
+        "seat_box_iou": 0.0,
         "duration_s": 5.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,
@@ -24388,6 +24450,7 @@
         "neighbour_seat_id": 2,
         "correlation": 0.705,
         "lag_s": -2.0,
+        "seat_box_iou": 0.12,
         "duration_s": 4.0,
         "min_correlation": 0.35,
         "min_duration_s": 4.0,

@@ -62,9 +62,60 @@ BOOK_CONF = 0.12           # `book` is a proxy for paper/chit -- see classify.py
 
 # --- Stage 3: action naming -------------------------------------------------
 PHONE_MIN_FRAMES = 3       # detections needed inside the window
+# --- seat_exchange: OFF by default ------------------------------------------
+# Every event this rule produced was checked frame by frame. All five were
+# false positives: an invigilator walking a row and leaning over desks, people
+# entering and leaving, a busy transition. Precision 0/5. Recall is also 0 --
+# file 07 is the organisers' own seat-swap clip and the real swap was never
+# detected, only a walk-through elsewhere in it.
+#
+# Two fixes were measured and both fail:
+#   * raising the hold to 30 s cannot work -- the Stage 1 windows this rule
+#     sees are 2-10 s long, so a 30 s in-window hold is unsatisfiable by
+#     construction. It would zero the rule by arithmetic, not by evidence.
+#   * requiring both tracks stationary at window end is confounded by sample
+#     count. measured end-displacement: 0.50, 0.06, 0.06, 0.31, 0.60 box
+#     diagonals -- the LOWEST (0.06) is the invigilator walk-through at 3387 s,
+#     which scored still only because its tracks were seen 1 and 5 times before
+#     leaving the crop. That filter would keep the worst false positive.
+#
+# The mechanism is the problem, not the threshold: ByteTrack reassigns ids
+# during occlusion, so someone passing behind two seats produces the same
+# id-swap signature as an exchange. Detecting this properly needs identity that
+# survives occlusion over minutes, which is a different system.
+SEAT_EXCHANGE_ENABLED = False
 SEAT_EXCHANGE_MIN_HOLD_S = 3.0
+
+# --- evidence clips ---------------------------------------------------------
+# Padding either side of the flagged window. A reviewer needs the run-up to
+# judge what they are seeing; the event itself is often only 2-3 s.
+# Single source of truth: the overlay burner maps clip time back to source time
+# with this same value, so they cannot drift apart.
+CLIP_PAD_S = 5.0
 TALKING_MIN_S = 4.0
 TALKING_MIN_CORR = 0.35
+# --- talking: reject one motion counted twice -------------------------------
+# Seat discovery can split a single person across two boxes, or leave two boxes
+# overlapping on one desk. adjacency() then calls them neighbours, and the same
+# motion appears in both series -- which correlates near-perfectly at zero lag.
+# That is not two people interacting.
+#
+# measured across 234 talking events, correlation band vs the IoU of the two
+# seat boxes involved:
+#   corr >= 0.95   n=72  median seat IoU 0.230   lag==0 in 90%
+#   0.85-0.95      n=62  median seat IoU 0.063   lag==0 in 74%
+#   0.60-0.85      n=73  median seat IoU 0.003   lag==0 in 49%
+#   corr <  0.60   n=27  median seat IoU 0.000   lag==0 in 26%
+#
+# The relationship is monotonic but GRADED -- there is no clean gap like the
+# 0.13-vs-0.87 that separated seated from transit. So this is a conjunction of
+# all three signals rather than one threshold, which is deliberately harder to
+# trip. It removes 53 events, all from the two long files, and none from any
+# short file. The one validated true positive (clip 04) survives at
+# correlation 0.897, IoU 0.108 -- clearing the gate by 0.053, a thin margin
+# that is worth re-checking if seat discovery changes.
+TALKING_REJECT_CORR = 0.95
+TALKING_REJECT_SEAT_IOU = 0.10
 # --- staff / transit ---------------------------------------------------------
 # A person crossing the frame is a large motion excursion, so Stage 1 flags it
 # correctly -- but it is an invigilator walking past desks, not seat behaviour.
