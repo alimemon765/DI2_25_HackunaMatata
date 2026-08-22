@@ -351,3 +351,76 @@ require any phone examples at all, which is precisely why it works here.
 What would change this: several verified phone events across different people,
 seats and recordings. One per recording would be a reasonable bar. That is the
 same labelling effort §9 identified, and it unlocks the same things.
+
+## 11. Sustained behaviour is not in the motion-vector signal at all
+
+§9 showed Stage 1 misses sustained behaviour (01, 02, 05) and finds only
+transitions. The obvious remedy is a second trigger on *sustained deviation
+from a long-term baseline*. It was measured before being built, and it does not
+work — in any direction, by magnitude or by duration.
+
+### Magnitude, long-horizon baseline
+
+Scoring each seat against its whole-recording median/MAD instead of the 60 s
+rolling window:
+
+| file | best seat, median long-z inside GT | outside | separation |
+|---|---|---|---|
+| 01 | +1.45 | −0.28 | +1.73 |
+| 02 | **−0.33** | +0.49 | **−0.82** |
+| 05 | +0.82 | −0.53 | +1.34 |
+
+Best separation is 1.73 sigma against a rule that fires at 3.5. And **02 is
+negative** — during verified phone use the seat is *less* active than its own
+average, because she is sitting still holding it. A "sustained elevated
+activity" trigger would look in the wrong direction.
+
+### Two-sided, and the selection trap
+
+Allowing stillness as well as elevation, and scoring with a threshold-free AUC,
+looked promising: **01 stillness 0.840, 05 elevation 0.865** — both above the
+0.80 usable-detector line, in opposite directions.
+
+Null-testing against 400 random windows of the same length in the same file
+destroys it:
+
+| file | GT best abs(AUC−0.5) | null p50 | null p95 | percentile |
+|---|---|---|---|---|
+| 01 | 0.340 | 0.237 | 0.340 | 93% |
+| 02 | 0.119 | 0.167 | 0.339 | **23%** |
+| 05 | 0.365 | 0.243 | 0.368 | 92% |
+
+**None clears p95, and 02 is less distinctive than a typical random window.**
+The 0.84/0.87 were selection artifacts: the best of 3–7 noisy seats picked
+post-hoc reaches 0.24 by chance alone, and a real detector does not get told
+which seat to examine.
+
+### Duration of state
+
+Asking instead "has this seat been in a distinct state for an unusually long
+time", magnitude- and direction-free:
+
+| file | GT score | null p50 | null p95 | percentile |
+|---|---|---|---|---|
+| 01 | 0.00 | 0.00 | 0.00 | 0% |
+| 02 | 0.00 | 0.00 | 0.00 | 0% |
+| 05 | 1.34 | 1.34 | 1.34 | 48% |
+
+The zeros are not a broken metric. PELT change-points per seat at the penalty
+Stage 1 uses: **01 = [0,0,0], 02 = [0,0,0]**, 05 = [1,1,0,0,0,0,1]. There is no
+state transition, so there is no state whose duration could be measured. On 05
+the score is identical for the real window and every random one.
+
+### Conclusion
+
+**A person sitting still holding a phone produces motion statistically
+indistinguishable from a person sitting still working.** That is not a
+thresholding or baseline-window problem, and no better statistic over the same
+motion vectors will fix it.
+
+Stage 1 finds *transitions* reliably and cheaply. Sustained states need a
+different sensor — object evidence, which the persistent-object sweep already
+provides for phones and books, or pose, which §8 shows needs per-seat
+baselining first. Building a trigger on a 93rd-percentile effect would flood
+the queue exactly as staff_or_transit did before its cap, with none of the
+compensating precision.
