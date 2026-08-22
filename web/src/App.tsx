@@ -380,7 +380,7 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
             </p>
             <div className="flex items-center gap-3">
               <Btn size="lg" onClick={() => onNavigate('video-analysis')}>
-                <Ico d={I.upload} size={15} />Analyze Video
+                <Ico d={I.event} size={15} />Browse Events
               </Btn>
               <Btn size="lg" variant="secondary" onClick={() => onNavigate('event-explorer')}>
                 View Events
@@ -682,36 +682,17 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 
 function VideoAnalysis() {
   const [opts, setOpts] = useState({ detect: true, heatmap: true, segment: true })
-  const [dragging, setDragging] = useState(false)
   const pipeline = ['Video Ingestion', 'Frame Extraction', 'Motion Estimation', 'ROI Detection', 'Object Detection', 'Event Segmentation', 'Analytics Generation']
   return (
     <div className="overflow-y-auto h-full px-8 py-10 space-y-8">
       <div>
         <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Offline Processing</div>
         <h1 className="text-3xl font-display text-cream">Video Analysis</h1>
-        <p className="text-cream-dim text-sm mt-1">Upload and configure offline analysis for recorded examination footage.</p>
+        <p className="text-cream-dim text-sm mt-1">How each recording in the library was processed. Analysis runs offline, ahead of review.</p>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 space-y-5">
-          <div
-            onDragOver={e => { e.preventDefault(); setDragging(true) }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={() => setDragging(false)}
-            className={cn('border-2 border-dashed rounded-2xl p-14 text-center transition-all cursor-pointer',
-              dragging ? 'border-olive bg-olive-subtle' : 'border-border hover:border-olive-mid hover:bg-surface')}
-          >
-            <div className="w-14 h-14 rounded-2xl bg-card border border-border mx-auto mb-4 flex items-center justify-center">
-              <Ico d={I.upload} size={24} />
-            </div>
-            <h3 className="text-lg font-semibold text-cream mb-2">Upload Recorded Examination Footage</h3>
-            <p className="text-cream-dim text-sm mb-5">Drag and drop CCTV recordings here, or browse your files</p>
-            <Btn>Browse Files</Btn>
-            <div className="flex justify-center gap-2 mt-5">
-              {['MP4', 'AVI', 'MOV', 'MKV'].map(f => <Badge key={f} color="muted">{f}</Badge>)}
-            </div>
-          </div>
-
           <Card className="p-6">
             <h3 className="text-base font-semibold text-cream mb-5">Analysis Options</h3>
             <div className="space-y-4">
