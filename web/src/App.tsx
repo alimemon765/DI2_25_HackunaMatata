@@ -404,7 +404,7 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
           <div>
             <ClipPlayer event={selected} compact />
             <div className="flex items-center justify-between mt-3 text-xs font-mono text-muted">
-              <span>Live investigation preview · CAM-03</span>
+              <span>Live investigation preview · {selected?.cam ?? '—'}</span>
               <button onClick={() => onNavigate('investigation')} className="text-olive hover:underline flex items-center gap-1">Open workspace <Ico d={I.arrow} size={10} /></button>
             </div>
           </div>
@@ -579,7 +579,7 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
             </div>
             <div className="space-y-3">
               {ALL_EVENTS.filter(e => e.priority === 'high').map(e => (
-                <button key={e.id} onClick={() => onNavigate('investigation')}
+                <button key={e.id} onClick={() => { select(e); onNavigate('investigation') }}
                   className="w-full text-left p-4 bg-card border border-border rounded-xl hover:border-danger/40 hover:bg-danger-dim/20 transition-all group">
                   <div className="flex items-start justify-between gap-2 mb-3">
                     <div>
@@ -801,7 +801,7 @@ function InvestigationWorkspace() {
         <div className="px-6 py-4 border-b border-border bg-surface shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Investigation · EVT-00342 · CAM-03</div>
+              <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Investigation · {selected?.id ?? '—'} · {selected?.cam ?? '—'}</div>
               <h1 className="text-xl font-display text-cream">REWIND — Investigation Workspace</h1>
             </div>
             <div className="flex items-center gap-2">
@@ -900,7 +900,7 @@ function InvestigationWorkspace() {
       {/* Events Panel */}
       <div className="w-80 bg-surface border-l border-border flex flex-col overflow-hidden shrink-0">
         <div className="px-5 py-4 border-b border-border">
-          <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">CAM-03 · 186 events</div>
+          <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">{selected?.cam ?? '—'} · {events.length} events</div>
           <h2 className="text-base font-semibold text-cream">Detected Events</h2>
         </div>
         <div className="flex-1 overflow-y-auto divide-y divide-border">
@@ -1006,7 +1006,10 @@ function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
             </thead>
             <tbody>
               {shown.map(e => (
-                <tr key={e.id} className="border-b border-border/50 hover:bg-elevated/40 transition-colors">
+                <tr key={e.id} onClick={() => select(e)}
+                  title={e.clipUrl ? 'select this event' : 'no clip exported yet for this event'}
+                  className={cn('border-b border-border/50 hover:bg-elevated/40 transition-colors cursor-pointer',
+                    !e.clipUrl && 'opacity-55')}>
                   <td className="px-5 py-3 font-mono text-muted text-[10px]">{e.id}</td>
                   <td className="px-5 py-3 font-mono text-cream-dim whitespace-nowrap">{e.time}</td>
                   <td className="px-5 py-3 font-mono text-olive">{e.cam}</td>
@@ -1024,7 +1027,7 @@ function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
                   <td className="px-5 py-3 text-cream-dim">{e.obj === 'None' ? '—' : e.obj}</td>
                   <td className="px-5 py-3">{statusBadge(e.status)}</td>
                   <td className="px-5 py-3">
-                    <Btn variant="secondary" size="sm" onClick={() => onNavigate('investigation')}>
+                    <Btn variant="secondary" size="sm" onClick={() => { select(e); onNavigate('investigation') }}>
                       {e.status === 'Reviewed' ? 'View' : 'Review'} <Ico d={I.arrow} size={11} />
                     </Btn>
                   </td>

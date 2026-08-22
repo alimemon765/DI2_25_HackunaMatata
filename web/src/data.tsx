@@ -31,7 +31,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
         if (cancelled) return
         setEvents(evs)
         setSummary(sum)
-        select((cur) => cur ?? evs[0] ?? null)
+        // Prefer something that can actually play: during a pipeline re-run
+        // the manifest may name clips that are mid-export.
+        select((cur) => cur ?? evs.find((e) => e.clipUrl) ?? evs[0] ?? null)
       })
       .catch((e) => !cancelled && setError(String(e?.message ?? e)))
       .finally(() => !cancelled && setLoading(false))

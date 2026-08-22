@@ -55,12 +55,14 @@ def _clip_url(event: dict) -> dict:
     """
     e = dict(event)
     name = Path(event["clip_path"]).name if event.get("clip_path") else None
-    if name:
-        e["clip_url"] = f"/clips/{name}"
-        e["clip_annotated_url"] = (f"/clips_annotated/{name}"
-                                   if (CLIPS_ANNOTATED / name).exists() else None)
-    else:
-        e["clip_url"] = e["clip_annotated_url"] = None
+    # Only advertise a URL that will actually resolve. The manifest can name a
+    # clip that is not on disk -- a re-run archives the previous run's clips
+    # and re-exports them, so during a run the manifest and the directory
+    # disagree. A UI cannot tell a slow load from a 404, so it should never be
+    # handed a URL that is going to fail.
+    e["clip_url"] = f"/clips/{name}" if name and (CLIPS / name).exists() else None
+    e["clip_annotated_url"] = (f"/clips_annotated/{name}"
+                               if name and (CLIPS_ANNOTATED / name).exists() else None)
     return e
 
 

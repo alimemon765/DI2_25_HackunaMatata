@@ -30,7 +30,13 @@ export function ClipPlayer({
 
   useEffect(() => {
     setErr(null)
-    if (ref.current) ref.current.load()
+    if (!ref.current) return
+    // React's `muted` prop is set as an attribute and does not reliably apply
+    // as the DOM property, which leaves autoplay blocked by the browser's
+    // sound policy. Set it directly. (Clips are exported with -an, so there is
+    // no audio either way -- this is about the policy, not the sound.)
+    ref.current.muted = true
+    ref.current.load()
   }, [src])
 
   const h = compact ? 'h-52' : 'h-80'
@@ -58,7 +64,7 @@ export function ClipPlayer({
         onError={() => setErr('clip failed to load - is the API running on :8000?')}
       />
 
-      <div className="absolute top-2 left-2 flex items-center gap-2 pointer-events-none">
+      <div className="absolute top-2 left-2 right-24 flex flex-wrap items-center gap-1.5 pointer-events-none">
         <span className="text-[10px] font-mono text-white/85 bg-black/60 px-1.5 py-0.5 rounded">
           {event.cam}
         </span>
@@ -80,8 +86,8 @@ export function ClipPlayer({
       )}
 
       {!hasAnnotated && (
-        <span className="absolute top-2 right-2 text-[10px] font-mono px-2 py-1 rounded bg-black/50 text-white/45">
-          no overlay yet
+        <span className="absolute top-2 right-2 text-[10px] font-mono px-2 py-1 rounded bg-black/50 text-white/45 whitespace-nowrap">
+          no overlay
         </span>
       )}
 
