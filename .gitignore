@@ -37,3 +37,4 @@ yolo11*.pt
 !out/debug/
 !out/debug/diag_*.png
 out/clips_stale/
+out/clips_archive/

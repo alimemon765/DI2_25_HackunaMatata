@@ -310,3 +310,62 @@ def cached_sweep(
                  [round(v, 1) for v in d.xyxy]] for d in f.dets]}
          for f in frames]))
     return frames
+
+
+# --- Stage 2 evidence cache -------------------------------------------------
+# Stage 3 is a rule engine, so it is the part most likely to be changed and
+# re-run. Without this cache, changing a rule means re-running the cascade --
+# 55 minutes across the two long files -- which makes iterating on rules
+# impractical and encourages guessing instead of measuring.
+
+def _evidence_key(video: str, candidates: list[Candidate]) -> str:
+    import hashlib
+    from pathlib import Path
+    h = hashlib.sha1()
+    for c in candidates:
+        h.update(f"{c.seat_id}:{c.start_sec:.3f}:{c.end_sec:.3f};".encode())
+    return f"evidence_{Path(video).stem}_{len(candidates)}_{h.hexdigest()[:10]}.json"
+
+
+def save_evidence(video: str, evidence: list[WindowEvidence],
+                  candidates: list[Candidate], cache_dir: str = "cache") -> None:
+    import json
+    from pathlib import Path
+    p = Path(cache_dir) / _evidence_key(video, candidates)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps([{
+        "cand": {"seat_id": e.candidate.seat_id, "start_sec": e.candidate.start_sec,
+                 "end_sec": e.candidate.end_sec, "i0": e.candidate.i0,
+                 "i1": e.candidate.i1, "peak_z": e.candidate.peak_z,
+                 "mean_z": e.candidate.mean_z, "duration_s": e.candidate.duration_s},
+        "roi": list(e.roi_px), "nbrs": e.neighbour_ids,
+        "seat_boxes": {str(k): list(v) for k, v in e.seat_boxes.items()},
+        "frames": [{"t": f.t_sec,
+                    "d": [[d.cls_id, d.name, round(d.conf, 4),
+                           [round(v, 1) for v in d.xyxy], d.track_id]
+                          for d in f.dets]} for f in e.frames],
+    } for e in evidence]))
+
+
+def load_evidence(video: str, candidates: list[Candidate],
+                  cache_dir: str = "cache") -> list[WindowEvidence] | None:
+    import json
+    from pathlib import Path
+    p = Path(cache_dir) / _evidence_key(video, candidates)
+    if not p.exists():
+        return None
+    out: list[WindowEvidence] = []
+    for r in json.loads(p.read_text()):
+        c = r["cand"]
+        out.append(WindowEvidence(
+            candidate=Candidate(c["seat_id"], c["start_sec"], c["end_sec"],
+                                c["i0"], c["i1"], c["peak_z"], c["mean_z"],
+                                c["duration_s"]),
+            roi_px=tuple(r["roi"]), neighbour_ids=r["nbrs"],
+            seat_boxes={int(k): tuple(v) for k, v in r["seat_boxes"].items()},
+            frames=[FrameDets(t_sec=f["t"],
+                              dets=[Detection(cls_id=d[0], name=d[1], conf=d[2],
+                                              xyxy=tuple(d[3]), track_id=d[4])
+                                    for d in f["d"]]) for f in r["frames"]],
+        ))
+    return out

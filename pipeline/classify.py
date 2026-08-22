@@ -38,6 +38,8 @@ from .config import (
     SEAT_EXCHANGE_MIN_HOLD_S,
     TALKING_MIN_CORR,
     TALKING_MIN_S,
+    TRANSIT_MIN_DISPLACEMENT,
+    TRANSIT_MIN_FRAMES,
 )
 from .cascade import WindowEvidence
 from .correlate import window_corr
@@ -240,6 +242,59 @@ def rule_talking(ev: WindowEvidence, scores: SeatScores, grid: SeatGrid) -> Acti
     )
 
 
+def rule_staff_transit(ev: WindowEvidence) -> Action | None:
+    """A person crossing the scene, rather than behaviour at a seat.
+
+    Fires on how far a tracked person travels relative to their own apparent
+    size, which is scale-free and so works at any depth in the frame.
+
+    It does NOT test whether the person is in a seat. That was the obvious
+    formulation and the measurements rejected it: someone walking past a row is
+    inside the seat boxes they pass (measured unseated_frac 0.12 for a staff
+    member crossing the aisle), while a candidate at a desk that seat discovery
+    never found scores unseated 1.00 without moving. See config.py.
+
+    This is the last rule tried. Any named seat behaviour outranks it, because
+    a phone in a window where staff also walk through is still a phone.
+    """
+    persons = ev.person_tracks()
+    seats = ev.seat_track_series()
+    best = None
+    for tid, dets in persons.items():
+        if len(dets) < TRANSIT_MIN_FRAMES:
+            continue
+        cents = np.array([d.centroid for _, d in dets], float)
+        diag = float(np.median([np.hypot(d.xyxy[2] - d.xyxy[0],
+                                         d.xyxy[3] - d.xyxy[1])
+                                for _, d in dets]))
+        if diag <= 1.0:
+            continue
+        disp = float(np.max(np.linalg.norm(cents - cents.mean(axis=0), axis=1))) * 2 / diag
+        if disp < TRANSIT_MIN_DISPLACEMENT:
+            continue
+        obs = seats.get(tid, [])
+        unseated = (float(np.mean([s is None for _, s in obs])) if obs else 1.0)
+        conf = _confidence(min(1.0, len(dets) / max(ev.n_frames, 1)),
+                           min(1.0, disp / (2 * TRANSIT_MIN_DISPLACEMENT))) * 0.85
+        act = Action("staff_or_transit", conf, {
+            "rule": "a tracked person crossed the scene by more than "
+                    f"{TRANSIT_MIN_DISPLACEMENT} of their own box diagonal",
+            "track_id": tid,
+            "displacement_box_diagonals": round(disp, 2),
+            "unseated_fraction": round(unseated, 2),
+            "frames_tracked": len(dets),
+            "frames_in_window": ev.n_frames,
+            "note": "movement across the scene, not behaviour at a seat -- "
+                    "typically an invigilator or a candidate arriving or "
+                    "leaving. Reported so it can be filtered out of a review "
+                    "queue, not because it is of interest in itself.",
+            "caveat": "threshold set from 5 hand-checked windows; provisional",
+        })
+        if best is None or act.confidence > best.confidence:
+            best = act
+    return best
+
+
 def classify_window(ev: WindowEvidence, scores: SeatScores, grid: SeatGrid) -> Action:
     """Run every rule, take the most confident, keep the rest on the record."""
     considered: list[dict] = []
@@ -252,6 +307,13 @@ def classify_window(ev: WindowEvidence, scores: SeatScores, grid: SeatGrid) -> A
         if a is not None:
             fired.append(a)
             considered.append({"label": a.label, "confidence": round(a.confidence, 3)})
+
+    # Tried only when no named seat behaviour matched: a phone in a window
+    # where staff also walk through is still a phone.
+    if not fired:
+        t = rule_staff_transit(ev)
+        if t is not None:
+            return t
 
     if not fired:
         c = ev.candidate

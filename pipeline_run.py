@@ -19,7 +19,13 @@ from pathlib import Path
 import numpy as np
 
 from pipeline import config as C
-from pipeline.cascade import cached_sweep, run_cascade, scan_zone_crowd
+from pipeline.cascade import (
+    cached_sweep,
+    load_evidence,
+    run_cascade,
+    save_evidence,
+    scan_zone_crowd,
+)
 from pipeline.classify import (
     classify_crowd,
     classify_persistent_objects,
@@ -46,6 +52,36 @@ from pipeline.segment import budget_shortlist, segment_all
 # candidate with a phone is exactly clip 03. Only a scene with no seat at all
 # falls through to the zone/crowd path.
 MIN_SEATS_FOR_GRID = 1
+
+
+def archive_previous_clips(out_dir: Path, verbose: bool = True) -> int:
+    """Move the previous run's clips aside before a new run writes any.
+
+    Clip filenames are indexed per run (`_000_`, `_001_`) and carry the label
+    in the name, so a run that produces fewer events -- or different labels --
+    leaves the earlier files behind. That happened: out/clips held 1288 files
+    against 926 events, and 362 of the orphans were detections from runs whose
+    results had already been discredited. A UI pointed at that folder would
+    have shown exactly the false positives the work had removed.
+
+    Archived rather than deleted, so a comparison is still possible.
+    """
+    import shutil
+    from datetime import datetime
+
+    clips = out_dir / "clips"
+    existing = sorted(clips.glob("*.mp4"))
+    if not existing:
+        return 0
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    dest = out_dir / "clips_archive" / stamp
+    dest.mkdir(parents=True, exist_ok=True)
+    for p in existing:
+        shutil.move(str(p), str(dest / p.name))
+    if verbose:
+        print(f"[clips] archived {len(existing)} clips from the previous run "
+              f"-> {dest}", flush=True)
+    return len(existing)
 
 
 def scan_frames_fallback(video: str, duration_s: float, start_s: float,
@@ -80,6 +116,7 @@ def process_video(
     start_s: float = 0.0,
     want_clips: bool = False,
     crowd: str = "auto",
+    reuse_evidence: bool = False,
     verbose: bool = True,
 ) -> dict:
     name = video.name
@@ -153,8 +190,15 @@ def process_video(
                       flush=True)
 
         # --- Stage 2 -------------------------------------------------------
-        evidence = run_cascade(str(video), grid, short, fixtures=fixtures,
-                               verbose=verbose)
+        evidence = load_evidence(str(video), short) if reuse_evidence else None
+        if evidence is not None:
+            if verbose:
+                print(f"  [cascade] reusing cached Stage 2 evidence for "
+                      f"{len(evidence)} windows -- Stage 3 only", flush=True)
+        else:
+            evidence = run_cascade(str(video), grid, short, fixtures=fixtures,
+                                   verbose=verbose)
+            save_evidence(str(video), evidence, short)
 
         # --- Stage 3 -------------------------------------------------------
         for ev in evidence:
@@ -281,6 +325,12 @@ def main() -> None:
                          "candidates at undiscovered desks as unseated -- see "
                          "classify_crowd). 'always' to enable anyway; 'auto' "
                          "restricts it to scenes with no seat grid at all.")
+    ap.add_argument("--reclassify", action="store_true",
+                    help="reuse cached Stage 2 evidence and re-run Stage 3 only. "
+                         "Falls back to a full cascade for any window with no "
+                         "cache entry, so it is always safe to pass.")
+    ap.add_argument("--keep-clips", action="store_true",
+                    help="do not archive the previous run's clips first")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
 
@@ -294,6 +344,8 @@ def main() -> None:
     out_dir = Path(args.out)
     (out_dir / "debug").mkdir(parents=True, exist_ok=True)
     (out_dir / "clips").mkdir(parents=True, exist_ok=True)
+    if not args.keep_clips:
+        archive_previous_clips(out_dir, verbose=not args.quiet)
 
     all_events: list[dict] = []
     per_video: dict[str, list[dict]] = {}
@@ -304,7 +356,9 @@ def main() -> None:
         try:
             r = process_video(v, out_dir, max_seconds=args.max_seconds,
                               start_s=args.start, want_clips=args.clips,
-                              crowd=args.crowd, verbose=not args.quiet)
+                              crowd=args.crowd,
+                              reuse_evidence=args.reclassify,
+                              verbose=not args.quiet)
         except Exception as exc:  # one bad file must not lose the rest
             import traceback
             traceback.print_exc()

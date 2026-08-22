@@ -65,6 +65,26 @@ PHONE_MIN_FRAMES = 3       # detections needed inside the window
 SEAT_EXCHANGE_MIN_HOLD_S = 3.0
 TALKING_MIN_S = 4.0
 TALKING_MIN_CORR = 0.35
+# --- staff / transit ---------------------------------------------------------
+# A person crossing the frame is a large motion excursion, so Stage 1 flags it
+# correctly -- but it is an invigilator walking past desks, not seat behaviour.
+# Before this rule those windows all fell into `unclassified_anomaly`.
+#
+# The discriminator is DISPLACEMENT, measured in the track's own box diagonals.
+# It is deliberately NOT "the person is not in a seat":
+# measured on 5 hand-checked windows (3 transit, 2 seated-only) --
+#   transit : unseated_frac 0.12 / 0.69 / 0.24   displacement 0.87 / 1.23 / 1.65
+#   seated  : unseated_frac 1.00 / 0.00          displacement 0.13 / 0.09
+# Gating on "unseated" would have MISSED two of the three transit cases, because
+# someone walking past desks is inside the seat boxes they pass, while a
+# stationary candidate at a desk seat-discovery never found scores unseated 1.00
+# without moving at all. Displacement separates with no overlap.
+#
+# CAVEAT: 5 windows is a small sample. 0.5 sits roughly midway in the observed
+# gap (0.13 -> 0.87). Treat it as provisional until checked on more windows.
+TRANSIT_MIN_DISPLACEMENT = 0.5   # in box diagonals, peak deviation from the mean
+TRANSIT_MIN_FRAMES = 3
+
 CROWD_MIN_PERSONS = 4
 CROWD_MIN_S = 5.0
 UNCLASSIFIED_MAX_CONF = 0.35  # a fallback must never outrank a rule that matched
@@ -80,6 +100,7 @@ ACTION_LABELS = (
     "seat_exchange",
     "paper_pass",
     "crowd_gathering",
+    "staff_or_transit",
     "unclassified_anomaly",
 )
 
