@@ -27,13 +27,16 @@ handful of seat-seconds worth watching.
 |---|---|---|
 | Source file `06` | 2 h 08 m, 192,431 frames | measured |
 | Stage 1 scan | motion vectors only, no pixel decode | measured |
-| Decode throughput | 5,573 fps | measured |
+| Stage 1 scan, whole file | **34.9 s** = **221x realtime** | measured |
+| Decode throughput | 5,347 fps over 186,416 frames | measured |
 | Stage 1 candidates | 1,500 | measured |
 | Promoted to Stage 2 | 474 windows | measured |
 | Share of seat-seconds fully decoded | **2.00%** | measured |
 
-**Show:** `out/debug/timeline_06_mobile_phone_hall.png` (per-seat z over two
-hours, events marked) and the terminal line
+**Show:** `out/demo/triage_claim.png` -- the two-panel figure carries the claim.
+(`out/debug/timeline_06_mobile_phone_hall.png` exists but is too dense to read
+at a glance; it visually suggests everything is flagged. Use it only as a
+follow-up if a judge asks to see the raw per-seat scores.) Plus the terminal line
 `[stage1] 1500 candidates -> 474 promoted (1539s = 2.00% of seat-seconds)`.
 
 **The point:** 98% of the footage is never fully decoded. That is the product.
@@ -69,7 +72,7 @@ Then show an `unclassified_anomaly` entry in `out/events.json`: Stage 1 flagged
 it, no Stage 3 rule matched, and it is still reported with its z-score and
 clip. **A flag is never silently dropped because we could not name it.**
 
-Overall label accuracy: **38% top-label, 62% label-present**, file-level,
+Overall label accuracy: **38% top-label, 50% label-present**, file-level,
 against filename-derived ground truth. **measured.** Say the number out loud
 before a judge finds it.
 

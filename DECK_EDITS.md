@@ -47,8 +47,8 @@ they cannot be joined over time.
 > "Three hours reviewed in about four minutes"
 
 Not achieved end-to-end. What is true:
-- Stage 1 scan of a 2h08m file: motion vectors only, **~35 s** **[measured]**,
-  at **5,573 fps** decode **[measured]**
+- Stage 1 scan of a 2h08m file: motion vectors only, **34.9 s = 221x realtime** **[measured]**,
+  at **5,347 fps** decode over 186,416 frames **[measured]**
 - Full pipeline including detection on the shortlist: **35 min** **[measured]**
   — the cascade dominates, not the scan
 - Share of seat-seconds ever fully decoded: **2.00%** **[measured]**
@@ -107,10 +107,11 @@ CDnet2014 · "≥30× real time" · "cutting GPU-hours by roughly 90%".
 
 | Metric | Value |
 |---|---|
-| Stage 1 decode throughput | 5,573 fps |
+| Stage 1 scan of a 2h08m file | 34.9 s = **221x realtime** |
+| Stage 1 decode throughput | 5,347 fps (186,416 frames) |
 | Seat-seconds fully decoded | 2.00% (budget target 2%) |
 | Stage 1 candidates → promoted, file 06 | 1,500 → 474 |
-| Action-label accuracy, file level | 38% top-label, 62% label-present |
+| Action-label accuracy, file level | 38% top-label, 50% label-present |
 | Fixture filter reduction | 1393 → 156 phone detections (−89%) |
 | Files validated | 8 of 8 run end-to-end |
 
