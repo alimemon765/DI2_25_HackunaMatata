@@ -424,3 +424,75 @@ provides for phones and books, or pose, which §8 shows needs per-seat
 baselining first. Building a trigger on a 93rd-percentile effect would flood
 the queue exactly as staff_or_transit did before its cap, with none of the
 compensating precision.
+
+## 12. paper_pass: the `book` class never fires on the target file at all
+
+"The book proxy is weak" was asserted all night without measurement. Measured
+now, densely, at a floor-level threshold and both input sizes, across file 08 —
+the recording whose filename describes a paper being taken from a desk:
+
+| imgsz | frames | detections at conf >= 0.01 | median conf | **max conf** | >= 0.12 (our threshold) |
+|---|---|---|---|---|---|
+| 640 | 168 | 331 | 0.015 | **0.073** | **0** |
+| 1280 | 168 | 417 | 0.014 | **0.057** | **0** |
+
+**The `book` class never once exceeds 0.12 anywhere in the file, at either
+scale.** Its highest confidence across 168 densely sampled frames is 0.073 —
+below our threshold, and its median of 0.014 is the detector's noise floor.
+
+So the cause is not "detected but below threshold". Lowering the threshold does
+not recover a real signal, it admits noise: dropping to 0.05 yields 6 and 2
+detections respectively out of 331 and 417, against a floor-level median.
+
+For contrast, the same sweep on other files shows the class does fire elsewhere
+— on desk papers, monitors and keyboards — but essentially never on 08:
+
+| file | book | person | book per person |
+|---|---|---|---|
+| 06 | 199 | 2884 | 0.069 |
+| 02 | 18 | 721 | 0.025 |
+| **08** | **1** | **1360** | **0.001** |
+
+**COCO `book` does not see a sheet of paper on this footage.** `paper_pass`
+producing 0-1 events all night is the correct behaviour of an honest rule with
+no usable input, not a tuning failure. Detecting it needs a class that exists —
+a detector fine-tuned on exam-hall paper — which is the same labelled-data
+requirement as the phone/calculator problem.
+
+## 13. Spot-check of the highest-confidence flags on 06 and 07
+
+900 of 921 events live in the two long files and none had ever been verified.
+This is a **precision-only, biased** check — it inspects what the pipeline
+chose to flag, so it says nothing about recall — but it is the first look at
+whether the top of the queue is right.
+
+Ten events checked against raw footage, the five highest-confidence in each file.
+
+**06** — 4 talking flags at conf 0.75-0.77 and one phone flag at 0.72:
+* 2692 s and 231 s: someone leaning over a seated candidate's desk. A real
+  interaction, but the leaning party appears to be **staff**, not a neighbour.
+* 7553 s and 5388 s: seated candidates and people moving in the background; no
+  visible interaction between adjacent seats.
+* 1758 s (phone, 0.72): people moving and leaning; **no phone visible**.
+
+**07** — 3 talking flags at 0.77-0.78 and two phone flags at 0.71-0.73:
+* 1722 s: a woman **with a staff lanyard** walks in and stands by the desks.
+* 4393 s and 829 s (both phone): a person **walking through the room**. No
+  phone visible in either.
+* 2395 s and 3237 s: seated work, no obvious interaction.
+
+**Tally: roughly 4 of 10 are clear false positives, 3 are real interactions but
+involving staff rather than candidates, and 3 are ambiguous. None is a clearly
+correct candidate-to-candidate event.**
+
+The failure mode is consistent and now confirmed on the files that matter:
+**people moving through the room drive the highest-confidence flags** — as
+correlated motion across adjacent seats when someone passes between them, and
+as spurious object detections while they move.
+
+Worth noting for a future pass: `staff_or_transit` is evaluated **last**, after
+talking and phone. A window containing both movement and a weak correlation is
+therefore labelled `talking_to_neighbour` rather than transit. Reordering would
+likely raise precision at the top of the queue, but risks suppressing genuine
+interactions that happen while someone walks past, so it needs the same
+measured treatment as everything else here rather than a swap on intuition.
