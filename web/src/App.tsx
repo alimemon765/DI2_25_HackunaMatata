@@ -8,11 +8,9 @@ import { labelText, hoursLabel, camLabel, debugImage, type UiEvent } from './api
 // with values from the API.
 
 type Screen =
-  | 'dashboard'
-  | 'library'
+  | 'videos'
   | 'analysis'
-  | 'event-explorer'
-  | 'investigation'
+  | 'segment'
 
 function cn(...c: (string | false | undefined | null)[]) {
   return c.filter(Boolean).join(' ')
@@ -223,107 +221,96 @@ function statusBadge(s: string) {
 // ── Top Navigation ────────────────────────────────────────────────
 
 const NAV = [
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'library', label: 'Library' },
+  { id: 'videos', label: 'Videos' },
   { id: 'analysis', label: 'Analysis' },
-  { id: 'event-explorer', label: 'Events' },
-  { id: 'investigation', label: 'Investigate' },
+  { id: 'segment', label: 'Segment' },
 ] as const
 
 const SCREEN_TITLE: Record<Screen, string> = {
-  'dashboard': 'Investigation Dashboard',
-  'library': 'Recording Library',
-  'analysis': 'Recording Analysis',
-  'event-explorer': 'Event Explorer',
-  'investigation': 'Investigate',
+  'videos': 'Uploaded Recordings',
+  'analysis': 'Analysis',
+  'segment': 'Segment Detail',
 }
 
 const NAV_ICON: Record<Screen, string> = {
-  'dashboard': I.layers,
-  'library': I.video,
+  'videos': I.video,
   'analysis': I.roi,
-  'event-explorer': I.event,
-  'investigation': I.search,
+  'segment': I.search,
 }
 
-function Sidebar({ active, onNavigate }: { active: Screen; onNavigate: (s: Screen) => void }) {
+/** Single top bar with breadcrumb navigation. No sidebar: the flow is
+ *  Videos -> Analysis -> Segment, and you move through it by drilling in and
+ *  backing out, exactly as the reference layout does. */
+function TopBar({ screen, onNavigate, video, segment, right }: {
+  screen: Screen
+  onNavigate: (s: Screen) => void
+  video: string | null
+  segment: string | null
+  right: string
+}) {
+  const crumbs: { label: string; go?: () => void }[] = [
+    { label: 'Videos', go: () => onNavigate('videos') },
+  ]
+  if (screen !== 'videos' && video) {
+    crumbs.push({ label: camLabel(video), go: () => onNavigate('analysis') })
+  }
+  if (screen === 'segment' && segment) crumbs.push({ label: segment })
+
   return (
-    <aside className="w-56 shrink-0 h-full bg-surface border-r border-border flex flex-col">
-      <div className="h-14 px-5 flex items-center gap-2.5 border-b border-border shrink-0">
+    <header className="h-14 shrink-0 bg-surface/95 backdrop-blur-sm border-b border-border flex items-center gap-5 px-6">
+      <button onClick={() => onNavigate('videos')}
+        className="flex items-center gap-2.5 shrink-0 group">
         <div className="w-7 h-7 bg-olive-subtle border border-olive-mid/30 rounded-lg flex items-center justify-center">
           <Ico d={I.layers} size={13} />
         </div>
-        <div className="flex items-baseline gap-2 min-w-0">
-          <span className="font-display text-lg text-cream leading-none tracking-tight font-bold">REWIND</span>
-          <span className="text-[9px] font-mono text-olive bg-olive-subtle px-1.5 py-0.5 rounded tracking-widest">FORENSICS</span>
+        <div className="flex flex-col leading-none text-left">
+          <span className="font-display text-base text-cream tracking-tight font-bold">REWIND</span>
+          <span className="text-[9px] font-mono text-muted mt-0.5">Offline Examination Video Review</span>
         </div>
-      </div>
+      </button>
 
-      <nav className="flex-1 p-3 space-y-1">
-        {NAV.map(item => {
-          const on = active === item.id
-          return (
-            <button key={item.id} onClick={() => onNavigate(item.id as Screen)}
-              aria-current={on ? 'page' : undefined}
-              className={cn('w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg font-medium transition-all duration-150 text-left',
-                on ? 'bg-olive-subtle text-olive' : 'text-cream-dim hover:text-cream hover:bg-elevated')}>
-              <Ico d={NAV_ICON[item.id as Screen]} size={15} />
-              {item.label}
-            </button>
-          )
-        })}
+      {screen !== 'videos' && (
+        <button onClick={() => onNavigate(screen === 'segment' ? 'analysis' : 'videos')}
+          className="text-xs font-mono text-muted hover:text-cream-dim flex items-center gap-1 shrink-0">
+          <Ico d={I.chevronL} size={11} />Back
+        </button>
+      )}
+
+      <nav className="flex items-center gap-2 text-xs font-mono min-w-0">
+        {crumbs.map((c, i) => (
+          <span key={c.label} className="flex items-center gap-2 min-w-0">
+            {i > 0 && <span className="text-border">/</span>}
+            {c.go
+              ? <button onClick={c.go} className="text-muted hover:text-cream-dim truncate">{c.label}</button>
+              : <span className="text-cream truncate">{c.label}</span>}
+          </span>
+        ))}
       </nav>
 
-      <div className="p-4 border-t border-border">
-        <p className="text-[10px] font-mono text-muted leading-relaxed">
-          Decision support for review prioritisation. Names observed behaviour;
-          does not determine intent.
-        </p>
-      </div>
-    </aside>
-  )
-}
+      <div className="flex-1" />
 
-function TopBar({ screen, search, onSearch }: {
-  screen: Screen; search: string; onSearch: (v: string) => void
-}) {
-  return (
-    <header className="h-14 shrink-0 bg-surface/95 backdrop-blur-sm border-b border-border flex items-center gap-6 px-6">
-      <h1 className="text-sm font-semibold text-cream shrink-0">{SCREEN_TITLE[screen]}</h1>
-
-      <div className="flex-1 max-w-md relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none">
-          <Ico d={I.search} size={13} />
-        </span>
-        <input
-          value={search}
-          onChange={e => onSearch(e.target.value)}
-          placeholder="Search seat, recording, label or offset…"
-          className="w-full bg-card border border-border rounded-lg pl-9 pr-3 py-1.5 text-xs text-cream-dim placeholder:text-muted focus:outline-none focus:border-olive-mid transition-colors"
-        />
-      </div>
-
-      <div className="flex items-center gap-1.5 text-xs font-mono text-muted shrink-0">
-        <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-        Offline analysis
+      <div className="flex items-center gap-4 shrink-0">
+        <span className="text-xs font-mono text-muted">{right}</span>
+        <div className="flex items-center gap-1.5 text-xs font-mono text-muted">
+          <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+          OFFLINE
+        </div>
       </div>
     </header>
   )
 }
 
-/** Renders an event's `evidence` object as-is.
- *
- * The shape genuinely varies by rule -- a phone event carries
- * frames_with_detection and mean_detection_conf, a talking event carries a
- * correlation and a lag, a transit event carries a displacement. Hard-coding
- * fields would mean silently dropping whichever rule fired, so this walks
- * whatever is there. `rule` is promoted to a sentence; `note` and `caveat` are
- * shown as prose because they exist to qualify the finding.
- */
+// ── Dashboard ─────────────────────────────────────────────────────
+
+// Dashboard removed: the reference flow lands on the recording grid.
+
+
+/** Renders an event's `evidence` object as-is. The shape genuinely varies by
+ *  rule -- a phone event carries frame counts, a talking event a correlation
+ *  and a lag, a transit event a displacement -- so this walks whatever is
+ *  there rather than hard-coding fields and silently dropping the rest. */
 function EvidencePanel({ event }: { event: UiEvent | null }) {
-  if (!event) {
-    return <p className="text-xs text-muted">Select an event to see its evidence.</p>
-  }
+  if (!event) return <p className="text-xs text-muted">Select an event to see its evidence.</p>
   const ev = event.raw.evidence ?? {}
   const rule = String(ev['rule'] ?? '')
   const prose = ['note', 'caveat'] as const
@@ -331,16 +318,12 @@ function EvidencePanel({ event }: { event: UiEvent | null }) {
   const rows = Object.entries(ev).filter(([k, v]) =>
     !skip.has(k) && v !== null && typeof v !== 'object')
   const also = ev['also_matched'] as { label: string; confidence: number }[] | undefined
-
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">
-          Signal that fired
-        </div>
+        <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">Signal that fired</div>
         <p className="text-xs text-cream-dim leading-relaxed">{rule || '—'}</p>
       </div>
-
       {rows.length > 0 && (
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
           {rows.map(([k, v]) => (
@@ -351,12 +334,9 @@ function EvidencePanel({ event }: { event: UiEvent | null }) {
           ))}
         </dl>
       )}
-
       {event.raw.stage1 && (
         <div>
-          <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">
-            Stage 1 signal
-          </div>
+          <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">Stage 1 signal</div>
           <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
             {Object.entries(event.raw.stage1).map(([k, v]) => (
               <div key={k}>
@@ -367,369 +347,20 @@ function EvidencePanel({ event }: { event: UiEvent | null }) {
           </dl>
         </div>
       )}
-
       {also?.length ? (
         <div>
-          <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">
-            Other rules that also matched
-          </div>
+          <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">Other rules that also matched</div>
           <div className="flex flex-wrap gap-1.5">
-            {also.map(a => (
-              <Badge key={a.label} color="muted">
-                {labelText(a.label)} {a.confidence}
-              </Badge>
-            ))}
+            {also.map(a => <Badge key={a.label} color="muted">{labelText(a.label)} {a.confidence}</Badge>)}
           </div>
         </div>
       ) : null}
-
       {prose.map(k => ev[k] ? (
-        <p key={k} className="text-[11px] text-muted leading-relaxed border-l-2 border-border pl-3">
-          {String(ev[k])}
-        </p>
+        <p key={k} className="text-[11px] text-muted leading-relaxed border-l-2 border-border pl-3">{String(ev[k])}</p>
       ) : null)}
     </div>
   )
 }
-
-// ── Dashboard ─────────────────────────────────────────────────────
-
-function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
-  const [cam, setCam] = useState('all')
-  const { events: ALL_EVENTS, selected, select, loading, error } = useData()
-  const EVENTS_DATA = ALL_EVENTS.slice(0, 6)
-  const { summary } = useData()
-  // Every figure here comes from the manifest. Nothing is padded for effect:
-  // if only eight recordings were processed, the card says eight.
-  const kpi = (() => {
-    const videos = summary ? Object.keys(summary.videos).length : 0
-    const events = ALL_EVENTS.length
-    // A finding is a reported behaviour at a seat. staff_or_transit and
-    // unclassified_anomaly are the opposite -- reasons to look elsewhere --
-    // so counting them as "named behaviours" would overstate the result.
-    const DISMISS = ['staff_or_transit', 'unclassified_anomaly']
-    const named = ALL_EVENTS.filter(e => !DISMISS.includes(e.raw.action_label)).length
-    const reviewSec = ALL_EVENTS.reduce((a, e) => a + e.durationS, 0)
-    return {
-      videos,
-      events,
-      named,
-      unnamed: events - named,
-      high: ALL_EVENTS.filter(e => e.priority === 'high').length,
-      withObject: ALL_EVENTS.filter(e => e.obj !== 'None').length,
-      reviewMin: Math.max(1, Math.round(reviewSec / 60)),
-      hours: hoursLabel(summary?.total_footage_s ?? 0),
-    }
-  })()
-  const s1 = [18,22,24,28,30,32,35,38,40,42,44,48]
-  const s2 = [40,42,45,48,50,52,55,58,60,62,66,70]
-  const s3 = [8,10,12,14,15,16,18,20,22,24,26,28]
-
-  return (
-    <div className="overflow-y-auto h-full">
-
-      {/* Hero band */}
-      <div className="bg-surface border-b border-border">
-        <div className="px-8 py-14 grid grid-cols-2 gap-16 items-center">
-          <div>
-            <div className="flex items-center gap-2 mb-5">
-              <span className="w-1.5 h-1.5 rounded-full bg-success" />
-              <span className="text-xs font-mono text-muted uppercase tracking-widest">
-                {kpi.videos} recordings analysed · offline
-              </span>
-            </div>
-            <h1 className="text-5xl font-display text-cream leading-tight mb-4">
-              Review what<br />is worth reviewing.
-            </h1>
-            <p className="text-cream-dim text-base leading-relaxed mb-8 max-w-md">
-              {kpi.hours} of recorded footage reduced to {kpi.events} ranked
-              moments — each with its seat, offset, the signal that fired, and a
-              clip. REWIND names observed behaviour; a reviewer decides what it
-              means.
-            </p>
-            <div className="flex items-center gap-3">
-              <Btn size="lg" onClick={() => onNavigate('library')}>
-                <Ico d={I.event} size={15} />Browse Events
-              </Btn>
-              <Btn size="lg" variant="secondary" onClick={() => onNavigate('event-explorer')}>
-                View Events
-                <Ico d={I.arrow} size={15} />
-              </Btn>
-            </div>
-            <div className="flex items-center gap-6 mt-8 pt-8 border-t border-border">
-              {[
-                { label: 'Recordings', val: String(kpi.videos) },
-                { label: 'Events', val: String(kpi.events) },
-                { label: 'High Confidence', val: String(kpi.high) },
-                { label: 'Footage', val: kpi.hours },
-              ].map(s => (
-                <div key={s.label}>
-                  <div className="text-2xl font-display text-cream">{s.val}</div>
-                  <div className="text-xs font-mono text-muted mt-0.5">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <ClipPlayer event={selected} compact />
-            <div className="flex items-center justify-between mt-3 text-xs font-mono text-muted">
-              <span>Live investigation preview · {selected?.cam ?? '—'}</span>
-              <button onClick={() => onNavigate('investigation')} className="text-olive hover:underline flex items-center gap-1">Open workspace <Ico d={I.arrow} size={10} /></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* KPIs */}
-      <div className="px-8 py-10 border-b border-border">
-        <div className="flex items-baseline justify-between mb-6">
-          <div>
-            <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Session Analytics</div>
-            <h2 className="text-2xl font-display text-cream">Key Metrics</h2>
-          </div>
-
-        </div>
-        <div className="grid grid-cols-4 gap-4">
-          {[
-            { label: 'Recordings Analysed', val: String(kpi.videos), sub: `${kpi.hours} of footage`, spark: s1, color: 'olive' as const },
-            { label: 'Events Surfaced', val: String(kpi.events), sub: `${kpi.reviewMin} min to review`, spark: s2, color: 'olive' as const },
-            { label: 'Findings', val: String(kpi.named), sub: `${kpi.unnamed} set aside as transit or unclassified`, spark: s3, color: 'danger' as const },
-            { label: 'Object Evidence', val: String(kpi.withObject), sub: 'detection-backed', spark: [4,6,8,7,10,12,14,16,18,20,21,23], color: 'amber' as const },
-          ].map(k => {
-            const cc = { olive: { border: 'border-olive-mid/20', val: 'text-olive', sc: '#5E7832' }, danger: { border: 'border-danger/20', val: 'text-danger', sc: '#B02030' }, amber: { border: 'border-amber/20', val: 'text-amber', sc: '#A06010' } }[k.color]
-            return (
-              <Card key={k.label} className={cn('p-6 border', cc.border)}>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="text-xs font-mono text-muted uppercase tracking-wider mb-2">{k.label}</div>
-                    <div className={cn('text-5xl font-display', cc.val)}>{k.val}</div>
-                    <div className="text-xs text-muted mt-2">{k.sub}</div>
-                  </div>
-                  <Spark data={k.spark} color={cc.sc} />
-                </div>
-              </Card>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Activity Overview */}
-      <div className="px-8 py-10 border-b border-border">
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Real-time Analysis</div>
-            <h2 className="text-2xl font-display text-cream">Activity Timeline</h2>
-            <p className="text-cream-dim text-sm mt-1">Jump directly to high-activity moments — skip manual review of quiet footage.</p>
-          </div>
-          <div className="flex gap-1.5">
-            {/* Recordings, not cameras. This system has no camera concept --
-                regions are seats within a recording. */}
-            {['all', ...Object.keys(summary?.videos ?? {})].map(c => (
-              <button key={c} onClick={() => setCam(c)} title={c}
-                className={cn('px-3 py-1.5 text-xs rounded-lg font-mono transition-colors',
-                  cam === c ? 'bg-olive text-white font-semibold' : 'bg-card border border-border text-muted hover:text-cream-dim')}>
-                {c === 'all' ? 'All' : camLabel(c)}
-              </button>
-            ))}
-          </div>
-        </div>
-        <Card className="p-6">
-          {/* Activity level legend */}
-          <div className="flex items-center gap-6 mb-4 text-xs font-mono text-muted">
-            {[['Normal','#5E7832'],['Moderate','#A06010'],['High','#B02030'],['Suspicious','#7B2040']].map(([l,c]) => (
-              <span key={l} className="flex items-center gap-1.5">
-                <span className="w-3 h-1.5 rounded-sm inline-block" style={{ background: c as string }} />
-                {l} Activity
-              </span>
-            ))}
-          </div>
-          <ActivityChart height={100} data={activitySeries(
-            cam === 'all' ? ALL_EVENTS : ALL_EVENTS.filter(e => e.raw.video === cam))} />
-        </Card>
-      </div>
-
-      {/* Recent Events */}
-      <div className="px-8 py-10">
-        <div className="flex items-baseline justify-between mb-6">
-          <div>
-            <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Investigation Queue</div>
-            <h2 className="text-2xl font-display text-cream">Recent High-Priority Events</h2>
-          </div>
-          <Btn variant="secondary" size="sm" onClick={() => onNavigate('event-explorer')}>
-            View All Events <Ico d={I.arrow} size={13} />
-          </Btn>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {EVENTS_DATA.filter(e => e.priority === 'high').slice(0, 3).map(e => (
-            <Card key={e.id} className="p-6 flex flex-col gap-4 hover:border-border-light transition-colors">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="text-xs font-mono text-muted">{e.id}</div>
-                  <div className="text-base font-semibold text-cream mt-0.5">{e.type}</div>
-                </div>
-                {statusBadge(e.status)}
-              </div>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-                {[
-                  ['Timestamp', `${e.time} – ${e.end}`],
-                  ['Camera', e.cam],
-                  ['ROI', e.roi],
-                  ['Object', e.obj],
-                ].map(([k, v]) => (
-                  <div key={k}>
-                    <div className="font-mono text-muted uppercase tracking-wide text-[10px] mb-0.5">{k}</div>
-                    <div className="text-cream-dim font-medium truncate">{v}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center gap-4 py-3 border-y border-border">
-                <div className="text-center">
-                  <div className="text-2xl font-display text-danger">{e.activity}%</div>
-                  <div className="text-[10px] font-mono text-muted uppercase tracking-wide">Activity</div>
-                </div>
-                <div className="w-px h-8 bg-border" />
-                <div className="text-center">
-                  <div className="text-2xl font-display text-olive">{e.conf}%</div>
-                  <div className="text-[10px] font-mono text-muted uppercase tracking-wide">Confidence</div>
-                </div>
-                <div className="flex-1 text-right">
-                  <div className="text-xs font-mono text-amber">Requires Review</div>
-                </div>
-              </div>
-              <Btn onClick={() => onNavigate('investigation')} className="w-full justify-center">
-                Review Event <Ico d={I.arrow} size={13} />
-              </Btn>
-            </Card>
-          ))}
-        </div>
-        {/* A 'Processing Queue' strip sat here showing two files at 67% and
-            23%. Nothing was processing -- the filenames and percentages were
-            literals. This build reviews already-processed footage only. */}
-      </div>
-
-      {/* Priority Video Columns */}
-      <div className="px-8 py-10 border-t border-border">
-        <div className="flex items-baseline justify-between mb-6">
-          <div>
-            <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Triage View</div>
-            <h2 className="text-2xl font-display text-cream">Events by Priority</h2>
-            <p className="text-muted text-sm mt-1">Sorted by activity score and confidence — review high-priority first.</p>
-          </div>
-          <Btn variant="secondary" size="sm" onClick={() => onNavigate('event-explorer')}>
-            Full Event Table <Ico d={I.arrow} size={13} />
-          </Btn>
-        </div>
-
-        <div className="grid grid-cols-3 gap-5">
-          {/* High */}
-          <div>
-            <div className="flex items-center gap-2 mb-4 pb-3 border-b-2 border-danger">
-              <span className="w-2.5 h-2.5 rounded-full bg-danger" />
-              <span className="font-semibold text-cream">High Priority</span>
-              <span className="ml-auto text-xs font-mono text-danger">5 events</span>
-            </div>
-            <div className="space-y-3">
-              {ALL_EVENTS.filter(e => e.priority === 'high').map(e => (
-                <button key={e.id} onClick={() => { select(e); onNavigate('investigation') }}
-                  className="w-full text-left p-4 bg-card border border-border rounded-xl hover:border-danger/40 hover:bg-danger-dim/20 transition-all group">
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <div>
-                      <div className="text-[10px] font-mono text-muted">{e.id}</div>
-                      <div className="text-sm font-semibold text-cream mt-0.5 group-hover:text-cream">{e.type}</div>
-                    </div>
-                    <Badge color="danger">{e.activity}%</Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-1 text-[11px] text-muted mb-3">
-                    <div><span className="text-cream-dim font-medium">{e.cam}</span></div>
-                    <div><span className="text-cream-dim font-medium">{e.time}</span></div>
-                    <div className="col-span-2 truncate">{e.roi}</div>
-                  </div>
-                  {e.obj !== 'None' && (
-                    <div className="text-[10px] font-mono text-amber mb-2">⚠ Possible {e.obj}</div>
-                  )}
-                  <div className="flex items-center justify-between">
-                    {statusBadge(e.status)}
-                    <span className="text-xs text-olive opacity-0 group-hover:opacity-100 transition-opacity font-medium">Review →</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Medium */}
-          <div>
-            <div className="flex items-center gap-2 mb-4 pb-3 border-b-2 border-amber">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber" />
-              <span className="font-semibold text-cream">Medium Priority</span>
-              <span className="ml-auto text-xs font-mono text-amber">3 events</span>
-            </div>
-            <div className="space-y-3">
-              {ALL_EVENTS.filter(e => e.priority === 'medium').map(e => (
-                <button key={e.id} onClick={() => onNavigate('event-explorer')}
-                  className="w-full text-left p-4 bg-card border border-border rounded-xl hover:border-amber/40 hover:bg-amber-dim/20 transition-all group">
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <div>
-                      <div className="text-[10px] font-mono text-muted">{e.id}</div>
-                      <div className="text-sm font-semibold text-cream mt-0.5">{e.type}</div>
-                    </div>
-                    <Badge color="amber">{e.activity}%</Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-1 text-[11px] text-muted mb-3">
-                    <div><span className="text-cream-dim font-medium">{e.cam}</span></div>
-                    <div><span className="text-cream-dim font-medium">{e.time}</span></div>
-                    <div className="col-span-2 truncate">{e.roi}</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    {statusBadge(e.status)}
-                    <span className="text-xs text-olive opacity-0 group-hover:opacity-100 transition-opacity font-medium">Review →</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Low */}
-          <div>
-            <div className="flex items-center gap-2 mb-4 pb-3 border-b-2 border-muted/40">
-              <span className="w-2.5 h-2.5 rounded-full bg-muted/60" />
-              <span className="font-semibold text-cream">Low Priority</span>
-              <span className="ml-auto text-xs font-mono text-muted">3 events</span>
-            </div>
-            <div className="space-y-3">
-              {ALL_EVENTS.filter(e => e.priority === 'low').slice(0, 3).map(e => (
-                <button key={e.id} onClick={() => onNavigate('event-explorer')}
-                  className="w-full text-left p-4 bg-card border border-border rounded-xl hover:border-border-light transition-all group">
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <div>
-                      <div className="text-[10px] font-mono text-muted">{e.id}</div>
-                      <div className="text-sm font-semibold text-cream mt-0.5">{e.type}</div>
-                    </div>
-                    <Badge color="muted">{e.activity}%</Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-1 text-[11px] text-muted mb-3">
-                    <div><span className="text-cream-dim font-medium">{e.cam}</span></div>
-                    <div><span className="text-cream-dim font-medium">{e.time}</span></div>
-                    <div className="col-span-2 truncate">{e.roi}</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    {statusBadge(e.status)}
-                    <span className="text-xs text-muted opacity-0 group-hover:opacity-100 transition-opacity font-medium">View →</span>
-                  </div>
-                </button>
-              ))}
-              {/* Filler card if few low events */}
-              <div className="p-4 border border-dashed border-border rounded-xl text-center text-xs text-muted font-mono">
-                + 12 more low-priority events
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ── Video Analysis ─────────────────────────────────────────────────
 
 function priorityCounts(evs: UiEvent[]) {
   return {
@@ -856,6 +487,7 @@ function Library({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 function Analysis({ onNavigate }: { onNavigate: (s: Screen) => void }) {
   const { events, stats, video, setVideo, select, loading, error } = useData()
   const [filter, setFilter] = useState('All')
+  const [q, setQ] = useState('')
   if (error) return <ApiError error={error} />
   if (loading) return <Loading />
 
@@ -864,7 +496,7 @@ function Analysis({ onNavigate }: { onNavigate: (s: Screen) => void }) {
       <div className="h-full flex items-center justify-center px-10">
         <div className="text-center space-y-3">
           <div className="text-sm text-cream-dim">No recording selected.</div>
-          <Btn onClick={() => onNavigate('library')}>
+          <Btn onClick={() => onNavigate('videos')}>
             <Ico d={I.video} size={14} />Choose a recording
           </Btn>
         </div>
@@ -883,10 +515,16 @@ function Analysis({ onNavigate }: { onNavigate: (s: Screen) => void }) {
   const chips = ['All', 'Findings only',
     ...Object.keys(counts).sort((a, b) => counts[b] - counts[a])]
 
-  const shown = evs.filter(e =>
-    filter === 'All'
-    || (filter === 'Findings only' && !DISMISS.includes(e.raw.action_label))
-    || filter === e.raw.action_label)
+  const needle = q.trim().toLowerCase()
+  const shown = evs.filter(e => {
+    const f = filter === 'All'
+      || (filter === 'Findings only' && !DISMISS.includes(e.raw.action_label))
+      || filter === e.raw.action_label
+    const m = !needle || e.time.includes(needle) || e.roi.toLowerCase().includes(needle)
+      || e.type.toLowerCase().includes(needle) || e.obj.toLowerCase().includes(needle)
+      || e.rule.toLowerCase().includes(needle)
+    return f && m
+  })
 
   const kpi = [
     { label: 'Events surfaced', val: evs.length, sub: 'across this recording', color: 'olive' as const },
@@ -899,7 +537,7 @@ function Analysis({ onNavigate }: { onNavigate: (s: Screen) => void }) {
     <div className="overflow-y-auto h-full px-8 py-8 space-y-6">
       <div className="flex items-start justify-between gap-6">
         <div>
-          <button onClick={() => { setVideo(null); onNavigate('library') }}
+          <button onClick={() => { setVideo(null); onNavigate('videos') }}
             className="text-xs font-mono text-muted hover:text-cream-dim flex items-center gap-1 mb-2">
             <Ico d={I.chevronL} size={11} />Back to library
           </button>
@@ -941,7 +579,8 @@ function Analysis({ onNavigate }: { onNavigate: (s: Screen) => void }) {
         </p>
       </Card>
 
-      <div className="flex gap-1.5 flex-wrap">
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex gap-1.5 flex-wrap">
         {chips.map(f => (
           <button key={f} onClick={() => setFilter(f)} title={f}
             className={cn('px-3 py-2 text-xs rounded-lg font-medium transition-colors',
@@ -951,12 +590,21 @@ function Analysis({ onNavigate }: { onNavigate: (s: Screen) => void }) {
             {counts[f] != null && <span className="opacity-60"> {counts[f]}</span>}
           </button>
         ))}
+        </div>
+        <div className="relative flex-1 min-w-[220px]">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none">
+            <Ico d={I.search} size={13} />
+          </span>
+          <input value={q} onChange={e => setQ(e.target.value)}
+            placeholder="Search offset, seat, behaviour or signal…"
+            className="w-full bg-card border border-border rounded-lg pl-9 pr-3 py-2 text-xs text-cream-dim placeholder:text-muted focus:outline-none focus:border-olive-mid transition-colors" />
+        </div>
       </div>
 
       <div className="space-y-2">
         <div className="text-xs font-mono text-muted">{shown.length} events</div>
         {shown.slice(0, 80).map(e => (
-          <button key={e.id} onClick={() => { select(e); onNavigate('investigation') }}
+          <button key={e.id} onClick={() => { select(e); onNavigate('segment') }}
             className="w-full text-left">
             <Card className="p-4 flex items-center gap-4 hover:border-olive-mid/40 border border-transparent transition-colors">
               <div className="w-24 h-14 rounded-lg bg-[#0E1209] border border-border shrink-0 overflow-hidden flex items-center justify-center">
@@ -1219,151 +867,40 @@ function InvestigationWorkspace() {
 
 // ── Event Explorer ─────────────────────────────────────────────────
 
-function EventExplorer({ onNavigate, search }: {
-  onNavigate: (s: Screen) => void; search: string
-}) {
-  const { events: ALL_EVENTS, select, loading, error } = useData()
-  const [filter, setFilter] = useState('All')
-  // Chips are the labels classify.py can actually emit, plus a findings-only
-  // shortcut. The originals ('Possible Object', 'Elevated Motion') matched no
-  // label this system produces, so they filtered to nothing.
-  const DISMISSALS = ['staff_or_transit', 'unclassified_anomaly']
-  const counts = ALL_EVENTS.reduce<Record<string, number>>((a, e) => {
-    a[e.raw.action_label] = (a[e.raw.action_label] ?? 0) + 1
-    return a
-  }, {})
-  const filters = ['All', 'Findings only',
-    ...Object.keys(counts).sort((a, b) => counts[b] - counts[a])]
-  if (error) return <ApiError error={error} />
-  if (loading) return <Loading />
-  const shown = ALL_EVENTS.filter(e => {
-    const q = search.toLowerCase()
-    const m = !q || e.time.includes(q) || e.cam.toLowerCase().includes(q) || e.type.toLowerCase().includes(q) || e.roi.toLowerCase().includes(q)
-    const f = filter === 'All'
-      || (filter === 'Findings only' && !DISMISSALS.includes(e.raw.action_label))
-      || filter === e.raw.action_label
-    return m && f
-  })
+// EventExplorer removed: the reference flow scopes search to a recording,
+
+export default function App() {
+  const [screen, setScreen] = useState<Screen>('videos')
   return (
-    <div className="overflow-y-auto h-full px-8 py-10 space-y-6">
-      <div>
-        <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Investigation Database</div>
-        <h1 className="text-3xl font-display text-cream">Event Explorer</h1>
-        <p className="text-cream-dim text-sm mt-1">
-          Every event the pipeline surfaced, newest analysis first. Search from
-          the bar above; filter by the labels actually present in the data.
-        </p>
-      </div>
-
-      {/* The search box lives in the top bar; this screen consumes it. */}
-      <div className="flex items-center gap-3">
-        {search && (
-          <span className="text-xs font-mono text-muted shrink-0">
-            filtering on “{search}”
-          </span>
-        )}
-        <div className="flex gap-1.5 flex-wrap">
-          {filters.map(f => (
-            <button key={f} onClick={() => setFilter(f)} title={f}
-              className={cn('px-3 py-2 text-xs rounded-lg font-medium transition-colors',
-                filter === f ? 'bg-olive text-white font-semibold' : 'bg-card border border-border text-muted hover:text-cream-dim')}>
-              {f === 'All' || f === 'Findings only' ? f : labelText(f)}
-              {counts[f] != null && <span className="opacity-60"> {counts[f]}</span>}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead className="bg-elevated">
-              <tr className="text-muted font-mono text-[10px] uppercase tracking-widest">
-                {['ID','Offset','Recording','Observed behaviour','Seat','Activity','Confidence','Object','Status',''].map(h => (
-                  <th key={h} className="text-left px-5 py-3 font-medium border-b border-border whitespace-nowrap">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {shown.map(e => (
-                <tr key={e.id} onClick={() => select(e)}
-                  title={e.clipUrl ? 'select this event' : 'no clip exported yet for this event'}
-                  className={cn('border-b border-border/50 hover:bg-elevated/40 transition-colors cursor-pointer',
-                    !e.clipUrl && 'opacity-55')}>
-                  <td className="px-5 py-3 font-mono text-muted text-[10px]">{e.id}</td>
-                  <td className="px-5 py-3 font-mono text-cream-dim whitespace-nowrap">{e.time}</td>
-                  <td className="px-5 py-3 font-mono text-olive">{e.cam}</td>
-                  <td className="px-5 py-3 text-cream font-medium">{e.type}</td>
-                  <td className="px-5 py-3 text-cream-dim">{e.roi}</td>
-                  <td className="px-5 py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-14 h-1.5 bg-elevated rounded-full overflow-hidden">
-                        <div className={cn('h-full rounded-full', e.activity >= 80 ? 'bg-danger' : e.activity >= 60 ? 'bg-amber' : 'bg-olive')} style={{ width: `${e.activity}%` }} />
-                      </div>
-                      <span className="font-mono text-cream-dim">{e.activity}%</span>
-                    </div>
-                  </td>
-                  <td className="px-5 py-3 font-mono text-olive">{e.conf}%</td>
-                  <td className="px-5 py-3 text-cream-dim">{e.obj === 'None' ? '—' : e.obj}</td>
-                  <td className="px-5 py-3">{statusBadge(e.status)}</td>
-                  <td className="px-5 py-3">
-                    <Btn variant="secondary" size="sm" onClick={() => { select(e); onNavigate('investigation') }}>
-                      {e.status === 'Reviewed' ? 'View' : 'Review'} <Ico d={I.arrow} size={11} />
-                    </Btn>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="px-5 py-3 border-t border-border bg-elevated/30 flex items-center justify-between text-xs text-muted font-mono">
-          <span>Showing {shown.length} of {ALL_EVENTS.length} events</span>
-          <div className="flex gap-1">
-            {['←','1','2','3','→'].map((l, i) => (
-              <button key={l} className={cn('px-2.5 py-1 rounded-lg text-xs font-mono', i === 1 ? 'bg-olive text-white' : 'bg-card border border-border hover:border-border-light')}>{l}</button>
-            ))}
-          </div>
-        </div>
-      </Card>
-    </div>
+    <DataConsumerShell screen={screen} setScreen={setScreen} />
   )
 }
 
-// ── ROI Analysis ──────────────────────────────────────────────────
+function DataConsumerShell({ screen, setScreen }: {
+  screen: Screen; setScreen: (s: Screen) => void
+}) {
+  const { events, video, selected } = useData()
+  const scoped = video ? events.filter(e => e.raw.video === video) : events
+  const right =
+    screen === 'videos'
+      ? `${events.length} events across ${new Set(events.map(e => e.raw.video)).size} recordings`
+      : screen === 'analysis'
+        ? `${scoped.length} events detected`
+        : selected ? `${selected.conf}% confidence` : ''
 
-// ROIAnalysis, ObjectDetection, SegmentedEvents, Reports and SystemStatus
-// were removed. Every one of them ran on hardcoded arrays -- invented ROI
-// statistics, a mock detection list, fabricated report rows and made-up GPU
-// and storage telemetry. None was wired to the pipeline, and SegmentedEvents
-// was a second view of the same events as the Event Explorer while not being
-// reachable from the nav at all. A screen that shows a reviewer numbers the
-// system did not produce is worse than no screen.
-
-export default function App() {
-  const [screen, setScreen] = useState<Screen>('dashboard')
-  // One search box in the chrome, and it drives the only searchable surface.
-  // Typing anywhere takes you to the results rather than silently doing nothing.
-  const [search, setSearch] = useState('')
-  const onSearch = (v: string) => {
-    setSearch(v)
-    if (v && screen !== 'event-explorer') setScreen('event-explorer')
-  }
   const screens: Record<Screen, React.ReactNode> = {
-    'dashboard': <Dashboard onNavigate={setScreen} />,
-    'library': <Library onNavigate={setScreen} />,
+    'videos': <Library onNavigate={setScreen} />,
     'analysis': <Analysis onNavigate={setScreen} />,
-    'event-explorer': <EventExplorer onNavigate={setScreen} search={search} />,
-    'investigation': <InvestigationWorkspace />,
+    'segment': <InvestigationWorkspace />,
   }
+
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-bg text-cream font-sans">
-      <Sidebar active={screen} onNavigate={setScreen} />
-      <div className="flex-1 flex flex-col min-w-0">
-        <TopBar screen={screen} search={search} onSearch={onSearch} />
-        <main className="flex-1 overflow-hidden screen-enter" key={screen}>
-          {screens[screen]}
-        </main>
-      </div>
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-bg text-cream font-sans">
+      <TopBar screen={screen} onNavigate={setScreen} video={video}
+        segment={selected ? selected.id : null} right={right} />
+      <main className="flex-1 overflow-hidden screen-enter" key={screen}>
+        {screens[screen]}
+      </main>
     </div>
   )
 }
