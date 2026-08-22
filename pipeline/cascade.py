@@ -253,8 +253,11 @@ def sweep_persistent_objects(
     frames = sample_frames(video, start_s, duration_s, n)
     if not frames:
         return []
-    fds = detect_multiscale(frames, classes=SMALL_CLASSES,
-                            conf=min(PHONE_CONF, BOOK_CONF) * 0.6)
+    # Persons are collected on the same pass: the crowd rule needs a person
+    # count over the whole file, and this is already the whole file.
+    fds = detect_multiscale(frames, classes=SMALL_CLASSES + [COCO_PERSON],
+                            conf=min(PHONE_CONF, BOOK_CONF) * 0.6,
+                            include_native=False)
     if verbose:
         n_hit = sum(1 for f in fds if f.dets)
         print(f"  [sweep] {len(fds)} frames every {interval:.0f}s, "

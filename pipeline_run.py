@@ -24,6 +24,7 @@ from pipeline.classify import (
     classify_crowd,
     classify_persistent_objects,
     classify_window,
+    count_unseated,
 )
 from pipeline.correlate import correlate_all
 from pipeline.evaluate import evaluate_all
@@ -45,6 +46,14 @@ from pipeline.segment import budget_shortlist, segment_all
 # candidate with a phone is exactly clip 03. Only a scene with no seat at all
 # falls through to the zone/crowd path.
 MIN_SEATS_FOR_GRID = 1
+
+
+def scan_frames_fallback(video: str, duration_s: float, start_s: float,
+                         verbose: bool) -> list:
+    """Person detections over the file when no sweep ran (SWEEP_ENABLED off)."""
+    from pipeline.cascade import sweep_persistent_objects
+    return sweep_persistent_objects(video, None, duration_s, start_s=start_s,
+                                    verbose=verbose)
 
 
 def _overlaps_existing(e: dict, events: list[dict], tiou: float = 0.3) -> bool:
@@ -130,7 +139,8 @@ def process_video(
         if C.SWEEP_ENABLED:
             sweep = sweep_persistent_objects(str(video), grid, observed_s,
                                              start_s=start_s, verbose=verbose)
-            fixtures = build_fixture_map(sweep)
+            fixtures = build_fixture_map(
+                sweep, only_classes=(C.COCO_CELL_PHONE, C.COCO_BOOK))
             n_dropped = drop_fixtures(sweep, fixtures)
             stage1["fixtures"] = {
                 "n": len(fixtures),
@@ -210,17 +220,27 @@ def process_video(
             print(f"  [stage1] {stage1['note']}", flush=True)
 
     # --- crowd path (zone-based, separate from the seat grid) --------------
-    run_crowd = crowd == "always" or (crowd == "auto" and len(grid) < MIN_SEATS_FOR_GRID)
+    # Runs on the sweep frames that were already decoded, so it is free. It
+    # counts only people who are *not* in a discovered seat: a room full of
+    # seated candidates is an exam, not a gathering, and counting them would
+    # make this rule fire permanently everywhere.
+    run_crowd = crowd != "never"
     if run_crowd:
-        dur = observed_s if max_seconds else info["duration_s"]
-        counts = scan_zone_crowd(str(video), duration_s=dur, verbose=verbose)
-        crowd_events = classify_crowd(counts, zone_id=f"{video.stem}:full_frame")
+        frames_for_crowd = sweep if sweep else scan_frames_fallback(
+            str(video), observed_s, start_s, verbose)
+        unseated = count_unseated(frames_for_crowd, grid)
+        crowd_events = classify_crowd(unseated, zone_id=f"{video.stem}:unseated")
         for e in crowd_events:
             e["video"] = name
             e["clip_path"] = None
         events += crowd_events
-        stage1["crowd_scan"] = {"frames_sampled": len(counts),
+        peak = max((n for _, n, _ in unseated), default=0)
+        stage1["crowd_scan"] = {"frames_sampled": len(unseated),
+                                "peak_unseated_persons": peak,
                                 "events": len(crowd_events)}
+        if verbose:
+            print(f"  [crowd] {len(unseated)} frames, peak {peak} unseated "
+                  f"persons -> {len(crowd_events)} events", flush=True)
 
     # --- clips -------------------------------------------------------------
     if want_clips:

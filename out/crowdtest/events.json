@@ -1,0 +1,559 @@
+{
+  "generated_by": "REWIND pipeline_run.py",
+  "parameters": {
+    "GRID_CELL_PX": 16,
+    "SEAT_ACCUM_SECONDS": 120,
+    "BASELINE_WINDOW_S": 60,
+    "Z_THRESHOLD": 3.5,
+    "CORR_MAX_LAG_S": 2.0,
+    "MIN_EVENT_S": 1.5,
+    "PELT_PENALTY": 10,
+    "CASCADE_TOP_PCT": 0.02,
+    "BIN_S": 1.0,
+    "ACTIVITY_TRANSFORM": "sqrt",
+    "CASCADE_FPS": 5.0
+  },
+  "disclaimer": "REWIND is decision support for review prioritisation. It names observed behaviour and does not determine intent. Every event is for a human reviewer to assess.",
+  "stats": {
+    "05_crowd_reception_desk.mp4": {
+      "n_seats": 7,
+      "observed_seconds": 241.0,
+      "seat_seconds_observed": 1687.0,
+      "stage1_candidates": 21,
+      "promoted_to_stage2": 9,
+      "promoted_seconds": 32.0,
+      "promoted_fraction_of_seat_seconds": 0.01896858328393598,
+      "frac_seat_seconds_over_z": 0.04149377593360996,
+      "fixtures": {
+        "n": 1,
+        "sweep_detections_dropped": 39,
+        "detail": [
+          {
+            "class_id": 73,
+            "box": [
+              94,
+              656,
+              222,
+              719
+            ],
+            "presence": 0.812,
+            "drift_in_box_diagonals": 0.011,
+            "samples": 39
+          }
+        ]
+      },
+      "sweep": {
+        "frames": 48,
+        "events": 2,
+        "kept_after_dedupe": 2
+      },
+      "pair_correlations": [
+        {
+          "seat_a": 6,
+          "seat_b": 7,
+          "corr": 0.785,
+          "lag_s": 0.0
+        },
+        {
+          "seat_a": 5,
+          "seat_b": 6,
+          "corr": 0.668,
+          "lag_s": 0.0
+        },
+        {
+          "seat_a": 5,
+          "seat_b": 7,
+          "corr": 0.651,
+          "lag_s": -1.0
+        },
+        {
+          "seat_a": 3,
+          "seat_b": 4,
+          "corr": 0.638,
+          "lag_s": 0.0
+        },
+        {
+          "seat_a": 4,
+          "seat_b": 5,
+          "corr": 0.565,
+          "lag_s": -1.0
+        },
+        {
+          "seat_a": 3,
+          "seat_b": 5,
+          "corr": 0.43,
+          "lag_s": -1.0
+        },
+        {
+          "seat_a": 2,
+          "seat_b": 3,
+          "corr": 0.41,
+          "lag_s": -2.0
+        },
+        {
+          "seat_a": 4,
+          "seat_b": 6,
+          "corr": 0.409,
+          "lag_s": -1.0
+        },
+        {
+          "seat_a": 3,
+          "seat_b": 6,
+          "corr": 0.368,
+          "lag_s": -2.0
+        },
+        {
+          "seat_a": 3,
+          "seat_b": 7,
+          "corr": 0.339,
+          "lag_s": -2.0
+        },
+        {
+          "seat_a": 4,
+          "seat_b": 7,
+          "corr": 0.303,
+          "lag_s": -2.0
+        },
+        {
+          "seat_a": 2,
+          "seat_b": 4,
+          "corr": 0.241,
+          "lag_s": -2.0
+        }
+      ],
+      "crowd_scan": {
+        "frames_sampled": 48,
+        "peak_unseated_persons": 15,
+        "events": 5
+      },
+      "elapsed_s": 54.1,
+      "duration_s": 240.8
+    }
+  },
+  "evaluation": {
+    "ground_truth_rows": 8,
+    "timed_rows": 0,
+    "label_accuracy": {
+      "metric": "action-label accuracy (file level, filename-derived truth)",
+      "status": "measured",
+      "n_files_scored": 1,
+      "top_label_correct": 1.0,
+      "label_present": 1.0,
+      "per_file": [
+        {
+          "video": "06_mobile_phone_hall.mp4",
+          "expected": "mobile_phone_usage",
+          "status": "not_run"
+        },
+        {
+          "video": "07_seat_exchange.mp4",
+          "expected": "seat_exchange",
+          "status": "not_run"
+        },
+        {
+          "video": "08_seat12_paper_pass.mkv",
+          "expected": "paper_pass",
+          "status": "not_run"
+        },
+        {
+          "video": "05_crowd_reception_desk.mp4",
+          "expected": "crowd_gathering",
+          "top_label": "crowd_gathering",
+          "n_events": 16,
+          "labels_seen": [
+            "crowd_gathering",
+            "mobile_phone_usage",
+            "talking_to_neighbour",
+            "unclassified_anomaly"
+          ],
+          "top_label_correct": true,
+          "label_present": true,
+          "status": "scored"
+        },
+        {
+          "video": "03_cctv_mobile_usage.mkv",
+          "expected": "mobile_phone_usage",
+          "status": "not_run"
+        },
+        {
+          "video": "04_cctv_candidate_talking.mkv",
+          "expected": "talking_to_neighbour",
+          "status": "not_run"
+        },
+        {
+          "video": "01_mobile_phone_hall.mkv",
+          "expected": "mobile_phone_usage",
+          "status": "not_run"
+        },
+        {
+          "video": "02_mobile_phone_hall.mkv",
+          "expected": "mobile_phone_usage",
+          "status": "not_run"
+        }
+      ]
+    },
+    "per_video": {
+      "05_crowd_reception_desk.mp4": {
+        "recall_at_budget": {
+          "metric": "recall@review-budget",
+          "status": "unavailable",
+          "reason": "no timed ground-truth rows for this video; fill start_sec/end_sec in data/ground_truth.csv"
+        },
+        "mean_tiou": {
+          "metric": "mean temporal IoU",
+          "status": "unavailable",
+          "reason": "no timed ground-truth rows for this video"
+        },
+        "false_events_per_hour": {
+          "metric": "false events per hour",
+          "status": "unavailable",
+          "reason": "cannot separate false from true without timed ground truth; the raw event rate is reported instead as `events_per_hour`",
+          "events_per_hour": 239.20265780730898
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 3,
+      "start_sec": 2.0,
+      "end_sec": 4.0,
+      "action_label": "mobile_phone_usage",
+      "confidence": 0.212,
+      "evidence": {
+        "rule": "cell_phone detected inside the seat region",
+        "seat_id": 3,
+        "frames_with_detection": 2,
+        "frames_in_window": 20,
+        "mean_detection_conf": 0.224,
+        "detector_class": "cell phone (COCO 67)"
+      },
+      "stage1": {
+        "peak_z": 9.69,
+        "mean_z": 7.38,
+        "duration_s": 2.0,
+        "salience": 10.44
+      },
+      "clip_path": null
+    },
+    {
+      "zone_id": "05_crowd_reception_desk:unseated",
+      "start_sec": 5.03203125,
+      "end_sec": 10.08203125,
+      "action_label": "crowd_gathering",
+      "confidence": 0.6058333333333333,
+      "evidence": {
+        "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+        "peak_person_count": 7,
+        "mean_person_count": 6.5,
+        "duration_s": 5.05,
+        "min_persons": 4
+      },
+      "video": "05_crowd_reception_desk.mp4",
+      "clip_path": null
+    },
+    {
+      "zone_id": "05_crowd_reception_desk:unseated",
+      "start_sec": 30.165364583333332,
+      "end_sec": 110.48203124999999,
+      "action_label": "crowd_gathering",
+      "confidence": 0.97,
+      "evidence": {
+        "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+        "peak_person_count": 15,
+        "mean_person_count": 8.82,
+        "duration_s": 80.32,
+        "min_persons": 4
+      },
+      "video": "05_crowd_reception_desk.mp4",
+      "clip_path": null
+    },
+    {
+      "seat_id": 3,
+      "start_sec": 65.28203125,
+      "end_sec": 75.31536458333333,
+      "action_label": "mobile_phone_usage",
+      "confidence": 0.6694037988781929,
+      "evidence": {
+        "rule": "persistent-object sweep: the object was present at this seat across consecutive sparse samples",
+        "detector_class": "cell phone (COCO 67)",
+        "samples_in_run": 3,
+        "samples_with_detection": 3,
+        "mean_detection_conf": 0.488,
+        "path": "persistent_object_sweep",
+        "note": "complements the Stage 1 change-point path, which by construction cannot flag a behaviour that was already underway and never changes"
+      },
+      "video": "05_crowd_reception_desk.mp4",
+      "clip_path": null
+    },
+    {
+      "seat_id": 5,
+      "start_sec": 110.48203124999999,
+      "end_sec": 125.56536458333333,
+      "action_label": "mobile_phone_usage",
+      "confidence": 0.4301329001784325,
+      "evidence": {
+        "rule": "persistent-object sweep: the object was present at this seat across consecutive sparse samples",
+        "detector_class": "cell phone (COCO 67)",
+        "samples_in_run": 4,
+        "samples_with_detection": 3,
+        "mean_detection_conf": 0.206,
+        "path": "persistent_object_sweep",
+        "note": "complements the Stage 1 change-point path, which by construction cannot flag a behaviour that was already underway and never changes"
+      },
+      "video": "05_crowd_reception_desk.mp4",
+      "clip_path": null
+    },
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 6,
+      "start_sec": 158.0,
+      "end_sec": 161.0,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.161,
+      "evidence": {
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
+        "seat_id": 6,
+        "peak_z": 7.2,
+        "mean_z": 6.44,
+        "persons_tracked": 7,
+        "frames_in_window": 25,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
+      },
+      "stage1": {
+        "peak_z": 7.2,
+        "mean_z": 6.44,
+        "duration_s": 3.0,
+        "salience": 11.16
+      },
+      "clip_path": null
+    },
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 1,
+      "start_sec": 163.0,
+      "end_sec": 165.0,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.184,
+      "evidence": {
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
+        "seat_id": 1,
+        "peak_z": 8.78,
+        "mean_z": 7.37,
+        "persons_tracked": 2,
+        "frames_in_window": 20,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
+      },
+      "stage1": {
+        "peak_z": 8.78,
+        "mean_z": 7.37,
+        "duration_s": 2.0,
+        "salience": 10.43
+      },
+      "clip_path": null
+    },
+    {
+      "zone_id": "05_crowd_reception_desk:unseated",
+      "start_sec": 180.76536458333334,
+      "end_sec": 185.79869791666667,
+      "action_label": "crowd_gathering",
+      "confidence": 0.2927777777777777,
+      "evidence": {
+        "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+        "peak_person_count": 4,
+        "mean_person_count": 4.0,
+        "duration_s": 5.03,
+        "min_persons": 4
+      },
+      "video": "05_crowd_reception_desk.mp4",
+      "clip_path": null
+    },
+    {
+      "zone_id": "05_crowd_reception_desk:unseated",
+      "start_sec": 195.83203125,
+      "end_sec": 215.91536458333334,
+      "action_label": "crowd_gathering",
+      "confidence": 0.97,
+      "evidence": {
+        "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+        "peak_person_count": 11,
+        "mean_person_count": 7.4,
+        "duration_s": 20.08,
+        "min_persons": 4
+      },
+      "video": "05_crowd_reception_desk.mp4",
+      "clip_path": null
+    },
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 6,
+      "start_sec": 196.0,
+      "end_sec": 200.0,
+      "action_label": "talking_to_neighbour",
+      "confidence": 0.567,
+      "evidence": {
+        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "seat_id": 6,
+        "neighbour_seat_id": 7,
+        "correlation": 0.918,
+        "lag_s": 0.0,
+        "duration_s": 4.0,
+        "min_correlation": 0.35,
+        "min_duration_s": 4.0,
+        "caveat": "inferred from motion correlation, not from speech or pose"
+      },
+      "stage1": {
+        "peak_z": 6.51,
+        "mean_z": 5.34,
+        "duration_s": 4.0,
+        "salience": 10.69
+      },
+      "clip_path": null
+    },
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 1,
+      "start_sec": 213.0,
+      "end_sec": 216.0,
+      "action_label": "unclassified_anomaly",
+      "confidence": 0.169,
+      "evidence": {
+        "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
+        "seat_id": 1,
+        "peak_z": 8.5,
+        "mean_z": 6.76,
+        "persons_tracked": 3,
+        "frames_in_window": 25,
+        "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
+      },
+      "stage1": {
+        "peak_z": 8.5,
+        "mean_z": 6.76,
+        "duration_s": 3.0,
+        "salience": 11.72
+      },
+      "clip_path": null
+    },
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 7,
+      "start_sec": 218.0,
+      "end_sec": 223.0,
+      "action_label": "talking_to_neighbour",
+      "confidence": 0.617,
+      "evidence": {
+        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "seat_id": 7,
+        "neighbour_seat_id": 6,
+        "correlation": 0.919,
+        "lag_s": 1.0,
+        "duration_s": 5.0,
+        "min_correlation": 0.35,
+        "min_duration_s": 4.0,
+        "caveat": "inferred from motion correlation, not from speech or pose"
+      },
+      "stage1": {
+        "peak_z": 8.36,
+        "mean_z": 6.39,
+        "duration_s": 5.0,
+        "salience": 14.29
+      },
+      "clip_path": null
+    },
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 6,
+      "start_sec": 219.0,
+      "end_sec": 224.0,
+      "action_label": "talking_to_neighbour",
+      "confidence": 0.616,
+      "evidence": {
+        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "seat_id": 6,
+        "neighbour_seat_id": 7,
+        "correlation": 0.915,
+        "lag_s": -1.0,
+        "duration_s": 5.0,
+        "min_correlation": 0.35,
+        "min_duration_s": 4.0,
+        "caveat": "inferred from motion correlation, not from speech or pose"
+      },
+      "stage1": {
+        "peak_z": 8.08,
+        "mean_z": 5.53,
+        "duration_s": 5.0,
+        "salience": 12.36
+      },
+      "clip_path": null
+    },
+    {
+      "zone_id": "05_crowd_reception_desk:unseated",
+      "start_sec": 225.96536458333333,
+      "end_sec": 235.99869791666666,
+      "action_label": "crowd_gathering",
+      "confidence": 0.6261111111111111,
+      "evidence": {
+        "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+        "peak_person_count": 6,
+        "mean_person_count": 5.33,
+        "duration_s": 10.03,
+        "min_persons": 4
+      },
+      "video": "05_crowd_reception_desk.mp4",
+      "clip_path": null
+    },
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 6,
+      "start_sec": 234.0,
+      "end_sec": 238.0,
+      "action_label": "talking_to_neighbour",
+      "confidence": 0.543,
+      "evidence": {
+        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "seat_id": 6,
+        "neighbour_seat_id": 4,
+        "correlation": 0.858,
+        "lag_s": 1.0,
+        "duration_s": 4.0,
+        "min_correlation": 0.35,
+        "min_duration_s": 4.0,
+        "caveat": "inferred from motion correlation, not from speech or pose"
+      },
+      "stage1": {
+        "peak_z": 12.97,
+        "mean_z": 8.55,
+        "duration_s": 4.0,
+        "salience": 17.1
+      },
+      "clip_path": null
+    },
+    {
+      "video": "05_crowd_reception_desk.mp4",
+      "seat_id": 7,
+      "start_sec": 234.0,
+      "end_sec": 238.0,
+      "action_label": "talking_to_neighbour",
+      "confidence": 0.569,
+      "evidence": {
+        "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+        "seat_id": 7,
+        "neighbour_seat_id": 3,
+        "correlation": 0.922,
+        "lag_s": 2.0,
+        "duration_s": 4.0,
+        "min_correlation": 0.35,
+        "min_duration_s": 4.0,
+        "caveat": "inferred from motion correlation, not from speech or pose"
+      },
+      "stage1": {
+        "peak_z": 11.35,
+        "mean_z": 7.93,
+        "duration_s": 4.0,
+        "salience": 15.87
+      },
+      "clip_path": null
+    }
+  ]
+}

@@ -1,0 +1,343 @@
+[
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 6,
+    "start_sec": 234.0,
+    "end_sec": 238.0,
+    "action_label": "talking_to_neighbour",
+    "confidence": 0.543,
+    "evidence": {
+      "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+      "seat_id": 6,
+      "neighbour_seat_id": 4,
+      "correlation": 0.858,
+      "lag_s": 1.0,
+      "duration_s": 4.0,
+      "min_correlation": 0.35,
+      "min_duration_s": 4.0,
+      "caveat": "inferred from motion correlation, not from speech or pose"
+    },
+    "stage1": {
+      "peak_z": 12.97,
+      "mean_z": 8.55,
+      "duration_s": 4.0,
+      "salience": 17.1
+    },
+    "clip_path": null
+  },
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 7,
+    "start_sec": 234.0,
+    "end_sec": 238.0,
+    "action_label": "talking_to_neighbour",
+    "confidence": 0.569,
+    "evidence": {
+      "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+      "seat_id": 7,
+      "neighbour_seat_id": 3,
+      "correlation": 0.922,
+      "lag_s": 2.0,
+      "duration_s": 4.0,
+      "min_correlation": 0.35,
+      "min_duration_s": 4.0,
+      "caveat": "inferred from motion correlation, not from speech or pose"
+    },
+    "stage1": {
+      "peak_z": 11.35,
+      "mean_z": 7.93,
+      "duration_s": 4.0,
+      "salience": 15.87
+    },
+    "clip_path": null
+  },
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 7,
+    "start_sec": 218.0,
+    "end_sec": 223.0,
+    "action_label": "talking_to_neighbour",
+    "confidence": 0.617,
+    "evidence": {
+      "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+      "seat_id": 7,
+      "neighbour_seat_id": 6,
+      "correlation": 0.919,
+      "lag_s": 1.0,
+      "duration_s": 5.0,
+      "min_correlation": 0.35,
+      "min_duration_s": 4.0,
+      "caveat": "inferred from motion correlation, not from speech or pose"
+    },
+    "stage1": {
+      "peak_z": 8.36,
+      "mean_z": 6.39,
+      "duration_s": 5.0,
+      "salience": 14.29
+    },
+    "clip_path": null
+  },
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 6,
+    "start_sec": 219.0,
+    "end_sec": 224.0,
+    "action_label": "talking_to_neighbour",
+    "confidence": 0.616,
+    "evidence": {
+      "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+      "seat_id": 6,
+      "neighbour_seat_id": 7,
+      "correlation": 0.915,
+      "lag_s": -1.0,
+      "duration_s": 5.0,
+      "min_correlation": 0.35,
+      "min_duration_s": 4.0,
+      "caveat": "inferred from motion correlation, not from speech or pose"
+    },
+    "stage1": {
+      "peak_z": 8.08,
+      "mean_z": 5.53,
+      "duration_s": 5.0,
+      "salience": 12.36
+    },
+    "clip_path": null
+  },
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 1,
+    "start_sec": 213.0,
+    "end_sec": 216.0,
+    "action_label": "unclassified_anomaly",
+    "confidence": 0.169,
+    "evidence": {
+      "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
+      "seat_id": 1,
+      "peak_z": 8.5,
+      "mean_z": 6.76,
+      "persons_tracked": 3,
+      "frames_in_window": 25,
+      "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
+    },
+    "stage1": {
+      "peak_z": 8.5,
+      "mean_z": 6.76,
+      "duration_s": 3.0,
+      "salience": 11.72
+    },
+    "clip_path": null
+  },
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 6,
+    "start_sec": 158.0,
+    "end_sec": 161.0,
+    "action_label": "unclassified_anomaly",
+    "confidence": 0.161,
+    "evidence": {
+      "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
+      "seat_id": 6,
+      "peak_z": 7.2,
+      "mean_z": 6.44,
+      "persons_tracked": 7,
+      "frames_in_window": 25,
+      "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
+    },
+    "stage1": {
+      "peak_z": 7.2,
+      "mean_z": 6.44,
+      "duration_s": 3.0,
+      "salience": 11.16
+    },
+    "clip_path": null
+  },
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 6,
+    "start_sec": 196.0,
+    "end_sec": 200.0,
+    "action_label": "talking_to_neighbour",
+    "confidence": 0.567,
+    "evidence": {
+      "rule": "sustained correlated activity with an adjacent seat and no object-class evidence",
+      "seat_id": 6,
+      "neighbour_seat_id": 7,
+      "correlation": 0.918,
+      "lag_s": 0.0,
+      "duration_s": 4.0,
+      "min_correlation": 0.35,
+      "min_duration_s": 4.0,
+      "caveat": "inferred from motion correlation, not from speech or pose"
+    },
+    "stage1": {
+      "peak_z": 6.51,
+      "mean_z": 5.34,
+      "duration_s": 4.0,
+      "salience": 10.69
+    },
+    "clip_path": null
+  },
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 3,
+    "start_sec": 2.0,
+    "end_sec": 4.0,
+    "action_label": "mobile_phone_usage",
+    "confidence": 0.212,
+    "evidence": {
+      "rule": "cell_phone detected inside the seat region",
+      "seat_id": 3,
+      "frames_with_detection": 2,
+      "frames_in_window": 20,
+      "mean_detection_conf": 0.224,
+      "detector_class": "cell phone (COCO 67)"
+    },
+    "stage1": {
+      "peak_z": 9.69,
+      "mean_z": 7.38,
+      "duration_s": 2.0,
+      "salience": 10.44
+    },
+    "clip_path": null
+  },
+  {
+    "video": "05_crowd_reception_desk.mp4",
+    "seat_id": 1,
+    "start_sec": 163.0,
+    "end_sec": 165.0,
+    "action_label": "unclassified_anomaly",
+    "confidence": 0.184,
+    "evidence": {
+      "rule": "Stage 1 flagged this window; no Stage 3 rule matched",
+      "seat_id": 1,
+      "peak_z": 8.78,
+      "mean_z": 7.37,
+      "persons_tracked": 2,
+      "frames_in_window": 20,
+      "note": "kept deliberately -- an unnamed anomaly is still footage worth reviewing, and dropping it would hide a miss"
+    },
+    "stage1": {
+      "peak_z": 8.78,
+      "mean_z": 7.37,
+      "duration_s": 2.0,
+      "salience": 10.43
+    },
+    "clip_path": null
+  },
+  {
+    "seat_id": 3,
+    "start_sec": 65.28203125,
+    "end_sec": 75.31536458333333,
+    "action_label": "mobile_phone_usage",
+    "confidence": 0.6694037988781929,
+    "evidence": {
+      "rule": "persistent-object sweep: the object was present at this seat across consecutive sparse samples",
+      "detector_class": "cell phone (COCO 67)",
+      "samples_in_run": 3,
+      "samples_with_detection": 3,
+      "mean_detection_conf": 0.488,
+      "path": "persistent_object_sweep",
+      "note": "complements the Stage 1 change-point path, which by construction cannot flag a behaviour that was already underway and never changes"
+    },
+    "video": "05_crowd_reception_desk.mp4",
+    "clip_path": null
+  },
+  {
+    "seat_id": 5,
+    "start_sec": 110.48203124999999,
+    "end_sec": 125.56536458333333,
+    "action_label": "mobile_phone_usage",
+    "confidence": 0.4301329001784325,
+    "evidence": {
+      "rule": "persistent-object sweep: the object was present at this seat across consecutive sparse samples",
+      "detector_class": "cell phone (COCO 67)",
+      "samples_in_run": 4,
+      "samples_with_detection": 3,
+      "mean_detection_conf": 0.206,
+      "path": "persistent_object_sweep",
+      "note": "complements the Stage 1 change-point path, which by construction cannot flag a behaviour that was already underway and never changes"
+    },
+    "video": "05_crowd_reception_desk.mp4",
+    "clip_path": null
+  },
+  {
+    "zone_id": "05_crowd_reception_desk:unseated",
+    "start_sec": 5.03203125,
+    "end_sec": 10.08203125,
+    "action_label": "crowd_gathering",
+    "confidence": 0.6058333333333333,
+    "evidence": {
+      "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+      "peak_person_count": 7,
+      "mean_person_count": 6.5,
+      "duration_s": 5.05,
+      "min_persons": 4
+    },
+    "video": "05_crowd_reception_desk.mp4",
+    "clip_path": null
+  },
+  {
+    "zone_id": "05_crowd_reception_desk:unseated",
+    "start_sec": 30.165364583333332,
+    "end_sec": 110.48203124999999,
+    "action_label": "crowd_gathering",
+    "confidence": 0.97,
+    "evidence": {
+      "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+      "peak_person_count": 15,
+      "mean_person_count": 8.82,
+      "duration_s": 80.32,
+      "min_persons": 4
+    },
+    "video": "05_crowd_reception_desk.mp4",
+    "clip_path": null
+  },
+  {
+    "zone_id": "05_crowd_reception_desk:unseated",
+    "start_sec": 180.76536458333334,
+    "end_sec": 185.79869791666667,
+    "action_label": "crowd_gathering",
+    "confidence": 0.2927777777777777,
+    "evidence": {
+      "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+      "peak_person_count": 4,
+      "mean_person_count": 4.0,
+      "duration_s": 5.03,
+      "min_persons": 4
+    },
+    "video": "05_crowd_reception_desk.mp4",
+    "clip_path": null
+  },
+  {
+    "zone_id": "05_crowd_reception_desk:unseated",
+    "start_sec": 195.83203125,
+    "end_sec": 215.91536458333334,
+    "action_label": "crowd_gathering",
+    "confidence": 0.97,
+    "evidence": {
+      "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+      "peak_person_count": 11,
+      "mean_person_count": 7.4,
+      "duration_s": 20.08,
+      "min_persons": 4
+    },
+    "video": "05_crowd_reception_desk.mp4",
+    "clip_path": null
+  },
+  {
+    "zone_id": "05_crowd_reception_desk:unseated",
+    "start_sec": 225.96536458333333,
+    "end_sec": 235.99869791666666,
+    "action_label": "crowd_gathering",
+    "confidence": 0.6261111111111111,
+    "evidence": {
+      "rule": "person count in the zone stayed at or above 4 for at least 5.0s",
+      "peak_person_count": 6,
+      "mean_person_count": 5.33,
+      "duration_s": 10.03,
+      "min_persons": 4
+    },
+    "video": "05_crowd_reception_desk.mp4",
+    "clip_path": null
+  }
+]

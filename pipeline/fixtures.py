@@ -62,6 +62,7 @@ def build_fixture_map(
     min_presence: float = FIXTURE_MIN_PRESENCE,
     max_drift: float = FIXTURE_MAX_DRIFT,
     join_iou: float = FIXTURE_IOU,
+    only_classes: tuple[int, ...] | None = None,
 ) -> list[Fixture]:
     """Find small objects that are always there and never move.
 
@@ -74,6 +75,11 @@ def build_fixture_map(
     clusters: list[dict] = []
     for f in frames:
         for d in f.dets:
+            # Restricted to small object classes on purpose. A candidate who
+            # sits still for two hours is long-lived and stationary by every
+            # measure here, and is emphatically not furniture.
+            if only_classes is not None and d.cls_id not in only_classes:
+                continue
             hit = None
             for c in clusters:
                 if c["cls"] == d.cls_id and iou(d.xyxy, c["box"]) >= join_iou:

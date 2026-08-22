@@ -30,6 +30,7 @@ from .config import (
     UNCLASSIFIED_MAX_CONF,
     COCO_BOOK,
     COCO_CELL_PHONE,
+    COCO_PERSON,
     CROWD_MIN_PERSONS,
     CROWD_MIN_S,
     PHONE_CONF,
@@ -279,6 +280,40 @@ def classify_window(ev: WindowEvidence, scores: SeatScores, grid: SeatGrid) -> A
     return best
 
 
+def count_unseated(
+    frames: list["FrameDets"],
+    grid: SeatGrid,
+    min_iou: float = 0.25,
+) -> list[tuple[float, int, tuple[float, float, float, float] | None]]:
+    """People per frame who are *not* in a discovered seat.
+
+    A hall full of seated candidates is not a crowd -- it is an exam. What
+    makes `crowd_gathering` a distinct behaviour is people congregating who
+    have no seat there: at a verification counter, a locker bank, a doorway.
+    Subtracting the seated population is what keeps this rule from firing
+    permanently on every occupied exam room.
+    """
+    from .detector import iou as box_iou
+
+    seat_boxes = [tuple(float(v) for v in s.bbox_px) for s in grid.seats]
+    out = []
+    for f in frames:
+        loose = []
+        for d in f.dets:
+            if d.cls_id != COCO_PERSON:
+                continue
+            if any(box_iou(d.xyxy, b) >= min_iou for b in seat_boxes):
+                continue
+            loose.append(d.xyxy)
+        zone = None
+        if loose:
+            a = np.array(loose, float)
+            zone = (float(a[:, 0].min()), float(a[:, 1].min()),
+                    float(a[:, 2].max()), float(a[:, 3].max()))
+        out.append((f.t_sec, len(loose), zone))
+    return out
+
+
 def classify_crowd(
     counts: list[tuple[float, int]],
     zone_id: str = "zone_full_frame",
@@ -293,8 +328,8 @@ def classify_crowd(
     """
     if not counts:
         return []
-    ts = np.array([t for t, _ in counts], float)
-    ns = np.array([n for _, n in counts], int)
+    ts = np.array([c[0] for c in counts], float)
+    ns = np.array([c[1] for c in counts], int)
     over = ns >= min_persons
 
     events: list[dict] = []
