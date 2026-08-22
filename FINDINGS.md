@@ -192,3 +192,77 @@ seat-second budget, unseated counts — inherits that instability.
 Not fixed. The fix is to seed the detector, sort detections into a canonical
 order before agglomerating, and merge by a deterministic criterion rather than
 greedy best-match-so-far.
+
+## 8. Pose-based behavioural monitoring: keypoints are good, the naive signal is not
+
+Tested `yolo11n-pose.pt` on real seat crops before building anything, the same
+way the calculator/phone question was tested with CLIP. The result is different
+from the CLIP case and worth stating precisely, because "it didn't work" would
+be the wrong summary.
+
+### Keypoints are usable — this is NOT a resolution failure
+
+People are large in frame: person boxes measure **144 x 214 px** at the median
+across 128,402 cached detections, about 11x the height of the 29x19 px objects
+that defeated CLIP.
+
+Measured keypoint confidence over 32 skeletons sampled from five windows that
+had already been reviewed frame by frame:
+
+| keypoint | mean conf | share > 0.5 |
+|---|---|---|
+| l/r shoulder | **0.93 / 0.94** | **97%** |
+| l/r hip | 0.81 / 0.82 | 94% |
+| nose | 0.63 | 59% |
+| l/r ear | 0.49 / 0.57 | 50% |
+| l/r eye | 0.43 / 0.51 | 38% / 56% |
+| l/r ankle | 0.20 / 0.23 | 9% / 16% |
+
+**Shoulders and hips are reliable. Head keypoints are not.** That matters
+directly: **head-yaw — the originally proposed signal — depends on eyes and
+ears, which are the two weakest keypoints available.** Sustained
+head-turning cannot be measured dependably from this footage.
+
+### The torso signal does not survive contact with the data
+
+Shoulders being reliable, the natural fallback is torso lean: the lateral
+offset of the shoulder midpoint over the hip midpoint, in torso lengths.
+Measured against windows already visually classified:
+
+| case | n | lateral lean p50 |
+|---|---|---|
+| seated, normal work (06 @1415) | 49 | 0.29 |
+| seated, normal work (06 @4887) | 51 | 0.35 |
+| **validated talking (clip 04)** | 61 | **0.13** |
+| invigilator walking (06) | 65 | 0.32 |
+
+**The signal runs backwards** — the validated talking case leans *least*. Same
+shape as the crowd-compactness attempt, and caught the same way.
+
+### Why: camera geometry dominates, and by the same magnitude as the effect
+
+Within a **single** recording, at five separate minutes, lean grouped by where
+the person sits in the frame:
+
+| frame region | n | lean p50 |
+|---|---|---|
+| centre-left | 47 | 0.44 |
+| centre-right | 78 | 0.22 |
+| right quarter | 20 | 0.37 |
+
+**Spread across regions of one room: 0.21. The apparent seated-vs-talking
+difference: 0.22.** The confound is the same size as the effect. Image-space
+posture measures obliquity — where you sit relative to the lens — not
+behaviour, so it cannot be compared across seats, let alone across recordings.
+
+### Status: documented future work, not built
+
+The indicated fix is the same principle Stage 1 already uses: score each seat's
+posture against **that seat's own rolling baseline** rather than a global
+threshold, so a seat's fixed viewing angle cancels out. That is a plausible
+design, not a validated one — confirming it needs timestamped ground truth to
+say whether a deviation coincides with a real interaction, and
+`data/ground_truth.csv` currently has 0 of 8 rows timestamped.
+
+Building a behavioural rule on the global signal as measured would ship the
+inverted discriminator. Not doing that.
