@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { fetchEvents, fetchSummary, type Summary, type UiEvent } from './api'
+import { fetchEvents, fetchStats, fetchSummary, type Summary, type UiEvent } from './api'
 
 type Ctx = {
   events: UiEvent[]
   summary: Summary | null
+  stats: Record<string, any> | null
   loading: boolean
   error: string | null
   selected: UiEvent | null
@@ -17,6 +18,7 @@ const DataCtx = createContext<Ctx | null>(null)
 export function DataProvider({ children }: { children: ReactNode }) {
   const [events, setEvents] = useState<UiEvent[]>([])
   const [summary, setSummary] = useState<Summary | null>(null)
+  const [stats, setStats] = useState<Record<string, any> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selected, select] = useState<UiEvent | null>(null)
@@ -26,11 +28,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
     let cancelled = false
     setLoading(true)
     setError(null)
-    Promise.all([fetchEvents(), fetchSummary()])
-      .then(([evs, sum]) => {
+    Promise.all([fetchEvents(), fetchSummary(), fetchStats()])
+      .then(([evs, sum, st]) => {
         if (cancelled) return
         setEvents(evs)
         setSummary(sum)
+        setStats(st)
         // Prefer something that can actually play: during a pipeline re-run
         // the manifest may name clips that are mid-export.
         select((cur) => cur ?? evs.find((e) => e.clipUrl) ?? evs[0] ?? null)
@@ -49,7 +52,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   return (
     <DataCtx.Provider
-      value={{ events, summary, loading, error, selected, select, setStatus,
+      value={{ events, summary, stats, loading, error, selected, select, setStatus,
                reload: () => setTick((t) => t + 1) }}
     >
       {children}

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useData } from './data'
 import { ClipPlayer } from './ClipPlayer'
-import { labelText, hoursLabel } from './api'
+import { labelText, hoursLabel, camLabel } from './api'
 
 // Live data replaces the design's hardcoded arrays. The module-level mock
 // consts are kept below only as a shape reference; every screen shadows them
@@ -9,14 +9,9 @@ import { labelText, hoursLabel } from './api'
 
 type Screen =
   | 'dashboard'
-  | 'video-analysis'
-  | 'investigation'
+  | 'library'
   | 'event-explorer'
-  | 'roi-analysis'
-  | 'object-detection'
-  | 'segmented-events'
-  | 'reports'
-  | 'system-status'
+  | 'investigation'
 
 function cn(...c: (string | false | undefined | null)[]) {
   return c.filter(Boolean).join(' ')
@@ -111,9 +106,20 @@ function Btn({ children, variant = 'primary', size = 'md', onClick, className }:
 
 // ── Charts ────────────────────────────────────────────────────────
 
-const ACT = [12,18,14,22,28,31,26,35,42,38,45,52,48,55,61,58,65,72,68,74,82,78,86,81,74,68,62,55,48,42,38,34,29,24,18,14,22,28,35,42,48,55,61,68,74,82,78,72,65,58,52,46,40,34,28,24,18,14,10,8]
+/** Events per time bucket across a recording. Real counts, not a drawn curve. */
+function activitySeries(evs: { raw: { start_sec: number } }[], buckets = 60): number[] {
+  if (!evs.length) return new Array(buckets).fill(0)
+  const span = Math.max(...evs.map(e => e.raw.start_sec)) || 1
+  const out = new Array(buckets).fill(0)
+  for (const e of evs) {
+    const i = Math.min(buckets - 1, Math.floor((e.raw.start_sec / span) * buckets))
+    out[i] += 1
+  }
+  return out
+}
 
-function ActivityChart({ height = 100 }: { height?: number }) {
+function ActivityChart({ height = 100, data }: { height?: number; data: number[] }) {
+  const ACT = data.length ? data : [0]
   const w = 600; const h = height
   const max = Math.max(...ACT)
   const xs = ACT.map((_, i) => (i / (ACT.length - 1)) * w)
@@ -170,60 +176,9 @@ function BarChart({ data, labels, color = '#5E7832' }: { data: number[]; labels:
 
 // ── CCTV Frame ────────────────────────────────────────────────────
 
-const ROIS = [
-  { id: '01', label: 'Student Area', x: '8%', y: '15%', w: '22%', h: '30%', color: '#5E7832', active: false },
-  { id: '02', label: 'Desk Area', x: '35%', y: '12%', w: '25%', h: '35%', color: '#5E7832', active: false },
-  { id: '03', label: 'Possible Object', x: '52%', y: '38%', w: '18%', h: '22%', color: '#B02030', active: true },
-  { id: '04', label: 'Hand Movement', x: '72%', y: '20%', w: '20%', h: '28%', color: '#A06010', active: false },
-]
-
-function CCTVFrame({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={cn('relative w-full bg-[#0E1209] rounded-xl overflow-hidden border border-border scanline-overlay', compact ? 'h-52' : 'h-80')}>
-      <div className="absolute inset-0 opacity-25">
-        {[20, 35, 50, 65, 78].map(y => (
-          <div key={y} className="absolute w-full flex gap-[3%] px-[5%]" style={{ top: `${y}%` }}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="flex-1">
-                <div className="w-full h-3 bg-[#1C2214] border border-[#2A3420] rounded-sm" />
-                <div className="w-[60%] h-1 bg-[#181F10] rounded-sm mt-0.5 mx-auto" />
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-      {ROIS.map(r => (
-        <div key={r.id} className="absolute pointer-events-none" style={{ left: r.x, top: r.y, width: r.w, height: r.h }}>
-          <div className="w-full h-full relative" style={{ border: `1px solid ${r.color}`, boxShadow: `0 0 8px ${r.color}25, inset 0 0 8px ${r.color}06` }}>
-            {['tl','tr','bl','br'].map(c => (
-              <div key={c} className={cn('absolute w-2.5 h-2.5',
-                c === 'tl' && 'top-0 left-0 border-t-2 border-l-2',
-                c === 'tr' && 'top-0 right-0 border-t-2 border-r-2',
-                c === 'bl' && 'bottom-0 left-0 border-b-2 border-l-2',
-                c === 'br' && 'bottom-0 right-0 border-b-2 border-r-2',
-              )} style={{ borderColor: r.color }} />
-            ))}
-            <div className="absolute -top-5 left-0 text-[9px] font-mono px-1.5 py-0.5 rounded-sm whitespace-nowrap text-white"
-              style={{ background: r.color }}>
-              ROI {r.id} {r.active && '⚠'}
-            </div>
-            {r.active && <div className="absolute inset-0 animate-pulse" style={{ background: `${r.color}12` }} />}
-          </div>
-        </div>
-      ))}
-      <div className="absolute top-3 left-3 flex items-center gap-2">
-        <span className="w-1.5 h-1.5 rounded-full bg-danger rec-blink" />
-        <span className="text-xs font-mono text-white/80 bg-black/50 px-1.5 py-0.5 rounded">CAM-03</span>
-      </div>
-      <div className="absolute top-3 right-3 bg-black/60 border border-danger/30 rounded px-2 py-1 text-center">
-        <div className="text-[8px] font-mono text-white/50 uppercase tracking-widest">Activity</div>
-        <div className="text-sm font-mono text-danger font-semibold">82%</div>
-      </div>
-      <div className="absolute bottom-3 left-3 text-[9px] font-mono text-white/40">14:32:18</div>
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%)' }} />
-    </div>
-  )
-}
+// CCTVFrame and its ROIS data were removed: it drew a fake exam hall out of
+// divs, with a fixed timestamp and a fixed activity percentage. ClipPlayer
+// plays the real exported clip instead.
 
 function Loading() {
   return (
@@ -264,13 +219,9 @@ function statusBadge(s: string) {
 
 const NAV = [
   { id: 'dashboard', label: 'Dashboard' },
-  { id: 'video-analysis', label: 'Analysis' },
-  { id: 'investigation', label: 'Investigate' },
+  { id: 'library', label: 'Library' },
   { id: 'event-explorer', label: 'Events' },
-  { id: 'roi-analysis', label: 'ROI' },
-  { id: 'object-detection', label: 'Objects' },
-  { id: 'reports', label: 'Reports' },
-  { id: 'system-status', label: 'System' },
+  { id: 'investigation', label: 'Investigate' },
 ] as const
 
 function TopNav({ active, onNavigate }: { active: Screen; onNavigate: (s: Screen) => void }) {
@@ -305,18 +256,10 @@ function TopNav({ active, onNavigate }: { active: Screen; onNavigate: (s: Screen
         <div className="flex items-center gap-4 shrink-0">
           <div className="flex items-center gap-1.5 text-xs font-mono text-muted">
             <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-            Offline · Ready
+            Offline analysis
           </div>
-          <div className="flex items-center gap-2 text-xs font-mono text-muted">
-            <Ico d={I.gpu} size={12} />
-            <span>GPU 78%</span>
-            <span className="text-border">|</span>
-            <Ico d={I.storage} size={12} />
-            <span>4.8 TB</span>
-          </div>
-          <div className="w-7 h-7 rounded-full bg-olive-subtle border border-olive-mid/30 flex items-center justify-center text-[11px] font-semibold text-olive font-mono">
-            IK
-          </div>
+          {/* GPU% and storage used to sit here as fixed strings. Nothing
+              measured them, so they are gone rather than left as decoration. */}
         </div>
       </div>
     </nav>
@@ -324,15 +267,6 @@ function TopNav({ active, onNavigate }: { active: Screen; onNavigate: (s: Screen
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────
-
-const EVENTS_DATA = [
-  { id: 'EVT-00342', time: '14:32:18', end: '14:32:27', cam: 'CAM-03', type: 'Elevated Motion', roi: 'Student Area 07', activity: 86, conf: 91, status: 'Unreviewed', obj: 'Mobile Phone', priority: 'high' },
-  { id: 'EVT-00339', time: '14:41:52', end: '14:42:05', cam: 'CAM-02', type: 'Possible Object', roi: 'Desk Area 04', activity: 74, conf: 87, status: 'Unreviewed', obj: 'Paper / Chit', priority: 'high' },
-  { id: 'EVT-00335', time: '15:02:11', end: '15:02:25', cam: 'CAM-04', type: 'Multiple Movement', roi: 'Zone B', activity: 68, conf: 82, status: 'Reviewed', obj: 'None', priority: 'medium' },
-  { id: 'EVT-00331', time: '14:21:08', end: '14:21:21', cam: 'CAM-01', type: 'Unusual Activity', roi: 'Zone A', activity: 79, conf: 85, status: 'Relevant', obj: 'Mobile Phone', priority: 'high' },
-  { id: 'EVT-00328', time: '13:55:44', end: '13:55:54', cam: 'CAM-06', type: 'Elevated Motion', roi: 'Row 3', activity: 52, conf: 76, status: 'Ignored', obj: 'None', priority: 'low' },
-  { id: 'EVT-00325', time: '13:38:20', end: '13:38:29', cam: 'CAM-03', type: 'Possible Paper/Chit', roi: 'Desk Area 02', activity: 63, conf: 79, status: 'Unreviewed', obj: 'Paper / Chit', priority: 'medium' },
-]
 
 function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
   const [cam, setCam] = useState('all')
@@ -379,7 +313,7 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
               Turn hours of recorded footage into prioritized events, motion insights, and investigation-ready evidence — without watching a single frame manually.
             </p>
             <div className="flex items-center gap-3">
-              <Btn size="lg" onClick={() => onNavigate('video-analysis')}>
+              <Btn size="lg" onClick={() => onNavigate('library')}>
                 <Ico d={I.event} size={15} />Browse Events
               </Btn>
               <Btn size="lg" variant="secondary" onClick={() => onNavigate('event-explorer')}>
@@ -474,7 +408,7 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
               </span>
             ))}
           </div>
-          <ActivityChart height={100} />
+          <ActivityChart height={100} data={activitySeries(ALL_EVENTS)} />
         </Card>
       </div>
 
@@ -550,7 +484,7 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
               </div>
             ))}
           </div>
-          <Btn variant="secondary" size="sm" onClick={() => onNavigate('video-analysis')}>
+          <Btn variant="secondary" size="sm" onClick={() => onNavigate('library')}>
             Manage Queue
           </Btn>
         </div>
@@ -680,88 +614,109 @@ function Dashboard({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 
 // ── Video Analysis ─────────────────────────────────────────────────
 
-function VideoAnalysis() {
-  const [opts, setOpts] = useState({ detect: true, heatmap: true, segment: true })
-  const pipeline = ['Video Ingestion', 'Frame Extraction', 'Motion Estimation', 'ROI Detection', 'Object Detection', 'Event Segmentation', 'Analytics Generation']
+function Library({ onNavigate }: { onNavigate: (s: Screen) => void }) {
+  const { events, stats, summary, select, loading, error } = useData()
+  if (error) return <ApiError error={error} />
+  if (loading) return <Loading />
+
+  const rows = Object.entries(stats ?? {})
+    .filter(([, v]) => v && typeof v === 'object' && !('error' in v))
+    .map(([video, v]: [string, any]) => {
+      const evs = events.filter(e => e.raw.video === video)
+      const named = evs.filter(e => !['staff_or_transit', 'unclassified_anomaly']
+        .includes(e.raw.action_label)).length
+      return {
+        video,
+        seats: v.n_seats ?? 0,
+        durationS: v.duration_s ?? 0,
+        candidates: v.stage1_candidates ?? null,
+        promoted: v.promoted_to_stage2 ?? null,
+        pct: v.promoted_fraction_of_seat_seconds ?? null,
+        fixtures: (v.fixtures ?? {}).n ?? null,
+        scanS: v.elapsed_s ?? null,
+        events: evs.length,
+        named,
+        note: v.note as string | undefined,
+      }
+    })
+    .sort((a, b) => b.durationS - a.durationS)
+
+  const totalS = rows.reduce((a, r) => a + r.durationS, 0)
+
   return (
-    <div className="overflow-y-auto h-full px-8 py-10 space-y-8">
+    <div className="overflow-y-auto h-full px-8 py-10 space-y-7">
       <div>
-        <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Offline Processing</div>
-        <h1 className="text-3xl font-display text-cream">Video Analysis</h1>
-        <p className="text-cream-dim text-sm mt-1">How each recording in the library was processed. Analysis runs offline, ahead of review.</p>
+        <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">
+          Processed Library
+        </div>
+        <h1 className="text-3xl font-display text-cream">Recordings</h1>
+        <p className="text-cream-dim text-sm mt-1">
+          {rows.length} recordings · {hoursLabel(totalS)} of footage · analysed
+          offline, ahead of review. Select one to review its events.
+        </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 space-y-5">
-          <Card className="p-6">
-            <h3 className="text-base font-semibold text-cream mb-5">Analysis Options</h3>
-            <div className="space-y-4">
-              {[
-                { key: 'detect', label: 'Run Object Detection', desc: 'Identify mobile phones, paper/chits, and unauthorized materials where technically feasible' },
-                { key: 'heatmap', label: 'Generate Motion Heatmap', desc: 'Visualize accumulated motion intensity across the footage timeline' },
-                { key: 'segment', label: 'Automatically Segment Events', desc: 'Split video into meaningful activity-based segments for efficient investigation' },
-              ].map(o => (
-                <label key={o.key} className="flex items-start gap-4 cursor-pointer group">
-                  <div className="mt-0.5">
-                    <input type="checkbox" checked={opts[o.key as keyof typeof opts]}
-                      onChange={e => setOpts(p => ({ ...p, [o.key]: e.target.checked }))} className="sr-only" />
-                    <div className={cn('w-5 h-5 rounded border-2 flex items-center justify-center transition-colors',
-                      opts[o.key as keyof typeof opts] ? 'bg-olive border-olive' : 'border-border bg-card')}>
-                      {opts[o.key as keyof typeof opts] && <Ico d={I.check} size={11} />}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-cream">{o.label}</div>
-                    <div className="text-xs text-muted mt-0.5">{o.desc}</div>
-                  </div>
-                </label>
+      <Card className="overflow-hidden">
+        <table className="w-full text-xs">
+          <thead className="bg-elevated">
+            <tr className="text-muted font-mono text-[10px] uppercase tracking-widest">
+              {['Recording', 'Duration', 'Seats', 'Stage 1 scan', 'Candidates',
+                'Reviewed', 'Fixtures rejected', 'Events', ''].map(h => (
+                <th key={h} className="text-left px-5 py-3 font-medium border-b border-border whitespace-nowrap">{h}</th>
               ))}
-            </div>
-          </Card>
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(r => (
+              <tr key={r.video} className="border-b border-border/50 hover:bg-elevated/40 transition-colors">
+                <td className="px-5 py-3 font-mono text-olive whitespace-nowrap">{camLabel(r.video)}</td>
+                <td className="px-5 py-3 font-mono text-cream-dim">{hoursLabel(r.durationS)}</td>
+                <td className="px-5 py-3 font-mono text-cream-dim">{r.seats}</td>
+                <td className="px-5 py-3 font-mono text-cream-dim">
+                  {r.scanS != null ? `${r.scanS.toFixed(0)}s` : '—'}
+                </td>
+                <td className="px-5 py-3 font-mono text-cream-dim">{r.candidates ?? '—'}</td>
+                <td className="px-5 py-3 font-mono">
+                  {r.pct != null ? (
+                    <span className="text-cream">{(r.pct * 100).toFixed(2)}%
+                      <span className="text-muted"> of seat-seconds</span></span>
+                  ) : <span className="text-muted">{r.note ? 'no seat grid' : '—'}</span>}
+                </td>
+                <td className="px-5 py-3 font-mono text-cream-dim">{r.fixtures ?? '—'}</td>
+                <td className="px-5 py-3 font-mono">
+                  <span className="text-cream">{r.events}</span>
+                  <span className="text-muted"> · {r.named} named</span>
+                </td>
+                <td className="px-5 py-3">
+                  <Btn variant="secondary" size="sm"
+                    onClick={() => {
+                      const first = events.find(e => e.raw.video === r.video)
+                      if (first) select(first)
+                      onNavigate('event-explorer')
+                    }}>Review</Btn>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
 
-        <div className="space-y-4">
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-cream">Processing Mode</h3>
-              <Badge color="info">OFFLINE</Badge>
-            </div>
-            <p className="text-xs text-muted leading-relaxed">Analysis runs locally on stored footage. No external data transmission. Average speed: <span className="text-cream font-mono">2.4× realtime</span>.</p>
-          </Card>
-
-          <Card className="p-6">
-            <h3 className="text-sm font-semibold text-cream mb-5">Processing Pipeline</h3>
-            <div className="space-y-3">
-              {pipeline.map((step, i) => (
-                <div key={step} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-olive-subtle border border-olive-mid/30 flex items-center justify-center shrink-0">
-                    <span className="text-[9px] font-mono text-olive">{i + 1}</span>
-                  </div>
-                  <span className="text-xs text-cream-dim">{step}</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-          <Btn className="w-full justify-center" size="lg">
-            <Ico d={I.play} size={15} />Start Analysis
-          </Btn>
-        </div>
-      </div>
+      <Card className="p-6">
+        <h3 className="text-sm font-semibold text-cream mb-2">How these were processed</h3>
+        <p className="text-xs text-muted leading-relaxed">
+          Stage 1 reads motion vectors straight from the codec bitstream without
+          decoding a frame, and scores every seat against its own rolling
+          baseline. Only the highest-ranked ~2% of seat-seconds is ever fully
+          decoded for detection and tracking. Analysis is offline and local; no
+          footage leaves the machine, and no face recognition is performed at
+          any stage.
+        </p>
+      </Card>
     </div>
   )
 }
 
-// ── Investigation Workspace ────────────────────────────────────────
 
-const DET_EVENTS = [
-  { time: '14:32:18', type: 'Elevated Activity', roi: 'ROI-03', score: 86, conf: 91, dur: '8 sec', color: 'danger' as const, obj: 'Possible Mobile Phone' },
-  { time: '14:28:44', type: 'Possible Mobile Phone', roi: 'ROI-03', score: 82, conf: 89, dur: '5 sec', color: 'danger' as const, obj: 'Mobile Phone' },
-  { time: '14:21:08', type: 'Multiple ROI Movement', roi: 'ROI-01,02', score: 79, conf: 85, dur: '12 sec', color: 'amber' as const, obj: 'None' },
-  { time: '14:15:30', type: 'Possible Paper/Chit', roi: 'ROI-07', score: 63, conf: 77, dur: '6 sec', color: 'amber' as const, obj: 'Paper/Chit' },
-  { time: '13:58:12', type: 'Unusual Activity', roi: 'ROI-02', score: 55, conf: 72, dur: '4 sec', color: 'muted' as const, obj: 'None' },
-]
-
-const TL = [{ label: 'Elevated Activity', x: 28, c: '#B02030' }, { label: 'Possible Object', x: 52, c: '#A06010' }, { label: 'Multiple ROI', x: 71, c: '#A06010' }]
 
 function InvestigationWorkspace() {
   const { events, selected, select, loading, error } = useData()
@@ -811,15 +766,30 @@ function InvestigationWorkspace() {
                 setTlX(((e.clientX - r.left) / r.width) * 100)
               }}>
                 <div className="h-9 bg-elevated rounded-lg border border-border overflow-hidden relative">
-                  {ACT.map((v, i) => (
+                  {(() => { const A = activitySeries(
+                      events.filter(e => e.raw.video === selected?.raw.video)); const mx = Math.max(1, ...A);
+                    return A.map((v, i) => (
                     <div key={i} className="absolute bottom-0 bg-olive/40"
-                      style={{ left: `${(i/ACT.length)*100}%`, width: `${100/ACT.length}%`, height: `${(v/86)*100}%` }} />
-                  ))}
-                  {TL.map(e => (
-                    <div key={e.label} className="absolute top-0 bottom-0 w-0.5" style={{ left: `${e.x}%`, background: e.c }}>
-                      <div className="absolute -top-0 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full border-2 border-card" style={{ background: e.c }} />
-                    </div>
-                  ))}
+                      style={{ left: `${(i/A.length)*100}%`, width: `${100/A.length}%`, height: `${(v/mx)*100}%` }} />
+                  )) })()}
+                  {/* Markers are the real named findings in this recording,
+                      positioned at their actual offsets -- not fixed decoration. */}
+                  {(() => {
+                    const sib = events.filter(e => e.raw.video === selected?.raw.video)
+                    const span = Math.max(1, ...sib.map(e => e.raw.start_sec))
+                    return sib
+                      .filter(e => !['staff_or_transit', 'unclassified_anomaly'].includes(e.raw.action_label))
+                      .slice(0, 12)
+                      .map(e => (
+                        <div key={e.id} title={`${e.type} · ${e.time}`}
+                          className="absolute top-0 bottom-0 w-0.5"
+                          style={{ left: `${(e.raw.start_sec / span) * 100}%`,
+                                   background: e.priority === 'high' ? '#B02030' : '#A06010' }}>
+                          <div className="absolute -top-0 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full border-2 border-card"
+                            style={{ background: e.priority === 'high' ? '#B02030' : '#A06010' }} />
+                        </div>
+                      ))
+                  })()}
                   <div className="absolute top-0 bottom-0 w-0.5 bg-cream/80" style={{ left: `${tlX}%` }} />
                 </div>
                 <div className="flex justify-between text-[9px] font-mono text-muted mt-1">
@@ -836,14 +806,21 @@ function InvestigationWorkspace() {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-3 text-xs text-muted font-mono">
-              <span>14:32:18</span>
+            <div className="flex items-center gap-3 text-xs text-muted font-mono flex-wrap">
+              <span>{selected ? `t+${selected.time}` : '—'}</span>
               <span className="text-border">|</span>
-              {TL.map(e => (
-                <button key={e.label} onClick={() => setTlX(e.x)} className="flex items-center gap-1 hover:text-cream-dim transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: e.c }} />{e.label}
-                </button>
-              ))}
+              {events
+                .filter(e => e.raw.video === selected?.raw.video
+                  && !['staff_or_transit', 'unclassified_anomaly'].includes(e.raw.action_label))
+                .slice(0, 5)
+                .map(e => (
+                  <button key={e.id} onClick={() => select(e)}
+                    className="flex items-center gap-1 hover:text-cream-dim transition-colors">
+                    <span className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: e.priority === 'high' ? '#B02030' : '#A06010' }} />
+                    {e.type} <span className="text-border">{e.time}</span>
+                  </button>
+                ))}
             </div>
           </Card>
 
@@ -926,15 +903,6 @@ function InvestigationWorkspace() {
 }
 
 // ── Event Explorer ─────────────────────────────────────────────────
-
-const ALL_EVENTS = [
-  ...EVENTS_DATA,
-  { id: 'EVT-00320', time: '13:20:15', end: '13:20:28', cam: 'CAM-05', type: 'Elevated Motion', roi: 'Zone C', activity: 58, conf: 74, status: 'Reviewed', obj: 'None', priority: 'medium' },
-  { id: 'EVT-00315', time: '13:05:33', end: '13:05:46', cam: 'CAM-01', type: 'Possible Object', roi: 'Desk Area 01', activity: 72, conf: 83, status: 'Relevant', obj: 'Mobile Phone', priority: 'high' },
-  { id: 'EVT-00310', time: '12:48:02', end: '12:48:14', cam: 'CAM-07', type: 'Elevated Motion', roi: 'Row 5', activity: 65, conf: 80, status: 'Unreviewed', obj: 'None', priority: 'medium' },
-  { id: 'EVT-00304', time: '12:30:18', end: '12:30:26', cam: 'CAM-09', type: 'Minor Movement', roi: 'Row 2', activity: 31, conf: 65, status: 'Reviewed', obj: 'None', priority: 'low' },
-  { id: 'EVT-00298', time: '12:12:44', end: '12:12:51', cam: 'CAM-06', type: 'Brief Activity', roi: 'Zone A', activity: 28, conf: 62, status: 'Ignored', obj: 'None', priority: 'low' },
-]
 
 function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
   const { events: ALL_EVENTS, select, loading, error } = useData()
@@ -1032,427 +1000,21 @@ function EventExplorer({ onNavigate }: { onNavigate: (s: Screen) => void }) {
 
 // ── ROI Analysis ──────────────────────────────────────────────────
 
-const ROISD = [
-  { id: 'ROI-01', name: 'Student Zone A', score: 72, dur: '18 sec', conf: 88, count: 6, obj: 'None detected', x: '8%', y: '15%', w: '22%', h: '30%' },
-  { id: 'ROI-02', name: 'Student Zone B', score: 91, dur: '11 sec', conf: 94, count: 4, obj: 'Possible Mobile Phone', x: '35%', y: '12%', w: '25%', h: '35%' },
-  { id: 'ROI-03', name: 'Student Zone C', score: 43, dur: '6 sec', conf: 76, count: 2, obj: 'None detected', x: '52%', y: '38%', w: '18%', h: '22%' },
-  { id: 'ROI-04', name: 'Supervisor Area', score: 78, dur: '14 sec', conf: 85, count: 5, obj: 'Possible Paper/Chit', x: '72%', y: '20%', w: '20%', h: '28%' },
-]
-
-function ROIAnalysis() {
-  const [sel, setSel] = useState(1)
-  const r = ROISD[sel]
-  return (
-    <div className="overflow-y-auto h-full px-8 py-10 space-y-6">
-      <div>
-        <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Spatial Analysis</div>
-        <h1 className="text-3xl font-display text-cream">ROI Analysis</h1>
-        <p className="text-cream-dim text-sm mt-1">Region of Interest detection and activity scoring across the examination frame.</p>
-      </div>
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 space-y-4">
-          <div className="relative bg-[#0E1209] rounded-xl border border-border overflow-hidden" style={{ paddingTop: '56.25%' }}>
-            <div className="absolute inset-0">
-              {ROISD.map((roi, i) => {
-                const color = roi.score >= 80 ? '#B02030' : roi.score >= 60 ? '#A06010' : '#5E7832'
-                return (
-                  <div key={roi.id} onClick={() => setSel(i)} className="absolute cursor-pointer" style={{ left: roi.x, top: roi.y, width: roi.w, height: roi.h }}>
-                    <div className="w-full h-full relative border-2 transition-all" style={{ borderColor: sel === i ? '#E3D9C2' : color, background: sel === i ? `${color}18` : `${color}08`, boxShadow: `0 0 ${sel === i ? 16 : 6}px ${color}35` }}>
-                      {['tl','tr','bl','br'].map(c => (
-                        <div key={c} className={cn('absolute w-3 h-3', c==='tl'&&'top-0 left-0 border-t-2 border-l-2', c==='tr'&&'top-0 right-0 border-t-2 border-r-2', c==='bl'&&'bottom-0 left-0 border-b-2 border-l-2', c==='br'&&'bottom-0 right-0 border-b-2 border-r-2')} style={{ borderColor: color }} />
-                      ))}
-                      <div className="absolute -top-6 left-0 text-[9px] font-mono px-2 py-0.5 rounded-sm text-white whitespace-nowrap" style={{ background: color }}>
-                        {roi.id} · {roi.score}%
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-              <div className="absolute top-2 left-2 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-danger rec-blink" />
-                <span className="text-[9px] font-mono text-white/70 bg-black/50 px-1.5 py-0.5 rounded">CAM-03 · 14:32:18</span>
-              </div>
-              <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,0.5) 100%)' }} />
-            </div>
-          </div>
-          <div className="grid grid-cols-4 gap-3">
-            {ROISD.map((roi, i) => (
-              <button key={roi.id} onClick={() => setSel(i)}
-                className={cn('p-4 rounded-xl border text-left transition-all', sel === i ? 'border-olive bg-olive-subtle' : 'border-border bg-card hover:border-border-light')}>
-                <div className="text-xs font-mono font-semibold text-cream">{roi.id}</div>
-                <div className="text-[10px] text-muted mt-1">{roi.name}</div>
-                <div className="text-[10px] text-muted mt-1">Activity: <span className={cn('font-mono', roi.score >= 80 ? 'text-danger' : roi.score >= 60 ? 'text-amber' : 'text-olive')}>{roi.score}%</span></div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <Card className="p-6 space-y-5 h-fit">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-semibold text-cream">ROI Details</h3>
-            <Badge color={r.score >= 80 ? 'danger' : r.score >= 60 ? 'amber' : 'olive'}>{r.id}</Badge>
-          </div>
-          <div className="space-y-2.5">
-            {[['ROI ID', r.id],['Zone Name', r.name],['Activity Score', `${r.score}%`],['Motion Duration', r.dur],['Confidence', `${r.conf}%`],['Event Count', `${r.count} events`]].map(([k,v]) => (
-              <div key={k} className="flex items-center justify-between py-2 border-b border-border/50 text-sm">
-                <span className="text-muted">{k}</span>
-                <span className="font-mono text-cream-dim font-medium">{v}</span>
-              </div>
-            ))}
-            <div className="flex items-center justify-between py-2">
-              <span className="text-sm text-muted">Detected Objects</span>
-              <Badge color={r.obj !== 'None detected' ? 'amber' : 'muted'}>{r.obj}</Badge>
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between text-[10px] font-mono text-muted mb-1.5">
-              <span>Activity Score</span><span>{r.score}%</span>
-            </div>
-            <div className="h-2 bg-elevated rounded-full overflow-hidden">
-              <div className={cn('h-full rounded-full', r.score >= 80 ? 'bg-danger' : r.score >= 60 ? 'bg-amber' : 'bg-olive')} style={{ width: `${r.score}%` }} />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {['View Events','Compare Timeline','Mark Relevant','Edit ROI','Reset ROI','Save Annotation'].map((b, i) => (
-              <button key={b} className={cn('py-2 text-xs rounded-lg border font-medium transition-colors',
-                i === 2 ? 'col-span-2 bg-burgundy-dim border-burgundy-mid/30 text-burgundy hover:bg-burgundy-mid' : 'bg-card border-border text-cream-dim hover:border-olive-mid')}>
-                {b}
-              </button>
-            ))}
-          </div>
-        </Card>
-      </div>
-    </div>
-  )
-}
-
-// ── Object Detection ───────────────────────────────────────────────
-
-const DETS = [
-  { type: 'Possible Mobile Phone', cam: 'CAM-03', time: '14:32:18', conf: 89, roi: 'ROI-03', status: 'Needs Review', color: 'danger' as const },
-  { type: 'Possible Paper / Chit', cam: 'CAM-02', time: '14:41:52', conf: 77, roi: 'ROI-07', status: 'Needs Review', color: 'amber' as const },
-  { type: 'Possible Mobile Phone', cam: 'CAM-05', time: '13:55:20', conf: 83, roi: 'ROI-04', status: 'Flagged', color: 'danger' as const },
-  { type: 'Possible Paper / Chit', cam: 'CAM-01', time: '13:20:44', conf: 71, roi: 'ROI-02', status: 'Reviewed', color: 'muted' as const },
-]
-
-function ObjectDetection({ onNavigate }: { onNavigate: (s: Screen) => void }) {
-  return (
-    <div className="overflow-y-auto h-full px-8 py-10 space-y-6">
-      <div>
-        <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">AI-Assisted Analysis</div>
-        <h1 className="text-3xl font-display text-cream">Object Detection</h1>
-        <p className="text-cream-dim text-sm mt-1">Identify external or potentially prohibited objects where technically feasible.</p>
-      </div>
-
-      <div className="flex items-start gap-3 p-4 bg-amber-dim/30 border border-amber/20 rounded-xl">
-        <Ico d={I.alert} size={16} />
-        <p className="text-sm text-amber leading-relaxed">
-          <span className="font-semibold">Important: </span>
-          AI detection is an investigation aid. Confidence scores indicate probability, not certainty. Final verification must be performed by an authorized human reviewer before any action is taken.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-4 gap-4">
-        {DETS.map((d, i) => (
-          <Card key={i} className="overflow-hidden hover:border-border-light transition-colors">
-            <div className="relative h-40 bg-[#0E1209] overflow-hidden">
-              <div className="absolute inset-6 border" style={{ borderColor: d.color === 'danger' ? '#B02030' : d.color === 'amber' ? '#A06010' : '#3A3D35' }}>
-                {['tl','tr','bl','br'].map(c => (
-                  <div key={c} className={cn('absolute w-3 h-3', c==='tl'&&'top-0 left-0 border-t-2 border-l-2', c==='tr'&&'top-0 right-0 border-t-2 border-r-2', c==='bl'&&'bottom-0 left-0 border-b-2 border-l-2', c==='br'&&'bottom-0 right-0 border-b-2 border-r-2')} style={{ borderColor: d.color === 'danger' ? '#B02030' : d.color === 'amber' ? '#A06010' : '#3A3D35' }} />
-                ))}
-              </div>
-              <div className="absolute top-2 left-2 text-[9px] font-mono text-white/60 bg-black/50 px-1.5 py-0.5 rounded">{d.cam}</div>
-              <div className="absolute bottom-2 right-2"><Badge color={d.color}>AI: {d.conf}%</Badge></div>
-            </div>
-            <div className="p-4 space-y-3">
-              <div className="text-sm font-semibold text-cream">{d.type}</div>
-              <div className="text-[10px] font-mono text-muted space-y-1">
-                <div>Camera: <span className="text-olive">{d.cam}</span></div>
-                <div>Timestamp: <span className="text-cream-dim">{d.time}</span></div>
-                <div>ROI: <span className="text-cream-dim">{d.roi}</span></div>
-              </div>
-              <div className="flex items-center justify-between">
-                <Badge color={d.status === 'Needs Review' ? 'amber' : d.status === 'Flagged' ? 'danger' : 'muted'} dot>{d.status}</Badge>
-              </div>
-              <div className="flex gap-2">
-                <Btn size="sm" className="flex-1 justify-center" onClick={() => onNavigate('investigation')}>Review</Btn>
-                <Btn size="sm" variant="danger" className="flex-1 justify-center">Flag</Btn>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ── Segmented Events ───────────────────────────────────────────────
-
-const SEG = [
-  { id: 'EVT-00342', start: '14:32:14', end: '14:32:23', dur: '9 sec', cam: 'CAM-03', level: 'High', conf: 91, tags: ['Motion', 'ROI-03', 'Possible Object'], status: 'Unreviewed' },
-  { id: 'EVT-00339', start: '14:41:45', end: '14:41:58', dur: '13 sec', cam: 'CAM-02', level: 'High', conf: 87, tags: ['Motion', 'ROI-07', 'Object Detected'], status: 'Unreviewed' },
-  { id: 'EVT-00335', start: '15:02:05', end: '15:02:19', dur: '14 sec', cam: 'CAM-04', level: 'Medium', conf: 82, tags: ['Multi-ROI', 'ROI-02'], status: 'Reviewed' },
-  { id: 'EVT-00331', start: '14:21:01', end: '14:21:14', dur: '13 sec', cam: 'CAM-01', level: 'High', conf: 85, tags: ['Unusual', 'ROI-05', 'Object Detected'], status: 'Relevant' },
-  { id: 'EVT-00328', start: '13:55:40', end: '13:55:50', dur: '10 sec', cam: 'CAM-06', level: 'Low', conf: 76, tags: ['Motion', 'ROI-01'], status: 'Ignored' },
-  { id: 'EVT-00325', start: '13:38:16', end: '13:38:25', dur: '9 sec', cam: 'CAM-03', level: 'Medium', conf: 79, tags: ['Motion', 'ROI-04', 'Possible Paper'], status: 'Unreviewed' },
-]
-
-function SegmentedEvents({ onNavigate }: { onNavigate: (s: Screen) => void }) {
-  const { events, select } = useData()
-  const SEG = events.slice(0, 40).map(e => ({
-    id: e.id, start: e.time, end: e.end, dur: `${e.durationS} sec`, cam: e.cam,
-    level: e.priority === 'high' ? 'High' : e.priority === 'medium' ? 'Medium' : 'Low',
-    conf: e.conf,
-    tags: [e.type, e.roi, ...(e.obj !== 'None' ? [e.obj] : [])],
-    status: e.status, ev: e,
-  }))
-  const [filter, setFilter] = useState('All')
-  return (
-    <div className="overflow-y-auto h-full px-8 py-10 space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Auto-Segmented Clips</div>
-          <h1 className="text-3xl font-display text-cream">Segmented Events</h1>
-          <p className="text-cream-dim text-sm mt-1">Auto-segmented video clips from detected activity windows.</p>
-        </div>
-        <span className="text-sm font-mono text-muted">342 segments total</span>
-      </div>
-      <div className="flex gap-2">
-        {['All','High Priority','Object Detection','High Motion','Unreviewed'].map(f => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={cn('px-3 py-2 text-xs rounded-lg font-medium transition-colors',
-              filter === f ? 'bg-olive text-white font-semibold' : 'bg-card border border-border text-muted hover:text-cream-dim')}>
-            {f}
-          </button>
-        ))}
-      </div>
-      <div className="grid grid-cols-3 gap-5">
-        {SEG.map(e => (
-          <Card key={e.id} className="overflow-hidden hover:border-border-light transition-colors">
-            <div className="relative h-36 bg-[#0E1209] flex items-center justify-center border-b border-border">
-              <div className="absolute inset-0 opacity-15" style={{ backgroundImage: 'linear-gradient(#2A3028 1px, transparent 1px), linear-gradient(90deg, #2A3028 1px, transparent 1px)', backgroundSize: '20px 15px' }} />
-              <button onClick={() => onNavigate('investigation')} className="relative z-10 w-11 h-11 bg-olive/90 rounded-full flex items-center justify-center hover:bg-olive transition-colors">
-                <Ico d={I.play} size={14} />
-              </button>
-              <div className="absolute top-2 left-2 text-[9px] font-mono text-white/60">{e.cam}</div>
-              <div className="absolute top-2 right-2"><Badge color={e.level === 'High' ? 'danger' : e.level === 'Medium' ? 'amber' : 'muted'}>{e.level}</Badge></div>
-              <div className="absolute bottom-2 left-2 text-[9px] font-mono text-white/40">{e.start} → {e.end}</div>
-            </div>
-            <div className="p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold font-mono text-cream">{e.id}</span>
-                {statusBadge(e.status)}
-              </div>
-              <div className="text-xs text-muted font-mono">
-                Duration: <span className="text-cream-dim">{e.dur}</span> · Confidence: <span className="text-olive">{e.conf}%</span>
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {e.tags.map(t => <Badge key={t} color="muted">{t}</Badge>)}
-              </div>
-              <div className="flex gap-2 pt-1">
-                <Btn size="sm" className="flex-1 justify-center" onClick={() => onNavigate('investigation')}>Review Clip</Btn>
-                <Btn size="sm" variant="secondary" className="flex-1 justify-center">Export</Btn>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ── Reports ────────────────────────────────────────────────────────
-
-function Reports() {
-  return (
-    <div className="overflow-y-auto h-full px-8 py-10 space-y-8">
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Investigation Summary</div>
-          <h1 className="text-3xl font-display text-cream">Investigation Report</h1>
-          <p className="text-cream-dim text-sm mt-1">Semester Examination — IT Department · 22 August 2026</p>
-        </div>
-        <div className="flex gap-2">
-          <Btn variant="secondary" size="sm"><Ico d={I.export} size={12} />Export Events</Btn>
-          <Btn size="md"><Ico d={I.report} size={13} />Generate PDF Report</Btn>
-        </div>
-      </div>
-
-      {/* Report meta */}
-      <Card className="p-6">
-        <div className="grid grid-cols-4 gap-8">
-          {[['Examination','Semester Exam — IT Dept'],['Date','22 August 2026'],['Total Cameras','12 active'],['Total Footage','186h 42m'],['Events Detected','342'],['High Priority','18 flagged'],['Reviewed','127 events'],['Object Detections','23 potential']].map(([k,v]) => (
-            <div key={k}>
-              <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-1">{k}</div>
-              <div className="text-sm font-semibold text-cream">{v}</div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* Stats strip */}
-      <div className="grid grid-cols-5 gap-4">
-        {[['Total Footage','186h 42m','info'],['Total Events','342','olive'],['High Activity','18','danger'],['Object Detections','23','amber'],['ROIs Identified','48','olive']].map(([l,v,c]) => (
-          <Card key={l} className="p-5 text-center">
-            <div className={cn('text-4xl font-display mb-1', c === 'olive' ? 'text-olive' : c === 'danger' ? 'text-danger' : c === 'amber' ? 'text-amber' : 'text-info')}>{v}</div>
-            <div className="text-xs font-mono text-muted uppercase tracking-wide">{l}</div>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-2 gap-5">
-        <Card className="p-6">
-          <h3 className="text-sm font-semibold text-cream mb-1">Events by Camera</h3>
-          <p className="text-xs text-muted mb-4">Distribution across 12 active cameras</p>
-          <BarChart data={[48,61,32,27,38,44,19,28,35,22,18,14]} labels={Array.from({length:12},(_,i)=>`C${String(i+1).padStart(2,'0')}`)} color="#5E7832" />
-        </Card>
-        <Card className="p-6">
-          <h3 className="text-sm font-semibold text-cream mb-1">Events by Category</h3>
-          <p className="text-xs text-muted mb-4">Breakdown by detection type</p>
-          <BarChart data={[142,98,64,38]} labels={['Elevated Motion','Multi-ROI','Possible Object','Unusual']} color="#7B2040" />
-        </Card>
-        <Card className="col-span-2 p-6">
-          <h3 className="text-sm font-semibold text-cream mb-1">High-Priority Events Timeline</h3>
-          <p className="text-xs text-muted mb-4">Activity intensity across the full session duration</p>
-          <ActivityChart height={90} />
-        </Card>
-      </div>
-
-      <Card className="p-6">
-        <h3 className="text-base font-semibold text-cream mb-3">Summary & Findings</h3>
-        <div className="text-sm text-cream-dim leading-relaxed space-y-3">
-          <p>Analysis completed for Semester Examination, IT Department on 22 August 2026. A total of <strong className="text-cream">186 hours 42 minutes</strong> of CCTV footage across <strong className="text-cream">12 cameras</strong> was processed using offline motion estimation and ROI detection.</p>
-          <p><strong className="text-danger">18 high-priority events</strong> were detected requiring immediate investigator review. Of the <strong className="text-cream">342 total events</strong>, 127 have been reviewed, 23 involve possible prohibited object detections, and 18 have been marked as potentially relevant.</p>
-          <p className="text-amber italic text-xs">All AI detections are presented as probabilistic findings. Final determination of any violation must be made by an authorized human reviewer following established examination authority protocols.</p>
-        </div>
-        <div className="flex gap-3 mt-5">
-          <Btn variant="secondary"><Ico d={I.export} size={13} />Export Evidence</Btn>
-          <Btn variant="secondary"><Ico d={I.export} size={13} />Export Event Log</Btn>
-        </div>
-      </Card>
-    </div>
-  )
-}
-
-// ── System Status ─────────────────────────────────────────────────
-
-function SystemStatus() {
-  return (
-    <div className="overflow-y-auto h-full px-8 py-10 space-y-8">
-      <div>
-        <div className="text-xs font-mono text-muted uppercase tracking-widest mb-1">Infrastructure</div>
-        <h1 className="text-3xl font-display text-cream">System Status</h1>
-        <p className="text-cream-dim text-sm mt-1">Hardware utilization and processing pipeline health.</p>
-      </div>
-      <div className="grid grid-cols-4 gap-4">
-        {[
-          { label: 'GPU Utilization', val: 78, unit: '%', color: 'olive' as const },
-          { label: 'CPU Usage', val: 42, unit: '%', color: 'info' as const },
-          { label: 'RAM Usage', val: 50, unit: '64 / 128 GB', color: 'olive' as const },
-          { label: 'Storage Used', val: 40, unit: '4.8 / 12 TB', color: 'amber' as const },
-        ].map(r => {
-          const cc = { olive: 'text-olive bg-olive', info: 'text-info bg-info', amber: 'text-amber bg-amber' }[r.color]
-          const tv = cc.split(' ')[0]
-          const bv = cc.split(' ')[1]
-          return (
-            <Card key={r.label} className="p-6">
-              <div className="text-[10px] font-mono text-muted uppercase tracking-widest mb-3">{r.label}</div>
-              <div className={cn('text-4xl font-display mb-1', tv)}>{r.val}%</div>
-              <div className="text-xs font-mono text-muted mb-4">{r.unit}</div>
-              <div className="h-1.5 bg-elevated rounded-full overflow-hidden">
-                <div className={cn('h-full rounded-full', bv)} style={{ width: `${r.val}%` }} />
-              </div>
-            </Card>
-          )
-        })}
-      </div>
-
-      <div className="grid grid-cols-3 gap-5">
-        <div className="col-span-2 space-y-4">
-          <Card className="p-6">
-            <h3 className="text-base font-semibold text-cream mb-4">Active Jobs</h3>
-            <div className="space-y-4">
-              {[{ name: 'CAM-08_Session1.mp4', stage: 'Object Detection', prog: 67, speed: '2.8× RT' }, { name: 'CAM-11_Session1.mp4', stage: 'Motion Estimation', prog: 23, speed: '2.1× RT' }].map(j => (
-                <div key={j.name} className="p-4 bg-elevated rounded-xl border border-border">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-mono text-cream">{j.name}</span>
-                    <div className="flex gap-2"><Badge color="info">{j.stage}</Badge><Badge color="olive">{j.speed}</Badge></div>
-                  </div>
-                  <div className="h-2 bg-surface rounded-full overflow-hidden mb-1">
-                    <div className="h-full bg-olive rounded-full" style={{ width: `${j.prog}%` }} />
-                  </div>
-                  <div className="text-[10px] font-mono text-muted">{j.prog}% complete</div>
-                </div>
-              ))}
-            </div>
-          </Card>
-          <Card className="p-6">
-            <h3 className="text-base font-semibold text-cream mb-4">Processing Logs</h3>
-            <div className="font-mono text-[10px] text-muted bg-[#0E1209] rounded-lg p-4 border border-border space-y-1.5 max-h-36 overflow-y-auto">
-              {[['14:38:22','INFO','CAM-08: ROI detection completed — 312 frames'],['14:38:19','INFO','CAM-11: Frame extraction started — 2.1× realtime'],['14:38:15','WARN','CAM-08: High activity detected in ROI-03 (score: 86%)'],['14:38:10','INFO','CAM-11: Video ingestion complete — 28,440 frames'],['14:38:05','INFO','Processing queue updated — 2 active, 1 queued']].map(([t,l,m]) => (
-                <div key={t} className="flex gap-3">
-                  <span className="text-white/20 shrink-0">{t}</span>
-                  <span className={cn('shrink-0', l === 'WARN' ? 'text-amber' : 'text-olive')}>[{l}]</span>
-                  <span className="text-white/50">{m}</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        <div className="space-y-4">
-          <Card className="p-6">
-            <h3 className="text-base font-semibold text-cream mb-4">Job Summary</h3>
-            <div className="space-y-4">
-              {[{ label: 'Active', val: 2, color: 'text-olive' }, { label: 'Completed Today', val: 22, color: 'text-success' }, { label: 'Failed', val: 0, color: 'text-muted' }, { label: 'In Queue', val: 1, color: 'text-amber' }].map(j => (
-                <div key={j.label} className="flex items-center justify-between border-b border-border/50 pb-3">
-                  <span className="text-sm text-muted">{j.label}</span>
-                  <span className={cn('text-3xl font-display', j.color)}>{j.val}</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-          <Card className="p-6">
-            <h3 className="text-sm font-semibold text-cream mb-3">Storage Health</h3>
-            <div className="space-y-2 text-xs font-mono">
-              {[['Capacity','12.0 TB'],['Used','4.8 TB'],['Available','7.2 TB'],['Last Backup','22 Aug 03:00'],['Status','Verified ✓']].map(([k,v]) => (
-                <div key={k} className="flex justify-between py-1.5 border-b border-border/50">
-                  <span className="text-muted">{k}</span>
-                  <span className="text-cream-dim">{v}</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-          <Card className="p-5 flex items-center gap-4">
-            <div className="w-10 h-10 bg-olive-subtle border border-olive-mid/30 rounded-xl flex items-center justify-center">
-              <Ico d={I.status} size={16} />
-            </div>
-            <div>
-              <div className="text-xs text-muted font-mono">Avg Speed</div>
-              <div className="text-3xl font-display text-olive leading-none">2.4×</div>
-              <div className="text-[10px] font-mono text-muted">realtime</div>
-            </div>
-          </Card>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ── App Shell ─────────────────────────────────────────────────────
+// ROIAnalysis, ObjectDetection, SegmentedEvents, Reports and SystemStatus
+// were removed. Every one of them ran on hardcoded arrays -- invented ROI
+// statistics, a mock detection list, fabricated report rows and made-up GPU
+// and storage telemetry. None was wired to the pipeline, and SegmentedEvents
+// was a second view of the same events as the Event Explorer while not being
+// reachable from the nav at all. A screen that shows a reviewer numbers the
+// system did not produce is worse than no screen.
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('dashboard')
   const screens: Record<Screen, React.ReactNode> = {
     'dashboard': <Dashboard onNavigate={setScreen} />,
-    'video-analysis': <VideoAnalysis />,
-    'investigation': <InvestigationWorkspace />,
+    'library': <Library onNavigate={setScreen} />,
     'event-explorer': <EventExplorer onNavigate={setScreen} />,
-    'roi-analysis': <ROIAnalysis />,
-    'object-detection': <ObjectDetection onNavigate={setScreen} />,
-    'segmented-events': <SegmentedEvents onNavigate={setScreen} />,
-    'reports': <Reports />,
-    'system-status': <SystemStatus />,
+    'investigation': <InvestigationWorkspace />,
   }
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-bg text-cream font-sans">
