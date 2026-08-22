@@ -154,3 +154,27 @@ def drop_fixtures(frames: list[FrameDets], fixtures: list[Fixture]) -> int:
         n += len(f.dets) - len(keep)
         f.dets = keep
     return n
+
+
+def frames_from_evidence(evidence: list) -> list[FrameDets]:
+    """Flatten cached Stage 2 windows into one time-sorted frame list.
+
+    The sweep is a *less sensitive* detector than the cascade: it runs
+    full-frame, while Stage 2 runs on ROI crops where a small object is
+    upscaled and becomes detectable. Building the fixture map from the sweep
+    alone therefore cannot see most of what it is supposed to reject.
+
+    measured on file 07: the sweep found 0 `cell phone` and 0 `book`
+    detections across 720 frames, so 0 fixtures were identified -- while Stage
+    2 found 7,949 phone detections in the same recording, 197 events' worth,
+    dominated by desk mice and calculators sitting still for the whole exam.
+
+    Feeding the fixture test the detections it is meant to filter is the fix.
+    No new rule, no new threshold.
+    """
+    out: list[FrameDets] = []
+    for w in evidence:
+        for f in w.frames:
+            out.append(f)
+    out.sort(key=lambda f: f.t_sec)
+    return out

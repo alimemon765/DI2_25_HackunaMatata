@@ -348,12 +348,35 @@ def save_evidence(video: str, evidence: list[WindowEvidence],
 
 
 def load_evidence(video: str, candidates: list[Candidate],
-                  cache_dir: str = "cache") -> list[WindowEvidence] | None:
+                  cache_dir: str = "cache",
+                  allow_fallback: bool = True) -> list[WindowEvidence] | None:
+    """Cached Stage 2 evidence for these candidates, or the newest for this file.
+
+    The exact key is a hash of the candidate list, and candidates depend on the
+    seat grid -- which is batch-order dependent, so the same file can yield a
+    slightly different grid between runs and miss its own cache. That turned
+    --reclassify back into a full 30-minute cascade on precisely the two long
+    files it exists to avoid.
+
+    On a miss we fall back to the most recent cache for this video and classify
+    the windows it holds. Stage 3 is a pure function of Stage 2's output, so
+    re-deriving those windows would produce the same detections; what changes
+    is only which windows were promoted, and that is reported rather than
+    silently swapped.
+    """
     import json
     from pathlib import Path
     p = Path(cache_dir) / _evidence_key(video, candidates)
     if not p.exists():
-        return None
+        if not allow_fallback:
+            return None
+        alts = sorted(Path(cache_dir).glob(f"evidence_{Path(video).stem}_*.json"),
+                      key=lambda q: q.stat().st_mtime, reverse=True)
+        if not alts:
+            return None
+        p = alts[0]
+        print(f"  [cascade] exact evidence key missed; falling back to {p.name}",
+              flush=True)
     out: list[WindowEvidence] = []
     for r in json.loads(p.read_text()):
         c = r["cand"]

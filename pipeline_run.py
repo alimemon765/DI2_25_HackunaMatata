@@ -42,7 +42,11 @@ from pipeline.evidence import (
     write_timeline_json,
 )
 from pipeline.filters import apply_filters
-from pipeline.fixtures import build_fixture_map, drop_fixtures
+from pipeline.fixtures import (
+    build_fixture_map,
+    drop_fixtures,
+    frames_from_evidence,
+)
 from pipeline.mv import cached_activity_cube, probe
 from pipeline.score import score_seats
 from pipeline.seats import discover_seats_multi
@@ -176,26 +180,43 @@ def process_video(
         if C.SWEEP_ENABLED:
             sweep = cached_sweep(str(video), grid, observed_s,
                                  start_s=start_s, verbose=verbose)
+
+        # --- Stage 2 -------------------------------------------------------
+        # Cached evidence is loaded *before* the fixture map is built, because
+        # it is the better input to that map: the cascade sees small objects
+        # the full-frame sweep misses entirely.
+        evidence = load_evidence(str(video), short) if reuse_evidence else None
+        from_cache = evidence is not None
+        if from_cache and verbose:
+            print(f"  [cascade] reusing cached Stage 2 evidence for "
+                  f"{len(evidence)} windows -- Stage 3 only", flush=True)
+
+        if C.SWEEP_ENABLED:
+            fx_input = list(sweep)
+            if from_cache:
+                fx_input += frames_from_evidence(evidence)
+                fx_input.sort(key=lambda f: f.t_sec)
             fixtures = build_fixture_map(
-                sweep, only_classes=(C.COCO_CELL_PHONE, C.COCO_BOOK))
+                fx_input, only_classes=(C.COCO_CELL_PHONE, C.COCO_BOOK))
             n_dropped = drop_fixtures(sweep, fixtures)
+            # frames_from_evidence returns the same FrameDets objects, so this
+            # drops fixtures from the cached evidence in place.
+            n_ev_dropped = (drop_fixtures(frames_from_evidence(evidence), fixtures)
+                            if from_cache else 0)
             stage1["fixtures"] = {
                 "n": len(fixtures),
+                "built_from": "sweep + cached Stage 2" if from_cache else "sweep",
                 "sweep_detections_dropped": n_dropped,
+                "stage2_detections_dropped": n_ev_dropped,
                 "detail": [f.describe() for f in fixtures[:12]],
             }
             if verbose:
                 print(f"  [fixtures] {len(fixtures)} static small objects "
-                      f"identified; {n_dropped} sweep detections dropped",
-                      flush=True)
+                      f"identified from {stage1['fixtures']['built_from']}; "
+                      f"{n_dropped} sweep + {n_ev_dropped} Stage 2 detections "
+                      f"dropped", flush=True)
 
-        # --- Stage 2 -------------------------------------------------------
-        evidence = load_evidence(str(video), short) if reuse_evidence else None
-        if evidence is not None:
-            if verbose:
-                print(f"  [cascade] reusing cached Stage 2 evidence for "
-                      f"{len(evidence)} windows -- Stage 3 only", flush=True)
-        else:
+        if not from_cache:
             evidence = run_cascade(str(video), grid, short, fixtures=fixtures,
                                    verbose=verbose)
             save_evidence(str(video), evidence, short)
