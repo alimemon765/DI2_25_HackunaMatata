@@ -36,3 +36,4 @@ yolo11*.pt
 # ...but keep the diagnostic images FINDINGS.md cites as evidence
 !out/debug/
 !out/debug/diag_*.png
+out/clips_stale/
