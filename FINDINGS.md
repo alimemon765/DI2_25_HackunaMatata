@@ -143,3 +143,52 @@ significance out of near-zero noise.
 - **Overlapping seat boxes can double-report** one detection against two seats.
 - **Seats are only discovered where someone sits** during a calibration window.
   An empty desk is not a seat, by construction.
+
+## 7. Two defects found in the final validation run
+
+### The crowd rule is unsound wherever a seat grid exists
+
+`crowd_gathering` counts people who are not in a discovered seat. That
+definition is only as good as the seat set, and the seat set is incomplete by
+construction: discovery finds *persistently occupied* positions inside its
+calibration windows, so a candidate at a desk it never discovered is counted as
+"unseated".
+
+Measured on `06` — a two-hour exam hall with roughly 28 numbered desks and 10
+discovered seats — **313 of 720 sweep frames carry ≥4 "unseated" people**,
+producing **60 `crowd_gathering` events in a room where nobody is gathering**.
+
+Two geometric discriminators were measured, and **both failed**:
+
+| | 06 (exam hall, false) | 05 (reception, true) |
+|---|---|---|
+| group bbox area / frame | p50 **0.18** | p50 **0.43** |
+| dist to nearest seat / frame diagonal | p50 **0.052** | p50 **0.081** |
+| unseated share of all people | p50 **0.25** | p50 **0.21** |
+
+The compactness result runs *backwards* — the exam hall's groups are tighter
+than the real gathering's, so a compactness test would have rejected the true
+positive and kept the false ones. Worth recording: that filter was about to be
+written before it was measured.
+
+The rule is therefore **off by default** (`--crowd never`). It still works when
+asked for (`--crowd always` on `05` yields `crowd_gathering` as the top label).
+The fix is not a threshold — it needs either better seat-discovery recall, or a
+signal this module does not have: dwell time, or the per-cell motion energy
+Stage 1 already computes.
+
+### Seat discovery is not deterministic
+
+The same file yields a different seat count between runs — `08` gave 6 seats in
+one run and 9 in another; `05` gave 6 and 7. Two causes compound: detector
+output varies slightly run to run on MPS, and the IoU agglomeration in
+`discover_seats_from_persons` / `discover_seats_multi` is **order-dependent**,
+so a small change in detection order changes which boxes merge.
+
+This is why `06`'s crowd events swung from 0 to 60 between two runs of the same
+code. Anything downstream of the seat count — per-seat z-scores, the
+seat-second budget, unseated counts — inherits that instability.
+
+Not fixed. The fix is to seed the detector, sort detections into a canonical
+order before agglomerating, and merge by a deterministic criterion rather than
+greedy best-match-so-far.

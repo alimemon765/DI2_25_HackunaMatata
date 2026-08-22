@@ -224,7 +224,8 @@ def process_video(
     # counts only people who are *not* in a discovered seat: a room full of
     # seated candidates is an exam, not a gathering, and counting them would
     # make this rule fire permanently everywhere.
-    run_crowd = crowd != "never"
+    run_crowd = crowd == "always" or (crowd == "auto"
+                                      and len(grid) < MIN_SEATS_FOR_GRID)
     if run_crowd:
         frames_for_crowd = sweep if sweep else scan_frames_fallback(
             str(video), observed_s, start_s, verbose)
@@ -274,8 +275,12 @@ def main() -> None:
     ap.add_argument("--start", type=float, default=0.0)
     ap.add_argument("--out", default="out")
     ap.add_argument("--clips", action="store_true", help="export evidence clips")
-    ap.add_argument("--crowd", choices=["auto", "always", "never"], default="auto",
-                    help="auto: only when no seat grid is found")
+    ap.add_argument("--crowd", choices=["auto", "always", "never"], default="never",
+                    help="crowd_gathering detection. Default 'never': the rule "
+                         "is not sound where a seat grid exists (it counts "
+                         "candidates at undiscovered desks as unseated -- see "
+                         "classify_crowd). 'always' to enable anyway; 'auto' "
+                         "restricts it to scenes with no seat grid at all.")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
 

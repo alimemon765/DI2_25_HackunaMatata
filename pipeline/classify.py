@@ -314,6 +314,29 @@ def count_unseated(
     return out
 
 
+# WARNING -- this rule is not sound on scenes that have a seat grid, and is
+# off by default for that reason (`--crowd never`). It defines a crowd by
+# exclusion from the discovered seat set, and that set is incomplete: seat
+# discovery only finds *persistently occupied* positions inside its calibration
+# windows, so candidates at desks it never discovered are counted as "unseated".
+#
+# measured on file 06, a two-hour exam hall with ~28 numbered desks and 10
+# discovered seats: 313 of 720 sweep frames carry >=4 "unseated" people, which
+# produced 60 crowd_gathering events in a room where nobody is gathering.
+#
+# Two geometric discriminators were measured and both failed to separate the
+# exam hall (06) from the genuine reception gathering (05):
+#   * group bounding-box area, as a fraction of frame -- 06 p50=0.18 vs
+#     05 p50=0.43. The exam hall's groups are *tighter*, the opposite of the
+#     expected direction, so a compactness test would reject the true positive.
+#   * distance from group centre to nearest seat -- 06 p50=0.052 vs 05 p50=0.081
+#     of the frame diagonal, and unseated share of all people 0.25 vs 0.21.
+#     Both overlap almost completely.
+#
+# The fix is not a threshold. Either seat-discovery recall has to improve so
+# that "not in a seat" means something, or the rule needs a signal this module
+# does not have -- sustained approach and dwell, or motion energy at the group
+# location, which Stage 1 already computes per cell and could supply.
 def classify_crowd(
     counts: list[tuple[float, int]],
     zone_id: str = "zone_full_frame",
