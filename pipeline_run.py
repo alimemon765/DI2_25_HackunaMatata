@@ -309,13 +309,19 @@ def process_video(
                   f"persons -> {len(crowd_events)} events", flush=True)
 
     # --- clips -------------------------------------------------------------
-    if want_clips:
-        for i, e in enumerate(events):
-            p = export_clip(video, e["start_sec"], e["end_sec"],
-                            out_dir / "clips" / f"{video.stem}_{i:03d}_"
-                                                f"{e['action_label']}.mp4",
+    # Without --clips, an existing clip is still adopted rather than dropped.
+    # A re-classify changes labels and confidences, not footage, so discarding
+    # clip_path would blank every video in the review UI while 921 perfectly
+    # good clips sat on disk. Twice now that has silently emptied the manifest.
+    for i, e in enumerate(events):
+        dest = (out_dir / "clips"
+                / f"{video.stem}_{i:03d}_{e['action_label']}.mp4")
+        if want_clips:
+            p = export_clip(video, e["start_sec"], e["end_sec"], dest,
                             crop_px=tuple(e["roi_px"]) if e.get("roi_px") else None)
             e["clip_path"] = str(p) if p else None
+        elif dest.exists():
+            e["clip_path"] = str(dest)
 
     for e in events:
         e.pop("roi_px", None)
