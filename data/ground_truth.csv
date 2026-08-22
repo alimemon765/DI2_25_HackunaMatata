@@ -1,0 +1,9 @@
+video,start_sec,end_sec,seat_hint,label,type,confidence_of_label
+06_mobile_phone_hall.mp4,,,unknown,mobile_phone_usage,positive,filename_only
+07_seat_exchange.mp4,,,unknown,seat_exchange,positive,filename_only
+08_seat12_paper_pass.mkv,,,12,paper_pass,positive,filename_only
+05_crowd_reception_desk.mp4,,,n/a,crowd_gathering,positive_different_scene,filename_only
+03_cctv_mobile_usage.mkv,,,unknown,mobile_phone_usage,positive,filename_only
+04_cctv_candidate_talking.mkv,,,unknown,talking_to_neighbour,positive,filename_only
+01_mobile_phone_hall.mkv,,,unknown,mobile_phone_usage,positive,filename_only
+02_mobile_phone_hall.mkv,,,unknown,mobile_phone_usage,positive,filename_only

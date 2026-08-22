@@ -26,3 +26,6 @@ cache/
 
 # OS
 .DS_Store
+
+# Ultralytics weights downloaded at runtime
+yolo11*.pt

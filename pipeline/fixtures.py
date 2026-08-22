@@ -1,0 +1,125 @@
+"""Fixture rejection: telling a phone from a mouse.
+
+The single biggest source of false `mobile_phone_usage` on this footage is not
+a marginal detection -- it is a *confident, perfectly stable* one. A COCO
+detector calls a computer mouse a cell phone, at conf 0.2-0.5, in essentially
+every frame, from the same pixels, for as long as the camera runs. Verified on
+clips 03 and 06: see out/debug/diag_03.png and out/debug/diag_06.png, where the
+box sits at the identical coordinates 225 seconds apart.
+
+That breaks the persistent-object sweep's original premise. Persistence was
+meant to be evidence *for* an object being in use; it is in fact the signature
+of furniture. The discriminator that actually separates the two is **motion**:
+
+    a phone in someone's hand moves; a mouse on a desk does not.
+
+So a small-object detection cluster that is both long-lived and stationary is
+declared a fixture, and every detection overlapping it is dropped everywhere --
+in the Stage 2 windows and in the sweep alike. Nothing is thresholded on
+detector confidence, because on this footage confidence does not rank
+correctness: the single most confident `cell phone` in clip 02 is a sheet of
+paper.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import numpy as np
+
+from .detector import Detection, FrameDets, iou
+
+# A cluster counts as a fixture if it appears in at least this share of the
+# samples it could have appeared in...
+FIXTURE_MIN_PRESENCE = 0.5
+# ...and its centroid never wanders further than this multiple of its own box
+# diagonal. A held phone drifts far more than its own size as an arm moves; a
+# mouse drifts by detector jitter only.
+FIXTURE_MAX_DRIFT = 0.75
+# Minimum samples before the test means anything.
+FIXTURE_MIN_SAMPLES = 4
+# How much a detection must overlap a fixture to be considered the same object.
+FIXTURE_IOU = 0.30
+
+
+@dataclass
+class Fixture:
+    cls_id: int
+    box: tuple[float, float, float, float]
+    presence: float
+    drift: float
+    n_samples: int
+
+    def describe(self) -> dict:
+        return {"class_id": self.cls_id,
+                "box": [round(v) for v in self.box],
+                "presence": round(self.presence, 3),
+                "drift_in_box_diagonals": round(self.drift, 3),
+                "samples": self.n_samples}
+
+
+def build_fixture_map(
+    frames: list[FrameDets],
+    min_presence: float = FIXTURE_MIN_PRESENCE,
+    max_drift: float = FIXTURE_MAX_DRIFT,
+    join_iou: float = FIXTURE_IOU,
+) -> list[Fixture]:
+    """Find small objects that are always there and never move.
+
+    Runs over the sweep frames, which already span the whole file, so this
+    costs no extra decoding.
+    """
+    if len(frames) < FIXTURE_MIN_SAMPLES:
+        return []
+
+    clusters: list[dict] = []
+    for f in frames:
+        for d in f.dets:
+            hit = None
+            for c in clusters:
+                if c["cls"] == d.cls_id and iou(d.xyxy, c["box"]) >= join_iou:
+                    hit = c
+                    break
+            if hit is None:
+                clusters.append({"cls": d.cls_id, "box": tuple(d.xyxy), "n": 1,
+                                 "cents": [d.centroid], "frames": {round(f.t_sec, 3)}})
+            else:
+                k = hit["n"]
+                hit["box"] = tuple((np.array(hit["box"]) * k + np.array(d.xyxy)) / (k + 1))
+                hit["n"] = k + 1
+                hit["cents"].append(d.centroid)
+                hit["frames"].add(round(f.t_sec, 3))
+
+    n_frames = len(frames)
+    out: list[Fixture] = []
+    for c in clusters:
+        n = len(c["frames"])
+        if n < FIXTURE_MIN_SAMPLES:
+            continue
+        presence = n / n_frames
+        if presence < min_presence:
+            continue
+        cents = np.array(c["cents"], float)
+        x0, y0, x1, y1 = c["box"]
+        diag = max(float(np.hypot(x1 - x0, y1 - y0)), 1.0)
+        drift = float(np.max(np.linalg.norm(cents - cents.mean(axis=0), axis=1))) / diag
+        if drift <= max_drift:
+            out.append(Fixture(c["cls"], c["box"], presence, drift, n))
+    return out
+
+
+def is_fixture(det: Detection, fixtures: list[Fixture],
+               iou_thresh: float = FIXTURE_IOU) -> bool:
+    return any(f.cls_id == det.cls_id and iou(det.xyxy, f.box) >= iou_thresh
+               for f in fixtures)
+
+
+def drop_fixtures(frames: list[FrameDets], fixtures: list[Fixture]) -> int:
+    """Remove fixture detections in place. Returns how many were dropped."""
+    if not fixtures:
+        return 0
+    n = 0
+    for f in frames:
+        keep = [d for d in f.dets if not is_fixture(d, fixtures)]
+        n += len(f.dets) - len(keep)
+        f.dets = keep
+    return n
