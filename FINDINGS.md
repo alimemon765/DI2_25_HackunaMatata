@@ -496,3 +496,63 @@ therefore labelled `talking_to_neighbour` rather than transit. Reordering would
 likely raise precision at the top of the queue, but risks suppressing genuine
 interactions that happen while someone walks past, so it needs the same
 measured treatment as everything else here rather than a swap on intuition.
+
+## 14. Rule ordering: staff_or_transit evaluated first
+
+§13 found movement through the room driving the top of the queue. The lead was
+that `staff_or_transit` ran **last**, so a window containing both movement and a
+weak correlation became `talking_to_neighbour`. Tested behind a flag
+(`TRANSIT_FIRST`) rather than swapped on intuition.
+
+### Does it fix the confirmed false positives?
+
+| event | my frame-by-frame reading | before | after |
+|---|---|---|---|
+| 06 @1758 | **no phone visible** | mobile_phone_usage 0.72 | **transit 0.22** |
+| 07 @1722 | **staff lanyard, walking in** | talking 0.78 | **transit 0.22** |
+| 07 @4393 | **walking through, no phone** | mobile_phone_usage 0.73 | **transit 0.22** |
+| 07 @829 | **walking through, no phone** | mobile_phone_usage 0.71 | **transit 0.22** |
+| 06 @7553, @5388, 07 @3237 | ambiguous | talking 0.75-0.77 | **transit 0.22** |
+| 06 @2692, @231 | staff leaning over a desk | talking 0.75-0.77 | talking, kept |
+| 07 @2395 | ambiguous | talking 0.78 | talking, kept |
+
+**All four clear false positives are demoted.** The two staff-leaning cases are
+kept, which is defensible: leaning over a desk is an interaction *at a seat* and
+does not traverse the room, so displacement stays low. The rule cannot know
+staff from candidate, and should not pretend to.
+
+### Does it cost the one validated true positive?
+
+**No.** Clip 04's confirmed `talking_to_neighbour` at 4-18 s survives at 0.61,
+and recall against the four scrubbed windows is **unchanged at 1 of 4**, tIoU
+0.357 — identical before and after.
+
+### Is the new top of the queue actually better?
+
+Six newly-promoted top events were checked frame by frame. **None is a
+walk-through.** 06's three show seated candidates in close proximity with one
+reaching across a divider — plausible cross-seat interaction. 07's three are
+ambiguous but are quiet seated scenes, not people crossing the room.
+
+### The cost, stated plainly
+
+| label | before | after |
+|---|---|---|
+| mobile_phone_usage | 84 | **16** (−81%) |
+| talking_to_neighbour | 182 | **75** (−59%) |
+| staff_or_transit | 376 | **551** |
+
+This is aggressive. **On short, busy clips it can absorb everything**: 01 and 02
+now produce `staff_or_transit` and nothing else. No measured recall was lost —
+neither file's verified phone window was ever detected, before or after — but
+the mechanism could suppress a real detection in a scene with movement in it.
+
+File-level `label_present` falls 38% -> 25%, driven by 02 losing a
+`mobile_phone_usage` event that fired at 182 s, twenty seconds *after* the real
+phone use ended. Removing an incorrect label lowers that metric while improving
+the output, which is a good illustration of why file-level accuracy is a poor
+guide here.
+
+**Shipped, flagged, and reversible** via `TRANSIT_FIRST = False`. It should be
+revisited the moment more ground truth exists, because the −81% on phones is
+the kind of number that deserves a real recall measurement behind it.

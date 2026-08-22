@@ -41,6 +41,7 @@ from .config import (
     TALKING_MIN_S,
     TALKING_REJECT_CORR,
     TALKING_REJECT_SEAT_IOU,
+    TRANSIT_FIRST,
     TRANSIT_MAX_CONF,
     TRANSIT_MIN_DISPLACEMENT,
     TRANSIT_MIN_FRAMES,
@@ -294,7 +295,8 @@ def rule_staff_transit(ev: WindowEvidence) -> Action | None:
         # Ceilinged: this label exists to take a window OUT of the queue, so it
         # must never outrank a window that reports an actual behaviour.
         conf = min(
-            TRANSIT_MAX_CONF,
+            TRANSIT_FIRST,
+    TRANSIT_MAX_CONF,
             _confidence(min(1.0, len(dets) / max(ev.n_frames, 1)),
                         min(1.0, disp / (2 * TRANSIT_MIN_DISPLACEMENT))) * 0.85,
         )
@@ -321,6 +323,15 @@ def classify_window(ev: WindowEvidence, scores: SeatScores, grid: SeatGrid) -> A
     """Run every rule, take the most confident, keep the rest on the record."""
     considered: list[dict] = []
     fired: list[Action] = []
+
+    # When enabled, a window that is dominated by someone crossing the scene is
+    # called that, before the seat rules get a chance to read the same motion as
+    # a conversation. Its confidence is already ceilinged, so such windows sink
+    # in the queue rather than leading it.
+    if TRANSIT_FIRST:
+        t = rule_staff_transit(ev)
+        if t is not None:
+            return t
     for fn in (lambda: rule_mobile_phone(ev),
                lambda: rule_paper_pass(ev, grid),
                lambda: rule_seat_exchange(ev, grid),

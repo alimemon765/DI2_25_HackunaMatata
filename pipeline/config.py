@@ -134,6 +134,13 @@ TALKING_REJECT_SEAT_IOU = 0.10
 # CAVEAT: 5 windows is a small sample. 0.5 sits roughly midway in the observed
 # gap (0.13 -> 0.87). Treat it as provisional until checked on more windows.
 TRANSIT_MIN_DISPLACEMENT = 0.5   # in box diagonals, peak deviation from the mean
+# Evaluate staff_or_transit BEFORE the seat-behaviour rules rather than as a
+# fallback. Rationale: spot-checking the ten highest-confidence events on the
+# two long files found movement through the room driving the top of the queue --
+# correlated motion across adjacent seats as somebody passes between them, and
+# spurious object detections while they move. Reordering is behind a flag so
+# the trade can be measured and reverted.
+TRANSIT_FIRST = True
 TRANSIT_MIN_FRAMES = 3
 
 CROWD_MIN_PERSONS = 4
