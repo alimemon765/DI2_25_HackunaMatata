@@ -70,7 +70,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 5.0,
+      "elapsed_s": 4.4,
       "duration_s": 131.28
     },
     "02_mobile_phone_hall.mkv": {
@@ -114,7 +114,7 @@
           "lag_s": 0.0
         }
       ],
-      "elapsed_s": 19.3,
+      "elapsed_s": 18.7,
       "duration_s": 212.16
     },
     "03_cctv_mobile_usage.mkv": {
@@ -139,7 +139,7 @@
         "kept_after_dedupe": 0
       },
       "pair_correlations": [],
-      "elapsed_s": 18.3,
+      "elapsed_s": 17.5,
       "duration_s": 281.834
     },
     "04_cctv_candidate_talking.mkv": {
@@ -251,7 +251,7 @@
           "lag_s": 0.0
         }
       ],
-      "elapsed_s": 4.6,
+      "elapsed_s": 4.1,
       "duration_s": 143.16
     },
     "05_crowd_reception_desk.mp4": {
@@ -376,7 +376,7 @@
           "lag_s": -2.0
         }
       ],
-      "elapsed_s": 21.2,
+      "elapsed_s": 18.6,
       "duration_s": 240.8
     },
     "08_seat12_paper_pass.mp4": {
@@ -474,7 +474,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 4.1,
+      "elapsed_s": 3.3,
       "duration_s": 88.4
     },
     "06_mobile_phone_hall.mp4": {
@@ -729,7 +729,7 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 181.1,
+      "elapsed_s": 71.7,
       "duration_s": 7697.2
     },
     "07_seat_exchange.mp4": {
@@ -984,13 +984,13 @@
           "lag_s": 2.0
         }
       ],
-      "elapsed_s": 138.2,
+      "elapsed_s": 60.4,
       "duration_s": 8061.927995
     }
   },
   "evaluation": {
     "ground_truth_rows": 8,
-    "timed_rows": 0,
+    "timed_rows": 4,
     "label_accuracy": {
       "metric": "action-label accuracy (file level, filename-derived truth)",
       "status": "measured",
@@ -998,6 +998,71 @@
       "top_label_correct": 0.125,
       "label_present": 0.375,
       "per_file": [
+        {
+          "video": "01_mobile_phone_hall.mkv",
+          "expected": "mobile_phone_usage",
+          "top_label": "talking_to_neighbour",
+          "n_events": 2,
+          "labels_seen": [
+            "staff_or_transit",
+            "talking_to_neighbour"
+          ],
+          "top_label_correct": false,
+          "label_present": false,
+          "status": "scored"
+        },
+        {
+          "video": "02_mobile_phone_hall.mkv",
+          "expected": "mobile_phone_usage",
+          "top_label": "talking_to_neighbour",
+          "n_events": 3,
+          "labels_seen": [
+            "mobile_phone_usage",
+            "staff_or_transit",
+            "talking_to_neighbour"
+          ],
+          "top_label_correct": false,
+          "label_present": true,
+          "status": "scored"
+        },
+        {
+          "video": "04_cctv_candidate_talking.mkv",
+          "expected": "talking_to_neighbour",
+          "top_label": "talking_to_neighbour",
+          "n_events": 5,
+          "labels_seen": [
+            "talking_to_neighbour",
+            "unclassified_anomaly"
+          ],
+          "top_label_correct": true,
+          "label_present": true,
+          "status": "scored"
+        },
+        {
+          "video": "05_crowd_reception_desk.mp4",
+          "expected": "crowd_gathering",
+          "top_label": "talking_to_neighbour",
+          "n_events": 7,
+          "labels_seen": [
+            "staff_or_transit",
+            "talking_to_neighbour"
+          ],
+          "top_label_correct": false,
+          "label_present": false,
+          "status": "scored"
+        },
+        {
+          "video": "03_cctv_mobile_usage.mkv",
+          "expected": "mobile_phone_usage",
+          "top_label": "unclassified_anomaly",
+          "n_events": 1,
+          "labels_seen": [
+            "unclassified_anomaly"
+          ],
+          "top_label_correct": false,
+          "label_present": false,
+          "status": "scored"
+        },
         {
           "video": "06_mobile_phone_hall.mp4",
           "expected": "mobile_phone_usage",
@@ -1040,71 +1105,6 @@
           "top_label_correct": false,
           "label_present": false,
           "status": "scored"
-        },
-        {
-          "video": "05_crowd_reception_desk.mp4",
-          "expected": "crowd_gathering",
-          "top_label": "talking_to_neighbour",
-          "n_events": 7,
-          "labels_seen": [
-            "staff_or_transit",
-            "talking_to_neighbour"
-          ],
-          "top_label_correct": false,
-          "label_present": false,
-          "status": "scored"
-        },
-        {
-          "video": "03_cctv_mobile_usage.mkv",
-          "expected": "mobile_phone_usage",
-          "top_label": "unclassified_anomaly",
-          "n_events": 1,
-          "labels_seen": [
-            "unclassified_anomaly"
-          ],
-          "top_label_correct": false,
-          "label_present": false,
-          "status": "scored"
-        },
-        {
-          "video": "04_cctv_candidate_talking.mkv",
-          "expected": "talking_to_neighbour",
-          "top_label": "talking_to_neighbour",
-          "n_events": 5,
-          "labels_seen": [
-            "talking_to_neighbour",
-            "unclassified_anomaly"
-          ],
-          "top_label_correct": true,
-          "label_present": true,
-          "status": "scored"
-        },
-        {
-          "video": "01_mobile_phone_hall.mkv",
-          "expected": "mobile_phone_usage",
-          "top_label": "talking_to_neighbour",
-          "n_events": 2,
-          "labels_seen": [
-            "staff_or_transit",
-            "talking_to_neighbour"
-          ],
-          "top_label_correct": false,
-          "label_present": false,
-          "status": "scored"
-        },
-        {
-          "video": "02_mobile_phone_hall.mkv",
-          "expected": "mobile_phone_usage",
-          "top_label": "talking_to_neighbour",
-          "n_events": 3,
-          "labels_seen": [
-            "mobile_phone_usage",
-            "staff_or_transit",
-            "talking_to_neighbour"
-          ],
-          "top_label_correct": false,
-          "label_present": true,
-          "status": "scored"
         }
       ]
     },
@@ -1112,37 +1112,63 @@
       "01_mobile_phone_hall.mkv": {
         "recall_at_budget": {
           "metric": "recall@review-budget",
-          "status": "unavailable",
-          "reason": "no timed ground-truth rows for this video; fill start_sec/end_sec in data/ground_truth.csv"
+          "status": "measured",
+          "tiou_threshold": 0.1,
+          "recall": 0.0,
+          "n_gt": 1,
+          "detail": [
+            {
+              "gt": [
+                2.0,
+                52.0
+              ],
+              "best_tiou": 0.0
+            }
+          ]
         },
         "mean_tiou": {
           "metric": "mean temporal IoU",
-          "status": "unavailable",
-          "reason": "no timed ground-truth rows for this video"
+          "status": "measured",
+          "mean_tiou": 0.0,
+          "n_gt": 1
         },
         "false_events_per_hour": {
           "metric": "false events per hour",
-          "status": "unavailable",
-          "reason": "cannot separate false from true without timed ground truth; the raw event rate is reported instead as `events_per_hour`",
-          "events_per_hour": 54.844606946983546
+          "status": "measured",
+          "false_events_per_hour": 54.844606946983546,
+          "n_false": 2,
+          "duration_s": 131.28
         }
       },
       "02_mobile_phone_hall.mkv": {
         "recall_at_budget": {
           "metric": "recall@review-budget",
-          "status": "unavailable",
-          "reason": "no timed ground-truth rows for this video; fill start_sec/end_sec in data/ground_truth.csv"
+          "status": "measured",
+          "tiou_threshold": 0.1,
+          "recall": 0.0,
+          "n_gt": 1,
+          "detail": [
+            {
+              "gt": [
+                104.0,
+                162.0
+              ],
+              "best_tiou": 0.0
+            }
+          ]
         },
         "mean_tiou": {
           "metric": "mean temporal IoU",
-          "status": "unavailable",
-          "reason": "no timed ground-truth rows for this video"
+          "status": "measured",
+          "mean_tiou": 0.0,
+          "n_gt": 1
         },
         "false_events_per_hour": {
           "metric": "false events per hour",
-          "status": "unavailable",
-          "reason": "cannot separate false from true without timed ground truth; the raw event rate is reported instead as `events_per_hour`",
-          "events_per_hour": 50.904977375565615
+          "status": "measured",
+          "false_events_per_hour": 50.904977375565615,
+          "n_false": 3,
+          "duration_s": 212.16
         }
       },
       "03_cctv_mobile_usage.mkv": {
@@ -1166,37 +1192,63 @@
       "04_cctv_candidate_talking.mkv": {
         "recall_at_budget": {
           "metric": "recall@review-budget",
-          "status": "unavailable",
-          "reason": "no timed ground-truth rows for this video; fill start_sec/end_sec in data/ground_truth.csv"
+          "status": "measured",
+          "tiou_threshold": 0.1,
+          "recall": 1.0,
+          "n_gt": 1,
+          "detail": [
+            {
+              "gt": [
+                4.0,
+                18.0
+              ],
+              "best_tiou": 0.357
+            }
+          ]
         },
         "mean_tiou": {
           "metric": "mean temporal IoU",
-          "status": "unavailable",
-          "reason": "no timed ground-truth rows for this video"
+          "status": "measured",
+          "mean_tiou": 0.35714285714285715,
+          "n_gt": 1
         },
         "false_events_per_hour": {
           "metric": "false events per hour",
-          "status": "unavailable",
-          "reason": "cannot separate false from true without timed ground truth; the raw event rate is reported instead as `events_per_hour`",
-          "events_per_hour": 125.73344509639564
+          "status": "measured",
+          "false_events_per_hour": 100.58675607711652,
+          "n_false": 4,
+          "duration_s": 143.16
         }
       },
       "05_crowd_reception_desk.mp4": {
         "recall_at_budget": {
           "metric": "recall@review-budget",
-          "status": "unavailable",
-          "reason": "no timed ground-truth rows for this video; fill start_sec/end_sec in data/ground_truth.csv"
+          "status": "measured",
+          "tiou_threshold": 0.1,
+          "recall": 0.0,
+          "n_gt": 1,
+          "detail": [
+            {
+              "gt": [
+                11.0,
+                101.0
+              ],
+              "best_tiou": 0.0
+            }
+          ]
         },
         "mean_tiou": {
           "metric": "mean temporal IoU",
-          "status": "unavailable",
-          "reason": "no timed ground-truth rows for this video"
+          "status": "measured",
+          "mean_tiou": 0.0,
+          "n_gt": 1
         },
         "false_events_per_hour": {
           "metric": "false events per hour",
-          "status": "unavailable",
-          "reason": "cannot separate false from true without timed ground truth; the raw event rate is reported instead as `events_per_hour`",
-          "events_per_hour": 104.65116279069768
+          "status": "measured",
+          "false_events_per_hour": 104.65116279069768,
+          "n_false": 7,
+          "duration_s": 240.8
         }
       },
       "08_seat12_paper_pass.mkv": {

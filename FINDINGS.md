@@ -266,3 +266,49 @@ say whether a deviation coincides with a real interaction, and
 
 Building a behavioural rule on the global signal as measured would ship the
 inverted discriminator. Not doing that.
+
+## 9. First real timing metrics — and Stage 1's blind spot, confirmed
+
+Four events were scrubbed from the raw footage by sweeping frames directly,
+with no reference to the pipeline's own output (see `GROUND_TRUTH_NOTES.md`
+and the contact sheets in `out/demo/gt_*.png`). That is enough to activate
+recall@budget, temporal IoU and false-events/hour for the first time.
+
+| file | ground truth | recall@budget | mean tIoU |
+|---|---|---|---|
+| 01 | 2-52 s, phone | **0%** | 0.000 |
+| 02 | 104-162 s, phone | **0%** | 0.000 |
+| 04 | 4-18 s, talking | **100%** | **0.357** |
+| 05 | 11-101 s, crowd | **0%** | 0.000 |
+
+**Recall 1 of 4.** The three misses share one cause, and it is the blind spot
+already documented in §4 — now confirmed against real timestamps rather than
+argued from first principles.
+
+* **01** — the candidate sits still with a hand at her face for fifty seconds.
+  A person holding a phone and not moving produces no motion excursion, so
+  Stage 1 has nothing to threshold. The events it did produce sit at 66-68 s
+  and 97-101 s: the staff member approaching, and the candidate standing up.
+  **It found the reaction, not the behaviour.**
+* **02** — the phone is up between 104 and 162 s. The one
+  `mobile_phone_usage` event fires at **182-184 s**, twenty seconds after it
+  ended.
+* **05** — the crowd is dense from 11 to 101 s. Every event falls between 164
+  and 238 s, once the room has emptied. **The per-seat rolling baseline
+  normalises away sustained crowding**: while everyone is busy nothing
+  deviates, and only when it quiets down does the remaining movement stand out.
+* **04** — works, tIoU 0.357. The interaction is brief and punctuated, which is
+  exactly what a change-point detector is built for.
+
+**Read plainly: Stage 1 reliably finds moments where behaviour *changes*, and
+systematically misses behaviour that is simply *sustained*.** The persistent-
+object sweep was added for precisely this reason and covers the object case;
+nothing yet covers sustained *interaction* or sustained *crowding*.
+
+### On false-events/hour
+
+Reported as 51-105 per hour, but that number is inflated by construction: an
+event counts as false if it does not overlap **the single** scrubbed window,
+and these clips plainly contain other genuine activity — staff walking through
+01 and 05 is real. Treat it as an upper bound until more of each file is
+scrubbed, not as a measured false-positive rate.

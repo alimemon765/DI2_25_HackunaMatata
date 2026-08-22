@@ -1,9 +1,9 @@
 video,start_sec,end_sec,seat_hint,label,type,confidence_of_label
-06_mobile_phone_hall.mp4,,,unknown,mobile_phone_usage,positive,filename_only
-07_seat_exchange.mp4,,,unknown,seat_exchange,positive,filename_only
-08_seat12_paper_pass.mkv,,,12,paper_pass,positive,filename_only
-05_crowd_reception_desk.mp4,,,n/a,crowd_gathering,positive_different_scene,filename_only
-03_cctv_mobile_usage.mkv,,,unknown,mobile_phone_usage,positive,filename_only
-04_cctv_candidate_talking.mkv,,,unknown,talking_to_neighbour,positive,filename_only
-01_mobile_phone_hall.mkv,,,unknown,mobile_phone_usage,positive,filename_only
-02_mobile_phone_hall.mkv,,,unknown,mobile_phone_usage,positive,filename_only
+01_mobile_phone_hall.mkv,2,52,unknown,mobile_phone_usage,positive,visual_inferred_posture
+02_mobile_phone_hall.mkv,104,162,unknown,mobile_phone_usage,positive,visual_confirmed
+04_cctv_candidate_talking.mkv,4,18,unknown,talking_to_neighbour,positive,visual_confirmed
+05_crowd_reception_desk.mp4,11,101,n/a,crowd_gathering,positive_different_scene,visual_confirmed
+03_cctv_mobile_usage.mkv,,,unknown,mobile_phone_usage,positive,no_clear_moment_found
+06_mobile_phone_hall.mp4,,,unknown,mobile_phone_usage,positive,not_scrubbed_2h_file
+07_seat_exchange.mp4,,,unknown,seat_exchange,positive,not_scrubbed_2h_file
+08_seat12_paper_pass.mkv,,,12,paper_pass,positive,no_clear_moment_found
